@@ -5,5 +5,5 @@ before: "// @custom-inject-point"
 ---
 
 @ApiProperty()
-@Column()
-<%= property %>: <%= type %>;
+@Column({ type: '<%= type %>' })
+<%= property %>: <%= h.getType(type) %>;

@@ -5,4 +5,4 @@ before: "// @custom-inject-point"
 ---
 
 @ApiProperty()
-<%= property %>: <%= type %>;
+<%= property %>: <%= h.getType(type) %>;

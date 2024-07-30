@@ -32,7 +32,19 @@ module.exports = [
   {
     type: 'select',
     name: 'type',
-    choices: ['string', 'number', 'boolean'],
+    choices: [
+      'varchar', // varchar
+      'text', // text
+      'uuid', // uuid
+      'int', // int
+      'float', // float
+      'double', // double
+      'decimal', // decimal
+      'boolean', // boolean
+      'timestamp', // timestamp
+      'date', // date
+      'json', // json
+    ],
   },
   {
     type: 'confirm',
