@@ -18,6 +18,7 @@ export class <%= name %>Entity extends EntityRelationalHelper {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  // @custom-inject-point
   @ApiProperty()
   @CreateDateColumn()
   createdAt: Date;

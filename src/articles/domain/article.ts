@@ -6,6 +6,7 @@ export class Article {
   })
   id: string;
 
+  // @custom-inject-point
   @ApiProperty()
   createdAt: Date;
 
