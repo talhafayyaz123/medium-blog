@@ -5,7 +5,7 @@ import { Article } from '../../domain/article';
 
 export abstract class ArticleRepository {
   abstract create(
-    data: Omit<Article, 'id' | 'createdAt' | 'updatedAt'>,
+    data: Omit<Article, 'id' | 'author_id' | 'createdAt' | 'updatedAt'>,
   ): Promise<Article>;
 
   abstract findAllWithPagination({
