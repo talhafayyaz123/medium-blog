@@ -19,13 +19,37 @@
 
 ## Hexagonal Architecture
 
-NestJS Boilerplate is based on [Hexagonal Architecture](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)). This architecture is also known as Ports and Adapters.
+NestJS Boilerplate is based on [Hexagonal Architecture](<https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)>). This architecture is also known as Ports and Adapters.
 
 ![Hexagonal Architecture Diagram](https://github.com/brocoders/nestjs-boilerplate/assets/6001723/6a6a763e-d1c9-43cc-910a-617cda3a71db)
 
-## Motivation
+## Benefits of Using Hexagonal Architecture
 
-The main reason for using Hexagonal Architecture is to separate the business logic from the infrastructure. This separation allows us to easily change the database, the way of uploading files, or any other infrastructure without changing the business logic.
+### Benefits for Database Interactions
+
+#### 1. Decoupled Business Logic and Data Access
+
+**Benefit**: Business logic is separated from data access code, making it easier to modify or replace the database without impacting the core application logic.
+**Analogy**: It's like having a universal remote control for different TV brands. You can switch TVs without needing to learn a new set of controls, as the remote's interface remains the same.
+
+#### 2. Enhanced Testability
+
+**Benefit**: With database interactions abstracted behind interfaces, it's easier to mock the database during testing, leading to more reliable and faster tests.
+**Analogy**: Imagine practicing chess moves on a digital chessboard that lets you simulate any scenario without the need for physical pieces. This allows you to test different strategies quickly and effectively.
+
+### Benefits for Third-Party Integrations
+
+Given this project will involve a lot of 3rd party integrations, so it can pay off there as well.
+
+#### 4. Isolated and Replaceable Integrations
+
+**Benefit**: Third-party integrations are modular and can be easily swapped out without affecting the core business logic.
+**Analogy**: Think of the third-party services as plug-and-play USB devices. You can unplug one and plug in another without needing to change the computer's operating system or applications.
+
+#### 5. Improved Testability and Reliability
+
+**Benefit**: Abstracting third-party services makes it easier to create mock versions, leading to more reliable and faster testing.
+**Analogy**: It's like using a flight simulator to train pilots. The simulator provides a safe and controlled environment to test various scenarios without the risks and costs associated with actual flights.
 
 ## Description of the module structure
 
@@ -96,11 +120,11 @@ export class UsersRelationalRepository implements UserRepository {
   async findByEmail(email: string): Promise<User> {
     // ...
   }
-  
+
   async findByRoles(roles: string[]): Promise<User> {
     // ...
   }
-  
+
   async findByIds(ids: string[]): Promise<User> {
     // ...
   }
@@ -123,7 +147,7 @@ Yes, you can use the [CLI](cli.md) to generate a new resource with Hexagonal Arc
 
 You still can use [Three-tier Architecture](https://en.wikipedia.org/wiki/Multitier_architecture#Three-tier_architecture) `[controllers] -> [services] -> [data access]` near [Hexagonal Architecture](#hexagonal-architecture).
 
-Database example: Just keep the existing approach of getting data from the database for auth, files, etc, as is (with Hexagonal Architecture), but for new modules use repositories from TypeORM or models from Mongoose directly in [services](https://docs.nestjs.com/providers#services). Entities and Schemas are ready for this.
+Database example: Just keep the existing approach of getting data from the database for auth, files, etc, as is (with Hexagonal Architecture), but for new modules use repositories from TypeORM directly in [services](https://docs.nestjs.com/providers#services). Entities and Schemas are ready for this.
 
 ---
 
