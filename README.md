@@ -1,4 +1,6 @@
-# Medium backend APIs clone using typeORM/postgres/hexagonal-architecture
+# Medium backend clone
+
+Implementing the [Realworld Medium Clone Specifications](https://realworld-docs.netlify.app/docs/implementation-creation/features) using TypeORM/Postgres and Hexagonal Architecture.
 
 ## Documentation <!-- omit in toc -->
 
@@ -6,7 +8,7 @@
 
 ## Features
 
-- [x] Database. Support [TypeORM](https://www.npmjs.com/package/typeorm)
+- [x] This project is using [TypeORM](https://www.npmjs.com/package/typeorm) along with [PostgreSQL](https://www.postgresql.org/).
 - [x] Seeding.
 - [x] Config Service ([@nestjs/config](https://www.npmjs.com/package/@nestjs/config)).
 - [x] Mailing ([nodemailer](https://www.npmjs.com/package/nodemailer)).
