@@ -4,9 +4,12 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   Column,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 import { EntityRelationalHelper } from '../../../../../utils/relational-entity-helper';
 import { ApiProperty } from '@nestjs/swagger';
+import { UserEntity } from '../../../../../users/infrastructure/persistence/relational/entities/user.entity';
 
 @Entity({
   name: 'article',
@@ -35,6 +38,10 @@ export class ArticleEntity extends EntityRelationalHelper {
   @ApiProperty()
   @Column({ type: 'int' })
   author_id: number;
+
+  @ManyToOne(() => UserEntity)
+  @JoinColumn({ name: 'author_id' })
+  author: UserEntity;
 
   // @custom-inject-point
   @ApiProperty()

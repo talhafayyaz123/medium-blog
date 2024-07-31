@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { User } from '../../users/domain/user';
 
 export class Article {
   @ApiProperty({
@@ -19,7 +20,7 @@ export class Article {
   body: string;
 
   @ApiProperty()
-  author_id: number;
+  author: User;
 
   // @custom-inject-point
   @ApiProperty()
