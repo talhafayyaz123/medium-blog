@@ -7,11 +7,8 @@
 - [Hexagonal Architecture](#hexagonal-architecture)
 - [Benefits](#benefits)
   - [Database Interactions](#database-interactions)
-    - [1. Decoupled Business Logic and Data Access](#1-decoupled-business-logic-and-data-access)
-    - [2. Enhanced Testability](#2-enhanced-testability)
+    - [Decoupling Services from Database Repositories \& Enhanced Testability](#decoupling-services-from-database-repositories--enhanced-testability)
   - [Third-Party Integrations](#third-party-integrations)
-    - [4. Isolated and Replaceable Integrations](#4-isolated-and-replaceable-integrations)
-    - [5. Improved Testability and Reliability](#5-improved-testability-and-reliability)
 - [Description of the module structure](#description-of-the-module-structure)
 - [Recommendations](#recommendations)
   - [Repository](#repository)
@@ -25,7 +22,7 @@
 
 ## Hexagonal Architecture
 
-NestJS Boilerplate is based on [Hexagonal Architecture](<https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)>). This architecture is also known as Ports and Adapters.
+This project is based on [Hexagonal Architecture](<https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)>). This architecture is also known as Ports and Adapters.
 
 ![Hexagonal Architecture Diagram](https://github.com/brocoders/nestjs-boilerplate/assets/6001723/6a6a763e-d1c9-43cc-910a-617cda3a71db)
 
@@ -33,29 +30,24 @@ NestJS Boilerplate is based on [Hexagonal Architecture](<https://en.wikipedia.or
 
 ### Database Interactions
 
-#### 1. Decoupled Business Logic and Data Access
+#### Decoupling Services from Database Repositories & Enhanced Testability
 
-**Benefit**: Business logic is separated from data access code, making it easier to modify or replace the database without impacting the core application logic.
-**Analogy**: It's like having a universal remote control for different TV brands. You can switch TVs without needing to learn a new set of controls, as the remote's interface remains the same.
+The project enforces a structure where services do not depend on the inner workings of repositories. This is achieved through the use of mappers, which convert data between domain models and persistence entities. Mappers play a crucial role in breaking the coupling at the column level, ensuring that services remain agnostic to the underlying database schema. This decoupling is vital for several reasons:
 
-#### 2. Enhanced Testability
+1. **Modularity**: Services can be developed and maintained independently of the database schema, making the codebase more modular and easier to manage.
+2. **Flexibility**: Changes to the database schema, such as adding or modifying columns, do not impact the business logic, reducing the risk of errors and simplifying maintenance.
+3. **Testability**: With database interactions abstracted behind interfaces, it's easier to mock the database during testing. This leads to more reliable and faster tests, as the business logic can be tested independently of the database.
 
-**Benefit**: With database interactions abstracted behind interfaces, it's easier to mock the database during testing, leading to more reliable and faster tests.
-**Analogy**: Imagine practicing chess moves on a digital chessboard that lets you simulate any scenario without the need for physical pieces. This allows you to test different strategies quickly and effectively.
+4. **Adaptability**: The project can adapt to changes in third-party providers or database technologies with minimal impact on the core business logic, enhancing the project's longevity and resilience.
+
+By enforcing these practices, the project ensures a clean separation of concerns, promotes maintainability, and supports robust testing strategies.
 
 ### Third-Party Integrations
 
 Given this project will involve a lot of 3rd party integrations, so it can pay off there as well.
 
-#### 4. Isolated and Replaceable Integrations
-
-**Benefit**: Third-party integrations are modular and can be easily swapped out without affecting the core business logic.
-**Analogy**: Think of the third-party services as plug-and-play USB devices. You can unplug one and plug in another without needing to change the computer's operating system or applications.
-
-#### 5. Improved Testability and Reliability
-
-**Benefit**: Abstracting third-party services makes it easier to create mock versions, leading to more reliable and faster testing.
-**Analogy**: It's like using a flight simulator to train pilots. The simulator provides a safe and controlled environment to test various scenarios without the risks and costs associated with actual flights.
+1. **Isolated and Replaceable Integrations**: Third-party integrations are modular and can be easily swapped out without affecting the core business logic. This is particularly advantageous for long-term projects, where you may need to replace one third-party provider with another offering similar services.
+2. **Improved Testability and Reliability**: Abstracting third-party services makes it easier to create mock versions, leading to more reliable and faster testing.
 
 ## Description of the module structure
 
