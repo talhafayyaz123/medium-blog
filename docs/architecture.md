@@ -5,7 +5,13 @@
 ## Table of Contents <!-- omit in toc -->
 
 - [Hexagonal Architecture](#hexagonal-architecture)
-- [Motivation](#motivation)
+- [Benefits](#benefits)
+  - [Database Interactions](#database-interactions)
+    - [1. Decoupled Business Logic and Data Access](#1-decoupled-business-logic-and-data-access)
+    - [2. Enhanced Testability](#2-enhanced-testability)
+  - [Third-Party Integrations](#third-party-integrations)
+    - [4. Isolated and Replaceable Integrations](#4-isolated-and-replaceable-integrations)
+    - [5. Improved Testability and Reliability](#5-improved-testability-and-reliability)
 - [Description of the module structure](#description-of-the-module-structure)
 - [Recommendations](#recommendations)
   - [Repository](#repository)
@@ -23,9 +29,9 @@ NestJS Boilerplate is based on [Hexagonal Architecture](<https://en.wikipedia.or
 
 ![Hexagonal Architecture Diagram](https://github.com/brocoders/nestjs-boilerplate/assets/6001723/6a6a763e-d1c9-43cc-910a-617cda3a71db)
 
-## Benefits of Using Hexagonal Architecture
+## Benefits
 
-### Benefits for Database Interactions
+### Database Interactions
 
 #### 1. Decoupled Business Logic and Data Access
 
@@ -37,7 +43,7 @@ NestJS Boilerplate is based on [Hexagonal Architecture](<https://en.wikipedia.or
 **Benefit**: With database interactions abstracted behind interfaces, it's easier to mock the database during testing, leading to more reliable and faster tests.
 **Analogy**: Imagine practicing chess moves on a digital chessboard that lets you simulate any scenario without the need for physical pieces. This allows you to test different strategies quickly and effectively.
 
-### Benefits for Third-Party Integrations
+### Third-Party Integrations
 
 Given this project will involve a lot of 3rd party integrations, so it can pay off there as well.
 

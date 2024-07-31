@@ -6,7 +6,6 @@
 
 - [Generate resource](#generate-resource)
   - [For relational database (PostgreSQL + TypeORM)](#for-relational-database-postgresql--typeorm)
-- [Add property to resource](#add-property-to-resource)
   - [Property for relational database (PostgreSQL + TypeORM)](#property-for-relational-database-postgresql--typeorm)
 
 ---

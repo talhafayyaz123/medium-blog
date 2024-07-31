@@ -2,7 +2,7 @@
 
 This project is using [TypeORM](https://www.npmjs.com/package/typeorm) along with [PostgreSQL](https://www.postgresql.org/).
 
-The interactions with database are implemented based on the [Hexagonal Architecture](architecture.md#hexagonal-architecture). This introduces a strict de-coupling of databases with the business logic, hence make it easier to test. Also it make it easier to handle the future database schema changes.
+Interactions with the database are implemented based on [Hexagonal Architecture](architecture.md#hexagonal-architecture). Benefits of this architecture are described in detail in the [benefits](architecture.md#benefits) section.
 
 ---
 
