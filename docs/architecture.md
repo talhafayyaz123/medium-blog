@@ -22,7 +22,7 @@
 
 ## Hexagonal Architecture
 
-This project is based on [Hexagonal Architecture](<https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)>). This architecture is also known as Ports and Adapters.
+This project is based on [Hexagonal Architecture](https://www.youtube.com/watch?v=bDWApqAUjEI). This architecture is also known as Ports and Adapters.
 
 ![Hexagonal Architecture Diagram](https://github.com/brocoders/nestjs-boilerplate/assets/6001723/6a6a763e-d1c9-43cc-910a-617cda3a71db)
 
@@ -32,7 +32,9 @@ This project is based on [Hexagonal Architecture](<https://en.wikipedia.org/wiki
 
 #### Decoupling Services from Database Repositories & Enhanced Testability
 
-The project enforces a structure where services do not depend on the inner workings of repositories. This is achieved through the use of mappers, which convert data between domain models and persistence entities. Mappers play a crucial role in breaking the coupling at the column level, ensuring that services remain agnostic to the underlying database schema. This decoupling is vital for several reasons:
+The project uses a structure where services operate independently of the inner workings of repositories. In this architecture, the service layer interacts exclusively with domain entities, remaining unaware of the underlying database entities. Conversely, repositories handle database entities without any knowledge of the domain entities. This clear separation is maintained through the use of mappers, which are responsible for converting data between domain models and persistence entities.
+
+Mappers play a crucial role in breaking the coupling at the column level, ensuring that changes in the database schema do not directly affect the business logic, and vice versa. This decoupling is essential for several reasons:
 
 1. **Modularity**: Services can be developed and maintained independently of the database schema, making the codebase more modular and easier to manage.
 2. **Flexibility**: Changes to the database schema, such as adding or modifying columns, do not impact the business logic, reducing the risk of errors and simplifying maintenance.
