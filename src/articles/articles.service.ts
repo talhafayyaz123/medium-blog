@@ -5,10 +5,14 @@ import { ArticleRepository } from './infrastructure/persistence/article.reposito
 import { IPaginationOptions } from '../utils/types/pagination-options';
 import { Article } from './domain/article';
 import { JwtPayloadType } from '../auth/strategies/types/jwt-payload.type';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class ArticlesService {
-  constructor(private readonly articleRepository: ArticleRepository) {}
+  constructor(
+    private readonly articleRepository: ArticleRepository,
+    private userService: UsersService,
+  ) {}
 
   async create(
     createArticleDto: CreateArticleDto,
@@ -18,7 +22,16 @@ export class ArticlesService {
       ...createArticleDto,
       author_id: userJwtPayload.id,
     };
-    return this.articleRepository.create(clonedPayload);
+
+    const article = await this.articleRepository.create(clonedPayload);
+
+    const user = await this.userService.findById(userJwtPayload.id);
+
+    if (user) {
+      article.author = user;
+    }
+
+    return article;
   }
 
   findAllWithPagination({
