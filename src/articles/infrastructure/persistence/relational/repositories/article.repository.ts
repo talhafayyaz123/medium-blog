@@ -42,6 +42,9 @@ export class ArticleRelationalRepository implements ArticleRepository {
   async findById(id: Article['id']): Promise<NullableType<Article>> {
     const entity = await this.articleRepository.findOne({
       where: { id },
+      relations: {
+        author: true,
+      },
     });
 
     return entity ? ArticleMapper.toDomain(entity) : null;
@@ -50,6 +53,9 @@ export class ArticleRelationalRepository implements ArticleRepository {
   async update(id: Article['id'], payload: Partial<Article>): Promise<Article> {
     const entity = await this.articleRepository.findOne({
       where: { id },
+      relations: {
+        author: true,
+      },
     });
 
     if (!entity) {
@@ -64,6 +70,8 @@ export class ArticleRelationalRepository implements ArticleRepository {
         }),
       ),
     );
+
+    updatedEntity.author = entity.author;
 
     return ArticleMapper.toDomain(updatedEntity);
   }
