@@ -37,7 +37,7 @@ The project uses a structure where services operate independently of the inner w
 Mappers play a crucial role in breaking the coupling at the column level, ensuring that changes in the database schema do not directly affect the business logic, and vice versa. This decoupling is essential for several reasons:
 
 1. **Modularity**: Services can be developed and maintained independently of the database schema, making the codebase more modular and easier to manage.
-2. **Flexibility**: Changes to the database schema, such as adding or modifying columns, do not impact the business logic, reducing the risk of errors and simplifying maintenance.
+2. **Flexibility**: Changes to the database schema, like adding or modifying columns, do not affect the business logic. This reduces the risk of errors and simplifies maintenance. In large-scale projects, this flexibility ensures that evolving database schemas won't disrupt endpoint responses.
 3. **Testability**: With database interactions abstracted behind interfaces, it's easier to mock the database during testing. This leads to more reliable and faster tests, as the business logic can be tested independently of the database.
 
 4. **Adaptability**: The project can adapt to changes in third-party providers or database technologies with minimal impact on the core business logic, enhancing the project's longevity and resilience.
