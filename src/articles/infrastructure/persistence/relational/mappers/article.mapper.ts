@@ -9,7 +9,9 @@ export class ArticleMapper {
     domainEntity.title = raw.title;
     domainEntity.slug = raw.slug;
     domainEntity.id = raw.id;
-    domainEntity.author_id = raw.author_id;
+    if (raw.author) {
+      domainEntity.author = raw.author;
+    }
     domainEntity.createdAt = raw.createdAt;
     domainEntity.updatedAt = raw.updatedAt;
 

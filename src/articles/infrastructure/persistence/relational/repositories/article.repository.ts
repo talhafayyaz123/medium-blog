@@ -31,9 +31,12 @@ export class ArticleRelationalRepository implements ArticleRepository {
     const entities = await this.articleRepository.find({
       skip: (paginationOptions.page - 1) * paginationOptions.limit,
       take: paginationOptions.limit,
+      relations: {
+        author: true,
+      },
     });
 
-    return entities.map((user) => ArticleMapper.toDomain(user));
+    return entities.map((entity) => ArticleMapper.toDomain(entity));
   }
 
   async findById(id: Article['id']): Promise<NullableType<Article>> {
