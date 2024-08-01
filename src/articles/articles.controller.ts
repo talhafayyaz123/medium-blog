@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Request,
   Query,
 } from '@nestjs/common';
 import { ArticlesService } from './articles.service';
@@ -42,8 +43,8 @@ export class ArticlesController {
   @ApiCreatedResponse({
     type: Article,
   })
-  create(@Body() createArticleDto: CreateArticleDto) {
-    return this.articlesService.create(createArticleDto);
+  async create(@Body() createArticleDto: CreateArticleDto, @Request() request) {
+    return await this.articlesService.create(createArticleDto, request.user);
   }
 
   @Get()

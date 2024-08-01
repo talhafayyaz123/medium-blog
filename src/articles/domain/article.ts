@@ -19,6 +19,11 @@ export class Article {
   @ApiProperty()
   body: string;
 
+  @ApiProperty({
+    type: Number,
+  })
+  author_id: number | string;
+
   @ApiProperty()
   author: User;
 

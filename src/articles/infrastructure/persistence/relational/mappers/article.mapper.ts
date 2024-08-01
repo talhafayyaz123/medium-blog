@@ -9,6 +9,7 @@ export class ArticleMapper {
     domainEntity.title = raw.title;
     domainEntity.slug = raw.slug;
     domainEntity.id = raw.id;
+    domainEntity.author_id = raw.author_id;
     domainEntity.createdAt = raw.createdAt;
     domainEntity.updatedAt = raw.updatedAt;
 
@@ -23,6 +24,9 @@ export class ArticleMapper {
     persistenceEntity.slug = domainEntity.slug;
     if (domainEntity.id) {
       persistenceEntity.id = domainEntity.id;
+    }
+    if (domainEntity.author_id && typeof domainEntity.author_id === 'number') {
+      persistenceEntity.author_id = domainEntity.author_id;
     }
     persistenceEntity.createdAt = domainEntity.createdAt;
     persistenceEntity.updatedAt = domainEntity.updatedAt;
