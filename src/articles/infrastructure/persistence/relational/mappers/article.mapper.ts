@@ -1,3 +1,4 @@
+import { UserMapper } from '../../../../../users/infrastructure/persistence/relational/mappers/user.mapper';
 import { Article } from '../../../../domain/article';
 import { ArticleEntity } from '../entities/article.entity';
 
@@ -10,7 +11,7 @@ export class ArticleMapper {
     domainEntity.slug = raw.slug;
     domainEntity.id = raw.id;
     if (raw.author) {
-      domainEntity.author = raw.author;
+      domainEntity.author = UserMapper.toDomain(raw.author);
     }
     domainEntity.created_at = raw.created_at;
     domainEntity.updated_at = raw.updated_at;
