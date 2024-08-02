@@ -5,7 +5,12 @@
 ## Table of Contents <!-- omit in toc -->
 
 - [About databases](#about-databases)
-- [DB tables naming conventions](#db-tables-naming-convention)
+- [DB tables naming conventions](#db-tables-naming-conventions)
+  - [Reason 1: Convenience](#reason-1-convenience)
+  - [Reason 2: Aesthetic and Order](#reason-2-aesthetic-and-order)
+    - [Reason 3: Simplicity](#reason-3-simplicity)
+  - [Reason 4: Globalization](#reason-4-globalization)
+- [DB columns naming convention](#db-columns-naming-convention)
 - [Working with database schema (TypeORM)](#working-with-database-schema-typeorm)
   - [Generate migration](#generate-migration)
   - [Run migration](#run-migration)
@@ -70,6 +75,10 @@ Once you know you are dealing with "Customer", you can be sure you will use the 
 ### Reason 4: Globalization
 
 The world is getting smaller, and you may have a team of different nationalities. Not everybody has English as a native language. It would be easier for a non-native English language programmer to think of "Repository" than of "Repositories", or "Status" instead of "Statuses". Having singular names can lead to fewer errors caused by typos, save time by not having to think "is it Child or Children?", hence improving productivity.
+
+## DB columns naming convention
+
+[Don't use upper case](https://wiki.postgresql.org/wiki/Don't_Do_This#Don.27t_use_upper_case_table_or_column_names) letters in the column or table names.
 
 ## Working with database schema (TypeORM)
 
