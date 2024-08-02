@@ -11,6 +11,7 @@ Interactions with the database are implemented based on [Hexagonal Architecture]
 - [Comfortable development (PostgreSQL + TypeORM)](#comfortable-development-postgresql--typeorm)
 - [Quick run (PostgreSQL + TypeORM)](#quick-run-postgresql--typeorm)
   - [Video guideline](#video-guideline)
+- [Debugging](#debugging)
 - [Links](#links)
 
 ---
@@ -112,6 +113,12 @@ If you want quick run your app, you can use following commands:
 ### Video guideline
 
 <https://user-images.githubusercontent.com/6001723/235758846-d7d97de8-dea9-46d8-ae12-8cc6b76df03d.mp4>
+
+---
+
+## Debugging
+
+After you app is up and running, [follow this video tutorial](https://www.youtube.com/watch?v=QL3KXE1hOgA) to configure the debugging in vs code.
 
 ---
 
