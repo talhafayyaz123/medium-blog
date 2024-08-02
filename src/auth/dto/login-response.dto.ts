@@ -6,10 +6,10 @@ export class LoginResponseDto {
   token: string;
 
   @ApiProperty()
-  refreshToken: string;
+  refresh_token: string;
 
   @ApiProperty()
-  tokenExpires: number;
+  token_expires: number;
 
   @ApiProperty({
     type: () => User,

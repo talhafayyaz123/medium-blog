@@ -101,9 +101,9 @@ export class AuthService {
     });
 
     return {
-      refreshToken,
+      refresh_token: refreshToken,
       token,
-      tokenExpires,
+      token_expires: tokenExpires,
       user,
     };
   }
@@ -186,9 +186,9 @@ export class AuthService {
     });
 
     return {
-      refreshToken,
+      refresh_token: refreshToken,
+      token_expires: tokenExpires,
       token: jwtToken,
-      tokenExpires,
       user,
     };
   }
@@ -531,8 +531,8 @@ export class AuthService {
 
     return {
       token,
-      refreshToken,
-      tokenExpires,
+      refresh_token: refreshToken,
+      token_expires: tokenExpires,
     };
   }
 
