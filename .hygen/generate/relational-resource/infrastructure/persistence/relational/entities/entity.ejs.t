@@ -21,9 +21,9 @@ export class <%= name %>Entity extends EntityRelationalHelper {
   // @custom-inject-point
   @ApiProperty()
   @CreateDateColumn()
-  createdAt: Date;
+  created_at: Date;
 
   @ApiProperty()
   @UpdateDateColumn()
-  updatedAt: Date;
+  updated_at: Date;
 }
