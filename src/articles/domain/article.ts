@@ -29,8 +29,8 @@ export class Article {
 
   // @custom-inject-point
   @ApiProperty()
-  createdAt: Date;
+  created_at: Date;
 
   @ApiProperty()
-  updatedAt: Date;
+  updated_at: Date;
 }

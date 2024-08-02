@@ -7,6 +7,7 @@ import { Article } from '../../../../domain/article';
 import { ArticleRepository } from '../../article.repository';
 import { ArticleMapper } from '../mappers/article.mapper';
 import { IPaginationOptions } from '../../../../../utils/types/pagination-options';
+import { UserEntity } from '../../../../../users/infrastructure/persistence/relational/entities/user.entity';
 
 @Injectable()
 export class ArticleRelationalRepository implements ArticleRepository {
@@ -20,6 +21,7 @@ export class ArticleRelationalRepository implements ArticleRepository {
     const newEntity = await this.articleRepository.save(
       this.articleRepository.create(persistenceModel),
     );
+
     return ArticleMapper.toDomain(newEntity);
   }
 
