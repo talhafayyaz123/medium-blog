@@ -49,11 +49,11 @@ export class UserEntity extends EntityRelationalHelper {
   password?: string;
 
   @Exclude({ toPlainOnly: true })
-  public previousPassword?: string;
+  public previous_password?: string;
 
   @AfterLoad()
   public loadPreviousPassword(): void {
-    this.previousPassword = this.password;
+    this.previous_password = this.password;
   }
 
   @ApiProperty({
@@ -71,7 +71,7 @@ export class UserEntity extends EntityRelationalHelper {
   @Index()
   @Column({ type: String, nullable: true })
   @Expose({ groups: ['me', 'admin'] })
-  socialId?: string | null;
+  social_id?: string | null;
 
   @ApiProperty({
     type: String,
@@ -79,7 +79,7 @@ export class UserEntity extends EntityRelationalHelper {
   })
   @Index()
   @Column({ type: String, nullable: true })
-  firstName: string | null;
+  first_name: string | null;
 
   @ApiProperty({
     type: String,
@@ -87,7 +87,7 @@ export class UserEntity extends EntityRelationalHelper {
   })
   @Index()
   @Column({ type: String, nullable: true })
-  lastName: string | null;
+  last_name: string | null;
 
   @ApiProperty({
     type: () => FileEntity,
@@ -95,7 +95,7 @@ export class UserEntity extends EntityRelationalHelper {
   @OneToOne(() => FileEntity, {
     eager: true,
   })
-  @JoinColumn()
+  @JoinColumn({ name: 'photo_id' })
   photo?: FileEntity | null;
 
   @ApiProperty({
@@ -104,6 +104,7 @@ export class UserEntity extends EntityRelationalHelper {
   @ManyToOne(() => RoleEntity, {
     eager: true,
   })
+  @JoinColumn({ name: 'role_id' })
   role?: RoleEntity | null;
 
   @ApiProperty({
@@ -112,17 +113,18 @@ export class UserEntity extends EntityRelationalHelper {
   @ManyToOne(() => StatusEntity, {
     eager: true,
   })
+  @JoinColumn({ name: 'status_id' })
   status?: StatusEntity;
 
   @ApiProperty()
   @CreateDateColumn()
-  createdAt: Date;
+  created_at: Date;
 
   @ApiProperty()
   @UpdateDateColumn()
-  updatedAt: Date;
+  updated_at: Date;
 
   @ApiProperty()
   @DeleteDateColumn()
-  deletedAt: Date;
+  deleted_at: Date;
 }

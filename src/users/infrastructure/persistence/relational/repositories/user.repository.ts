@@ -76,16 +76,16 @@ export class UsersRelationalRepository implements UserRepository {
   }
 
   async findBySocialIdAndProvider({
-    socialId,
+    social_id,
     provider,
   }: {
-    socialId: User['socialId'];
+    social_id: User['social_id'];
     provider: User['provider'];
   }): Promise<NullableType<User>> {
-    if (!socialId || !provider) return null;
+    if (!social_id || !provider) return null;
 
     const entity = await this.usersRepository.findOne({
-      where: { socialId, provider },
+      where: { social_id, provider },
     });
 
     return entity ? UserMapper.toDomain(entity) : null;
