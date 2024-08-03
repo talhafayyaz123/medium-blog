@@ -17,13 +17,13 @@ Generate resource with the following commands:
 ### For relational database (PostgreSQL + TypeORM)
 
 ```bash
-npm run generate:resource:relational -- --name=ResourceName
+npm run generate:resource:relational -- ResourceName
 ```
 
 Example:
 
 ```bash
-npm run generate:resource:relational -- --name=Category
+npm run generate:resource:relational -- Category
 ```
 
 ### Property for relational database (PostgreSQL + TypeORM)
@@ -32,7 +32,7 @@ npm run generate:resource:relational -- --name=Category
 npm run add:property:to-relational
 ```
 
----
+It will initiate the terminal prompt to ask for property details.
 
 Previous: [Architecture](architecture.md)
 
