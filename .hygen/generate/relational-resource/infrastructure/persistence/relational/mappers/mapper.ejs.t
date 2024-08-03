@@ -8,7 +8,7 @@ export class <%= name %>Mapper {
   static toDomain(raw: <%= name %>Entity): <%= name %> {
     const domainEntity = new <%= name %>();
     domainEntity.id = raw.id;
-    domainEntity.create_at = raw.create_at;
+    domainEntity.created_at = raw.created_at;
     domainEntity.updated_at = raw.updated_at;
 
     return domainEntity;
@@ -19,7 +19,7 @@ export class <%= name %>Mapper {
     if (domainEntity.id) {
       persistenceEntity.id = domainEntity.id;
     }
-    persistenceEntity.create_at = domainEntity.create_at;
+    persistenceEntity.created_at = domainEntity.created_at;
     persistenceEntity.updated_at = domainEntity.updated_at;
 
     return persistenceEntity;
