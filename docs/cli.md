@@ -36,6 +36,8 @@ npm run add:property
 
 It will initiate the terminal prompt to ask for property details.
 
+After the property is created, please check the DTO files and add the relevant imports. Otherwise, the file will have errors.
+
 ## FAQ
 
 ### Error: Unable to connent to the newly created relational entity
