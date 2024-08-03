@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Post,
+  Request,
   Body,
   Patch,
   Param,
@@ -42,8 +43,8 @@ export class CommentsController {
   @ApiCreatedResponse({
     type: Comment,
   })
-  create(@Body() createCommentDto: CreateCommentDto) {
-    return this.commentsService.create(createCommentDto);
+  create(@Body() createCommentDto: CreateCommentDto, @Request() request) {
+    return this.commentsService.create(createCommentDto, request.user);
   }
 
   @Get()

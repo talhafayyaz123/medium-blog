@@ -4,12 +4,37 @@ import { UpdateCommentDto } from './dto/update-comment.dto';
 import { CommentRepository } from './infrastructure/persistence/comment.repository';
 import { IPaginationOptions } from '../utils/types/pagination-options';
 import { Comment } from './domain/comment';
+import { UsersService } from '../users/users.service';
+import { JwtPayloadType } from '../auth/strategies/types/jwt-payload.type';
 
 @Injectable()
 export class CommentsService {
-  constructor(private readonly commentRepository: CommentRepository) {}
+  constructor(
+    private readonly commentRepository: CommentRepository,
+    private userService: UsersService,
+  ) {}
 
-  create(createCommentDto: CreateCommentDto) {
+  async create(
+    createCommentDto: CreateCommentDto,
+    userJwtPayload: JwtPayloadType,
+  ) {
+    const clonedPayload = {
+      ...createCommentDto,
+      author_id: userJwtPayload.id,
+    };
+
+    const comment = await this.commentRepository.create(clonedPayload);
+
+    const user = await this.userService.findById(userJwtPayload.id);
+
+    if (user) {
+      comment.author = user;
+    }
+
+    return comment;
+  }
+
+  create1(createCommentDto: CreateCommentDto) {
     return this.commentRepository.create(createCommentDto);
   }
 
