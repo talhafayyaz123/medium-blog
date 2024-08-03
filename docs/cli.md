@@ -9,6 +9,7 @@
   - [Property for relational database (PostgreSQL + TypeORM)](#property-for-relational-database-postgresql--typeorm)
 - [FAQ](#faq)
   - [Error: Unable to connent to the newly created relational entity](#error-unable-to-connent-to-the-newly-created-relational-entity)
+  - [Can I create forgein key properties using the add:property command?](#can-i-create-forgein-key-properties-using-the-addproperty-command)
 
 ---
 
@@ -53,6 +54,10 @@ npm run build
 ```
 
 And then you can use the start:dev or other command which you were using.
+
+### Can I create forgein key properties using the add:property command?
+
+Technically, yes and no. While you can generate a simple property without any relations using the `add:property` command, you will need to manually handle the foreign key relations. This includes writing the relation yourself, adding the relevant validation checks in the DTO, and updating other relevant pieces of code. Essentially, most of the work for handling foreign key relations will need to be done manually.
 
 ---
 
