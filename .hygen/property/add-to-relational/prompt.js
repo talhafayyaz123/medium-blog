@@ -17,7 +17,7 @@ module.exports = [
   {
     type: 'input',
     name: 'property',
-    message: "Property name (e.g. 'firstName')",
+    message: "Property name in snake case (e.g. 'first_name')",
     validate: (input) => {
       if (!input.trim()) {
         return 'Property name is required';
