@@ -5,7 +5,10 @@ import { Comment } from '../../domain/comment';
 
 export abstract class CommentRepository {
   abstract create(
-    data: Omit<Comment, 'id' | 'created_at' | 'updated_at'>,
+    data: Omit<
+      Comment,
+      'id' | 'author' | 'author_id' | 'created_at' | 'updated_at'
+    >,
   ): Promise<Comment>;
 
   abstract findAllWithPagination({
