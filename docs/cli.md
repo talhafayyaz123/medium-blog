@@ -34,6 +34,8 @@ npm run add:property:to-relational
 
 It will initiate the terminal prompt to ask for property details.
 
+---
+
 Previous: [Architecture](architecture.md)
 
 Next: [Working with database](database.md)
