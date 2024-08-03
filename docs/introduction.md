@@ -1,14 +1,8 @@
 # Introduction
 
-## Online demo
-
-Demo: <https://nestjs-boilerplate-test.herokuapp.com/docs>
-
-Frontend (React, Next.js): <https://github.com/brocoders/extensive-react-boilerplate>
-
 ## Features
 
-- [x] Database. Support [TypeORM](https://www.npmjs.com/package/typeorm) and [Mongoose](https://www.npmjs.com/package/mongoose).
+- [x] Database. Support [TypeORM](https://www.npmjs.com/package/typeorm)
 - [x] Seeding.
 - [x] Config Service ([@nestjs/config](https://www.npmjs.com/package/@nestjs/config)).
 - [x] Mailing ([nodemailer](https://www.npmjs.com/package/nodemailer)).

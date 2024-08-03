@@ -119,14 +119,14 @@ export class UsersService {
   }
 
   findBySocialIdAndProvider({
-    socialId,
+    social_id,
     provider,
   }: {
-    socialId: User['socialId'];
+    social_id: User['social_id'];
     provider: User['provider'];
   }): Promise<NullableType<User>> {
     return this.usersRepository.findBySocialIdAndProvider({
-      socialId,
+      social_id,
       provider,
     });
   }
@@ -139,7 +139,7 @@ export class UsersService {
 
     if (
       clonedPayload.password &&
-      clonedPayload.previousPassword !== clonedPayload.password
+      clonedPayload.previous_password !== clonedPayload.password
     ) {
       const salt = await bcrypt.genSalt();
       clonedPayload.password = await bcrypt.hash(clonedPayload.password, salt);

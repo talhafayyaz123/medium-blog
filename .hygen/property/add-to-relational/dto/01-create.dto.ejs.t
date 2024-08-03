@@ -6,14 +6,16 @@ after: export class Create<%= name %>Dto
 
 <% if (isAddToDto) { -%>
   @ApiProperty()
-  <% if (type === 'string') { -%>
+  <% if (h.getType(type) === 'string') { -%>
   @IsString()
-  <% } -%>
-  <% if (type === 'number') { -%>
+  <% } else if (h.getType(type) === 'number') { -%>
   @IsNumber()
-  <% } -%>
-  <% if (type === 'boolean') { -%>
+  <% } else if (h.getType(type) === 'boolean') { -%>
   @IsBoolean()
+  <% } else if (h.getType(type) === 'Date') { -%>
+  @IsDate()
+  <% } else if (h.getType(type) === 'object') { -%>
+  @IsObject()
   <% } -%>
-  <%= property %>: <%= type %>;
+  <%= property %>: <%= h.getType(type) %>;
 <% } -%>

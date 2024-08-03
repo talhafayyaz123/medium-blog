@@ -18,11 +18,12 @@ export class <%= name %>Entity extends EntityRelationalHelper {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  // @custom-inject-point
   @ApiProperty()
   @CreateDateColumn()
-  createdAt: Date;
+  created_at: Date;
 
   @ApiProperty()
   @UpdateDateColumn()
-  updatedAt: Date;
+  updated_at: Date;
 }

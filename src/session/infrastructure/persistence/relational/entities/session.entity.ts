@@ -7,6 +7,7 @@ import {
   DeleteDateColumn,
   Column,
   UpdateDateColumn,
+  JoinColumn,
 } from 'typeorm';
 import { UserEntity } from '../../../../../users/infrastructure/persistence/relational/entities/user.entity';
 
@@ -23,17 +24,18 @@ export class SessionEntity extends EntityRelationalHelper {
     eager: true,
   })
   @Index()
+  @JoinColumn({ name: 'user_id' })
   user: UserEntity;
 
   @Column()
   hash: string;
 
   @CreateDateColumn()
-  createdAt: Date;
+  created_at: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updated_at: Date;
 
   @DeleteDateColumn()
-  deletedAt: Date;
+  deleted_at: Date;
 }

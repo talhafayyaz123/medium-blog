@@ -17,7 +17,7 @@ module.exports = [
   {
     type: 'input',
     name: 'property',
-    message: "Property name (e.g. 'firstName')",
+    message: "Property name in snake case (e.g. 'first_name')",
     validate: (input) => {
       if (!input.trim()) {
         return 'Property name is required';
@@ -32,7 +32,19 @@ module.exports = [
   {
     type: 'select',
     name: 'type',
-    choices: ['string', 'number', 'boolean'],
+    choices: [
+      'varchar', // varchar
+      'text', // text
+      'uuid', // uuid
+      'int', // int
+      'float', // float
+      'double', // double
+      'decimal', // decimal
+      'boolean', // boolean
+      'timestamp', // timestamp
+      'date', // date
+      'json', // json
+    ],
   },
   {
     type: 'confirm',
