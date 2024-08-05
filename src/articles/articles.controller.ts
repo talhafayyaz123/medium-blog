@@ -32,6 +32,7 @@ import { CreateCommentDto } from './dto/create-comment.dto';
 import { CommentsService } from '../comments/comments.service';
 import { ArticleSlugParamDto } from './dto/article-slug-param.dto';
 import { Comment } from '../comments/domain/comment';
+import { FindAllCommentsDto } from './dto/find-all-comments.dto';
 
 @ApiTags('Articles')
 @ApiBearerAuth()
@@ -128,5 +129,44 @@ export class ArticlesController {
     const { slug } = params;
     const { body } = createCommentDto;
     return this.commentsService.create(slug, body, request.user);
+  }
+
+  @Get(':slug/comments')
+  @ApiOkResponse({
+    type: InfinityPaginationResponse(Comment),
+  })
+  async findAllComments(
+    @Param() params: ArticleSlugParamDto,
+    @Query() query: FindAllCommentsDto,
+  ): Promise<InfinityPaginationResponseDto<Comment>> {
+    const page = query?.page ?? 1;
+    let limit = query?.limit ?? 10;
+
+    if (limit > 50) {
+      limit = 50;
+    }
+
+    const { slug } = params;
+
+    return infinityPagination(
+      await this.commentsService.findAllWithPagination({
+        paginationOptions: {
+          page,
+          limit,
+        },
+        article_id: slug,
+      }),
+      { page, limit },
+    );
+  }
+
+  @Delete(':id')
+  @ApiParam({
+    name: 'id',
+    type: String,
+    required: true,
+  })
+  removeComment(@Param('id') id: string) {
+    return this.commentsService.remove(id);
   }
 }

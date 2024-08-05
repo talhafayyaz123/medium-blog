@@ -7,16 +7,9 @@ export class Comment {
   })
   id: string;
 
-  @ApiProperty()
   article_id: string;
 
-  @ApiProperty({
-    type: Number,
-  })
   author_id: number | string;
-
-  @ApiProperty()
-  author: User;
 
   @ApiProperty()
   body: string;
@@ -27,4 +20,7 @@ export class Comment {
 
   @ApiProperty()
   updated_at: Date;
+
+  @ApiProperty()
+  author: User;
 }

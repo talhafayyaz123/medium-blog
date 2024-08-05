@@ -11,8 +11,10 @@ export abstract class CommentRepository {
 
   abstract findAllWithPagination({
     paginationOptions,
+    article_id,
   }: {
     paginationOptions: IPaginationOptions;
+    article_id: Comment['article_id'];
   }): Promise<Comment[]>;
 
   abstract remove(id: Comment['id']): Promise<void>;

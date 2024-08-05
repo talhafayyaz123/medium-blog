@@ -6,8 +6,6 @@ export class CommentMapper {
   static toDomain(raw: CommentEntity): Comment {
     const domainEntity = new Comment();
     domainEntity.body = raw.body;
-    domainEntity.author_id = raw.author_id;
-    domainEntity.article_id = raw.article_id;
     domainEntity.id = raw.id;
     if (raw.author) {
       domainEntity.author = UserMapper.toDomain(raw.author);

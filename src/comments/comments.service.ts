@@ -36,14 +36,17 @@ export class CommentsService {
 
   findAllWithPagination({
     paginationOptions,
+    article_id,
   }: {
     paginationOptions: IPaginationOptions;
+    article_id: Comment['article_id'];
   }) {
     return this.commentRepository.findAllWithPagination({
       paginationOptions: {
         page: paginationOptions.page,
         limit: paginationOptions.limit,
       },
+      article_id,
     });
   }
 

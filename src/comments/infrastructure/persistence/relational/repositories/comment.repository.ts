@@ -24,10 +24,13 @@ export class CommentRelationalRepository implements CommentRepository {
 
   async findAllWithPagination({
     paginationOptions,
+    article_id,
   }: {
     paginationOptions: IPaginationOptions;
+    article_id: Comment['article_id'];
   }): Promise<Comment[]> {
     const entities = await this.commentRepository.find({
+      where: { article_id },
       skip: (paginationOptions.page - 1) * paginationOptions.limit,
       take: paginationOptions.limit,
     });
