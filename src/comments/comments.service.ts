@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  HttpStatus,
+  Injectable,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { CommentRepository } from './infrastructure/persistence/comment.repository';
 import { IPaginationOptions } from '../utils/types/pagination-options';
 import { Comment } from './domain/comment';
@@ -50,7 +54,18 @@ export class CommentsService {
     });
   }
 
-  remove(id: Comment['id']) {
+  async remove(id: Comment['id'], userJwtPayload: JwtPayloadType) {
+    const comment = await this.commentRepository.findById(id);
+
+    if (comment?.author?.id !== userJwtPayload.id) {
+      throw new UnprocessableEntityException({
+        status: HttpStatus.UNPROCESSABLE_ENTITY,
+        errors: {
+          id: 'unauthorized',
+        },
+      });
+    }
+
     return this.commentRepository.remove(id);
   }
 }

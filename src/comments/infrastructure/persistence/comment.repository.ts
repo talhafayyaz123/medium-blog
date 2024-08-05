@@ -1,3 +1,4 @@
+import { NullableType } from '../../../utils/types/nullable.type';
 import { IPaginationOptions } from '../../../utils/types/pagination-options';
 import { Comment } from '../../domain/comment';
 
@@ -16,6 +17,8 @@ export abstract class CommentRepository {
     paginationOptions: IPaginationOptions;
     article_id: Comment['article_id'];
   }): Promise<Comment[]>;
+
+  abstract findById(id: Comment['id']): Promise<NullableType<Comment>>;
 
   abstract remove(id: Comment['id']): Promise<void>;
 }

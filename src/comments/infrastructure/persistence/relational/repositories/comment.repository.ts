@@ -6,6 +6,7 @@ import { Comment } from '../../../../domain/comment';
 import { CommentRepository } from '../../comment.repository';
 import { CommentMapper } from '../mappers/comment.mapper';
 import { IPaginationOptions } from '../../../../../utils/types/pagination-options';
+import { NullableType } from '../../../../../utils/types/nullable.type';
 
 @Injectable()
 export class CommentRelationalRepository implements CommentRepository {
@@ -40,5 +41,13 @@ export class CommentRelationalRepository implements CommentRepository {
 
   async remove(id: Comment['id']): Promise<void> {
     await this.commentRepository.delete(id);
+  }
+
+  async findById(id: Comment['id']): Promise<NullableType<Comment>> {
+    const entity = await this.commentRepository.findOne({
+      where: { id },
+    });
+
+    return entity ? CommentMapper.toDomain(entity) : null;
   }
 }

@@ -162,8 +162,11 @@ export class ArticlesController {
   }
 
   @Delete(':slug/comments/:id')
-  removeComment(@Param() params: DeleteCommentPathParamDto) {
+  removeComment(
+    @Param() params: DeleteCommentPathParamDto,
+    @Request() request,
+  ) {
     const { id } = params;
-    return this.commentsService.remove(id);
+    return this.commentsService.remove(id, request.user);
   }
 }
