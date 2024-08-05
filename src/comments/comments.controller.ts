@@ -1,21 +1,14 @@
 import {
   Controller,
   Get,
-  Post,
-  Request,
-  Body,
-  Patch,
   Param,
   Delete,
   UseGuards,
   Query,
 } from '@nestjs/common';
 import { CommentsService } from './comments.service';
-import { CreateCommentDto } from './dto/create-comment.dto';
-import { UpdateCommentDto } from './dto/update-comment.dto';
 import {
   ApiBearerAuth,
-  ApiCreatedResponse,
   ApiOkResponse,
   ApiParam,
   ApiTags,
@@ -27,7 +20,7 @@ import {
   InfinityPaginationResponseDto,
 } from '../utils/dto/infinity-pagination-response.dto';
 import { infinityPagination } from '../utils/infinity-pagination';
-import { FindAllCommentsDto } from './dto/find-all-comments.dto';
+import { FindAllCommentsDto } from '../articles/dto/find-all-comments.dto';
 
 @ApiTags('Comments')
 @ApiBearerAuth()
@@ -38,14 +31,6 @@ import { FindAllCommentsDto } from './dto/find-all-comments.dto';
 })
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
-
-  @Post()
-  @ApiCreatedResponse({
-    type: Comment,
-  })
-  create(@Body() createCommentDto: CreateCommentDto, @Request() request) {
-    return this.commentsService.create(createCommentDto, request.user);
-  }
 
   @Get()
   @ApiOkResponse({
@@ -69,29 +54,6 @@ export class CommentsController {
       }),
       { page, limit },
     );
-  }
-
-  @Get(':id')
-  @ApiParam({
-    name: 'id',
-    type: String,
-    required: true,
-  })
-  findOne(@Param('id') id: string) {
-    return this.commentsService.findOne(id);
-  }
-
-  @Patch(':id')
-  @ApiParam({
-    name: 'id',
-    type: String,
-    required: true,
-  })
-  @ApiOkResponse({
-    type: Comment,
-  })
-  update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
-    return this.commentsService.update(id, updateCommentDto);
   }
 
   @Delete(':id')

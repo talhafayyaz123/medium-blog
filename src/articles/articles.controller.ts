@@ -28,6 +28,10 @@ import {
 } from '../utils/dto/infinity-pagination-response.dto';
 import { infinityPagination } from '../utils/infinity-pagination';
 import { FindAllArticlesDto } from './dto/find-all-articles.dto';
+import { CreateCommentDto } from './dto/create-comment.dto';
+import { CommentsService } from '../comments/comments.service';
+import { ArticleSlugParamDto } from './dto/article-slug-param.dto';
+import { Comment } from '../comments/domain/comment';
 
 @ApiTags('Articles')
 @ApiBearerAuth()
@@ -37,7 +41,10 @@ import { FindAllArticlesDto } from './dto/find-all-articles.dto';
   version: '1',
 })
 export class ArticlesController {
-  constructor(private readonly articlesService: ArticlesService) {}
+  constructor(
+    private readonly articlesService: ArticlesService,
+    private readonly commentsService: CommentsService,
+  ) {}
 
   @Post()
   @ApiCreatedResponse({
@@ -102,5 +109,24 @@ export class ArticlesController {
   })
   remove(@Param('id') id: string) {
     return this.articlesService.remove(id);
+  }
+
+  @Post(':slug/comments')
+  @ApiParam({
+    name: 'slug',
+    type: String,
+    required: true,
+  })
+  @ApiCreatedResponse({
+    type: Comment,
+  })
+  async addComment(
+    @Param() params: ArticleSlugParamDto,
+    @Body() createCommentDto: CreateCommentDto,
+    @Request() request,
+  ) {
+    const { slug } = params;
+    const { body } = createCommentDto;
+    return this.commentsService.create(slug, body, request.user);
   }
 }

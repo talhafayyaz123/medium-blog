@@ -1,6 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { CreateCommentDto } from './dto/create-comment.dto';
-import { UpdateCommentDto } from './dto/update-comment.dto';
 import { CommentRepository } from './infrastructure/persistence/comment.repository';
 import { IPaginationOptions } from '../utils/types/pagination-options';
 import { Comment } from './domain/comment';
@@ -15,11 +13,13 @@ export class CommentsService {
   ) {}
 
   async create(
-    createCommentDto: CreateCommentDto,
+    article_id: Comment['article_id'],
+    body: Comment['body'],
     userJwtPayload: JwtPayloadType,
   ) {
     const clonedPayload = {
-      ...createCommentDto,
+      article_id,
+      body,
       author_id: userJwtPayload.id,
     };
 
@@ -34,10 +34,6 @@ export class CommentsService {
     return comment;
   }
 
-  create1(createCommentDto: CreateCommentDto) {
-    return this.commentRepository.create(createCommentDto);
-  }
-
   findAllWithPagination({
     paginationOptions,
   }: {
@@ -49,14 +45,6 @@ export class CommentsService {
         limit: paginationOptions.limit,
       },
     });
-  }
-
-  findOne(id: Comment['id']) {
-    return this.commentRepository.findById(id);
-  }
-
-  update(id: Comment['id'], updateCommentDto: UpdateCommentDto) {
-    return this.commentRepository.update(id, updateCommentDto);
   }
 
   remove(id: Comment['id']) {
