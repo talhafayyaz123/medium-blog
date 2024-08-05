@@ -30,9 +30,10 @@ import { infinityPagination } from '../utils/infinity-pagination';
 import { FindAllArticlesDto } from './dto/find-all-articles.dto';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { CommentsService } from '../comments/comments.service';
-import { ArticleSlugParamDto } from './dto/article-slug-param.dto';
+import { CreateCommentParamDto } from './dto/create-comment-param.dto';
 import { Comment } from '../comments/domain/comment';
 import { FindAllCommentsDto } from './dto/find-all-comments.dto';
+import { DeleteCommentParamDto } from './dto/delete-comment-param.dto';
 
 @ApiTags('Articles')
 @ApiBearerAuth()
@@ -122,7 +123,7 @@ export class ArticlesController {
     type: Comment,
   })
   async addComment(
-    @Param() params: ArticleSlugParamDto,
+    @Param() params: CreateCommentParamDto,
     @Body() createCommentDto: CreateCommentDto,
     @Request() request,
   ) {
@@ -136,7 +137,7 @@ export class ArticlesController {
     type: InfinityPaginationResponse(Comment),
   })
   async findAllComments(
-    @Param() params: ArticleSlugParamDto,
+    @Param() params: CreateCommentParamDto,
     @Query() query: FindAllCommentsDto,
   ): Promise<InfinityPaginationResponseDto<Comment>> {
     const page = query?.page ?? 1;
@@ -160,13 +161,14 @@ export class ArticlesController {
     );
   }
 
-  @Delete(':id')
+  @Delete(':slug/comments/:id')
   @ApiParam({
     name: 'id',
     type: String,
     required: true,
   })
-  removeComment(@Param('id') id: string) {
+  removeComment(@Param() params: DeleteCommentParamDto) {
+    const { id } = params;
     return this.commentsService.remove(id);
   }
 }
