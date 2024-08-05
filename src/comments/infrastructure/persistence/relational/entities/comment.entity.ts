@@ -10,6 +10,7 @@ import {
 import { EntityRelationalHelper } from '../../../../../utils/relational-entity-helper';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserEntity } from '../../../../../users/infrastructure/persistence/relational/entities/user.entity';
+import { ArticleEntity } from '../../../../../articles/infrastructure/persistence/relational/entities/article.entity';
 
 @Entity({
   name: 'comment',
@@ -26,6 +27,10 @@ export class CommentEntity extends EntityRelationalHelper {
   @ApiProperty()
   @Column({ type: 'int' })
   author_id: number;
+
+  @ManyToOne(() => ArticleEntity, (article) => article.comments)
+  @JoinColumn({ name: 'article_id' })
+  article: ArticleEntity;
 
   @ManyToOne(() => UserEntity, {
     eager: true,

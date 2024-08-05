@@ -6,10 +6,12 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { EntityRelationalHelper } from '../../../../../utils/relational-entity-helper';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserEntity } from '../../../../../users/infrastructure/persistence/relational/entities/user.entity';
+import { CommentEntity } from '../../../../../comments/infrastructure/persistence/relational/entities/comment.entity';
 
 @Entity({
   name: 'article',
@@ -42,6 +44,9 @@ export class ArticleEntity extends EntityRelationalHelper {
   @ManyToOne(() => UserEntity)
   @JoinColumn({ name: 'author_id' })
   author: UserEntity;
+
+  @OneToMany(() => CommentEntity, (comment) => comment.article)
+  comments: CommentEntity[];
 
   // @custom-inject-point
   @ApiProperty()
