@@ -36,8 +36,6 @@ import { FindAllCommentsDto } from './dto/find-all-comments.dto';
 import { DeleteCommentPathParamDto } from './dto/delete-comment-path-param.dto';
 
 @ApiTags('Articles')
-@ApiBearerAuth()
-@UseGuards(AuthGuard('jwt'))
 @Controller({
   path: 'articles',
   version: '1',
@@ -48,6 +46,8 @@ export class ArticlesController {
     private readonly commentsService: CommentsService,
   ) {}
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Post()
   @ApiCreatedResponse({
     type: Article,
@@ -56,6 +56,8 @@ export class ArticlesController {
     return await this.articlesService.create(createArticleDto, request.user);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Get()
   @ApiOkResponse({
     type: InfinityPaginationResponse(Article),
@@ -80,6 +82,8 @@ export class ArticlesController {
     );
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   @ApiParam({
     name: 'id',
@@ -90,6 +94,8 @@ export class ArticlesController {
     return this.articlesService.findOne(id);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Patch(':id')
   @ApiParam({
     name: 'id',
@@ -103,6 +109,8 @@ export class ArticlesController {
     return this.articlesService.update(id, updateArticleDto);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   @ApiParam({
     name: 'id',
@@ -113,6 +121,8 @@ export class ArticlesController {
     return this.articlesService.remove(id);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Post(':slug/comments')
   @ApiParam({
     name: 'slug',
@@ -161,6 +171,8 @@ export class ArticlesController {
     );
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':slug/comments/:id')
   removeComment(
     @Param() params: DeleteCommentPathParamDto,
