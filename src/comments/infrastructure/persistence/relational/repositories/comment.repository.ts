@@ -32,6 +32,9 @@ export class CommentRelationalRepository implements CommentRepository {
   }): Promise<Comment[]> {
     const entities = await this.commentRepository.find({
       where: { article_id },
+      relations: {
+        author: true,
+      },
       skip: (paginationOptions.page - 1) * paginationOptions.limit,
       take: paginationOptions.limit,
     });

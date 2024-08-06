@@ -32,9 +32,7 @@ export class CommentEntity extends EntityRelationalHelper {
   @JoinColumn({ name: 'article_id' })
   article: ArticleEntity;
 
-  @ManyToOne(() => UserEntity, {
-    eager: true,
-  })
+  @ManyToOne(() => UserEntity)
   @JoinColumn({ name: 'author_id' })
   author: UserEntity;
 

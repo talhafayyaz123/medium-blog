@@ -51,6 +51,14 @@ export class ArticleRelationalRepository implements ArticleRepository {
     return entity ? ArticleMapper.toDomain(entity) : null;
   }
 
+  async findBySlug(slug: Article['slug']): Promise<NullableType<Article>> {
+    const entity = await this.articleRepository.findOne({
+      where: { slug },
+    });
+
+    return entity ? ArticleMapper.toDomain(entity) : null;
+  }
+
   async update(id: Article['id'], payload: Partial<Article>): Promise<Article> {
     const entity = await this.articleRepository.findOne({
       where: { id },

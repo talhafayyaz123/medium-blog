@@ -19,6 +19,8 @@ export abstract class ArticleRepository {
 
   abstract findById(id: Article['id']): Promise<NullableType<Article>>;
 
+  abstract findBySlug(id: Article['slug']): Promise<NullableType<Article>>;
+
   abstract update(
     id: Article['id'],
     payload: DeepPartial<Article>,

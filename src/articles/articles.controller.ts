@@ -160,12 +160,12 @@ export class ArticlesController {
     const { slug } = params;
 
     return infinityPagination(
-      await this.commentsService.findAllWithPagination({
+      await this.articlesService.findAllCommentsWithPagination({
         paginationOptions: {
           page,
           limit,
         },
-        article_id: slug,
+        slug,
       }),
       { page, limit },
     );
