@@ -6,6 +6,9 @@ export class Tag {
   })
   id: string;
 
+  @ApiProperty()
+  name: string;
+
   // @custom-inject-point
   @ApiProperty()
   created_at: Date;
