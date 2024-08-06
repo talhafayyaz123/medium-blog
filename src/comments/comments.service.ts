@@ -55,7 +55,7 @@ export class CommentsService {
     });
   }
 
-  async remove(id: Comment['id'], userJwtPayload: JwtPayloadType) {
+  async validateAndFetchComment(id: Comment['id']) {
     const comment = await this.commentRepository.findById(id);
 
     if (!comment) {
@@ -66,6 +66,12 @@ export class CommentsService {
         },
       });
     }
+
+    return comment;
+  }
+
+  async remove(id: Comment['id'], userJwtPayload: JwtPayloadType) {
+    const comment = await this.validateAndFetchComment(id);
 
     if (comment?.author?.id !== userJwtPayload.id) {
       throw new UnauthorizedException({

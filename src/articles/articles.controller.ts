@@ -29,7 +29,6 @@ import {
 import { infinityPagination } from '../utils/infinity-pagination';
 import { FindAllArticlesDto } from './dto/find-all-articles.dto';
 import { CreateCommentDto } from './dto/create-comment.dto';
-import { CommentsService } from '../comments/comments.service';
 import { CreateCommentPathParamDto } from './dto/create-comment-path-param.dto';
 import { Comment } from '../comments/domain/comment';
 import { FindAllCommentsDto } from './dto/find-all-comments.dto';
@@ -41,10 +40,7 @@ import { DeleteCommentPathParamDto } from './dto/delete-comment-path-param.dto';
   version: '1',
 })
 export class ArticlesController {
-  constructor(
-    private readonly articlesService: ArticlesService,
-    private readonly commentsService: CommentsService,
-  ) {}
+  constructor(private readonly articlesService: ArticlesService) {}
 
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
@@ -139,7 +135,7 @@ export class ArticlesController {
   ) {
     const { slug } = params;
     const { body } = createCommentDto;
-    return this.commentsService.create(slug, body, request.user);
+    return this.articlesService.createComment(slug, body, request.user);
   }
 
   @Get(':slug/comments')

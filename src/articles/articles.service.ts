@@ -62,6 +62,16 @@ export class ArticlesService {
     return this.articleRepository.remove(id);
   }
 
+  async createComment(
+    slug: Article['slug'],
+    body: Comment['body'],
+    userJwtPayload: JwtPayloadType,
+  ) {
+    const article = await this.validateAndFetchArticle(slug);
+
+    return await this.commentsService.create(article.id, body, userJwtPayload);
+  }
+
   async findAllCommentsWithPagination({
     paginationOptions,
     slug,
