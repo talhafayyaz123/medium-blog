@@ -16,4 +16,4 @@ We try to use the built-in HTTP exceptions provided by the `@nestjs/common`. Ple
 
 Previous: [Auth](auth.md)
 
-Next: [Exceptions](exceptions.md)
+Next: [Serialization](serialization.md)
