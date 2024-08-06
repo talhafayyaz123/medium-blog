@@ -178,7 +178,7 @@ export class ArticlesController {
     @Param() params: DeleteCommentPathParamDto,
     @Request() request,
   ) {
-    const { id } = params;
-    return this.commentsService.remove(id, request.user);
+    const { id, slug } = params;
+    return this.articlesService.removeComment(id, slug, request.user);
   }
 }

@@ -7,6 +7,7 @@ import { Article } from './domain/article';
 import { JwtPayloadType } from '../auth/strategies/types/jwt-payload.type';
 import { UsersService } from '../users/users.service';
 import { CommentsService } from '../comments/comments.service';
+import { Comment } from '../comments/domain/comment';
 
 @Injectable()
 export class ArticlesService {
@@ -68,6 +69,18 @@ export class ArticlesService {
     paginationOptions: IPaginationOptions;
     slug: Article['slug'];
   }) {
+    const article = await this.validateAndFetchArticle(slug);
+
+    return this.commentsService.findAllWithPagination({
+      paginationOptions: {
+        page: paginationOptions.page,
+        limit: paginationOptions.limit,
+      },
+      article_id: article.id,
+    });
+  }
+
+  async validateAndFetchArticle(slug: Article['slug']): Promise<Article> {
     const article = await this.articleRepository.findBySlug(slug);
 
     if (!article) {
@@ -79,12 +92,29 @@ export class ArticlesService {
       });
     }
 
-    return this.commentsService.findAllWithPagination({
-      paginationOptions: {
-        page: paginationOptions.page,
-        limit: paginationOptions.limit,
-      },
-      article_id: article.id,
-    });
+    return article;
+  }
+
+  async validateArticle(slug: Article['slug']): Promise<void> {
+    const article = await this.articleRepository.findBySlug(slug);
+
+    if (!article) {
+      throw new NotFoundException({
+        status: HttpStatus.NOT_FOUND,
+        errors: {
+          slug: 'Artilce not found',
+        },
+      });
+    }
+  }
+
+  async removeComment(
+    id: Comment['id'],
+    slug: Article['slug'],
+    userJwtPayload: JwtPayloadType,
+  ) {
+    await this.validateArticle(slug);
+
+    return await this.commentsService.remove(id, userJwtPayload);
   }
 }

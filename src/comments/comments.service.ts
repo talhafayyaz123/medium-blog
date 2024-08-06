@@ -1,7 +1,8 @@
 import {
   HttpStatus,
   Injectable,
-  UnprocessableEntityException,
+  NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { CommentRepository } from './infrastructure/persistence/comment.repository';
 import { IPaginationOptions } from '../utils/types/pagination-options';
@@ -57,11 +58,20 @@ export class CommentsService {
   async remove(id: Comment['id'], userJwtPayload: JwtPayloadType) {
     const comment = await this.commentRepository.findById(id);
 
-    if (comment?.author?.id !== userJwtPayload.id) {
-      throw new UnprocessableEntityException({
-        status: HttpStatus.UNPROCESSABLE_ENTITY,
+    if (!comment) {
+      throw new NotFoundException({
+        status: HttpStatus.NOT_FOUND,
         errors: {
-          id: 'unauthorized',
+          id: 'Comment not found',
+        },
+      });
+    }
+
+    if (comment?.author?.id !== userJwtPayload.id) {
+      throw new UnauthorizedException({
+        status: HttpStatus.UNAUTHORIZED,
+        errors: {
+          id: 'Not unauthorized to delete the comment',
         },
       });
     }
