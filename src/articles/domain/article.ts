@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from '../../users/domain/user';
+import { Comment } from '../../comments/domain/comment';
 
 export class Article {
   @ApiProperty({
@@ -26,6 +27,9 @@ export class Article {
 
   @ApiProperty()
   author: User;
+
+  @ApiProperty()
+  comments: Comment[];
 
   // @custom-inject-point
   @ApiProperty()

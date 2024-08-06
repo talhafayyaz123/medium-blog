@@ -10,6 +10,7 @@
 - [CLI](cli.md)
 - [Working with database](database.md)
 - [Auth](auth.md)
+- [Exceptions](exceptions.md)
 - [Serialization](serialization.md)
 - [File uploading](file-uploading.md)
 - [Tests](tests.md)

@@ -5,7 +5,10 @@ import { Article } from '../../domain/article';
 
 export abstract class ArticleRepository {
   abstract create(
-    data: Omit<Article, 'id' | 'author' | 'created_at' | 'updated_at'>,
+    data: Omit<
+      Article,
+      'id' | 'comments' | 'author' | 'created_at' | 'updated_at'
+    >,
   ): Promise<Article>;
 
   abstract findAllWithPagination({
@@ -15,6 +18,8 @@ export abstract class ArticleRepository {
   }): Promise<Article[]>;
 
   abstract findById(id: Article['id']): Promise<NullableType<Article>>;
+
+  abstract findBySlug(id: Article['slug']): Promise<NullableType<Article>>;
 
   abstract update(
     id: Article['id'],

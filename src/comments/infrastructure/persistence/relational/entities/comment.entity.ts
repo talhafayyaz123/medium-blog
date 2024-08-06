@@ -4,49 +4,41 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   Column,
-  ManyToOne,
   JoinColumn,
-  OneToMany,
+  ManyToOne,
 } from 'typeorm';
 import { EntityRelationalHelper } from '../../../../../utils/relational-entity-helper';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserEntity } from '../../../../../users/infrastructure/persistence/relational/entities/user.entity';
-import { CommentEntity } from '../../../../../comments/infrastructure/persistence/relational/entities/comment.entity';
+import { ArticleEntity } from '../../../../../articles/infrastructure/persistence/relational/entities/article.entity';
 
 @Entity({
-  name: 'article',
+  name: 'comment',
 })
-export class ArticleEntity extends EntityRelationalHelper {
+export class CommentEntity extends EntityRelationalHelper {
   @ApiProperty()
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @ApiProperty()
-  @Column({ type: 'varchar', unique: true })
-  slug: string;
-
-  @ApiProperty()
-  @Column({ type: 'varchar' })
-  title: string;
-
-  @ApiProperty()
-  @Column({ type: 'text' })
-  description: string;
-
-  @ApiProperty()
-  @Column({ type: 'text' })
-  body: string;
+  @Column({ type: 'uuid' })
+  article_id: string;
 
   @ApiProperty()
   @Column({ type: 'int' })
   author_id: number;
 
+  @ManyToOne(() => ArticleEntity, (article) => article.comments)
+  @JoinColumn({ name: 'article_id' })
+  article: ArticleEntity;
+
   @ManyToOne(() => UserEntity)
   @JoinColumn({ name: 'author_id' })
   author: UserEntity;
 
-  @OneToMany(() => CommentEntity, (comment) => comment.article)
-  comments: CommentEntity[];
+  @ApiProperty()
+  @Column({ type: 'text' })
+  body: string;
 
   // @custom-inject-point
   @ApiProperty()
