@@ -21,7 +21,7 @@
 
 ### Auth via email flow
 
-By default boilerplate used sign in and sign up via email and password.
+By default we used sign in and sign up via email and password.
 
 ```mermaid
 sequenceDiagram
