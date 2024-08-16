@@ -5,7 +5,7 @@ module.exports = {
     tsconfigRootDir: __dirname,
     sourceType: 'module',
   },
-  plugins: ['@typescript-eslint/eslint-plugin'],
+  plugins: ['@typescript-eslint/eslint-plugin', '@typescript-eslint/eslint-plugin', 'import', 'no-relative-import-paths',],
   extends: [
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
@@ -38,6 +38,56 @@ module.exports = {
         selector:
           'CallExpression[callee.name=it][arguments.0.value!=/^should/]',
         message: '"it" should start with "should"',
+      },
+    ],
+    'import/no-restricted-paths': [
+      'error',
+      {
+        basePath: './',
+        zones: [
+          {
+            target: ['./src', './test'],
+            from: './dist',
+            message: 'Importing from the `dist` folder is not allowed.',
+          },
+        ],
+      },
+    ],
+    'import/order': [
+      'warn',
+      {
+        groups: [
+          'builtin',
+          'external',
+          'internal',
+          'parent',
+          'sibling',
+          'index',
+        ],
+        alphabetize: {
+          order: 'asc',
+          caseInsensitive: true,
+        },
+        pathGroups: [
+          {
+            pattern: '@nest/**',
+            group: 'builtin',
+          },
+          {
+            pattern: '@src/**',
+            group: 'internal',
+          },
+        ],
+        'newlines-between': 'always',
+        pathGroupsExcludedImportTypes: ['default'],
+      },
+    ],
+    'no-relative-import-paths/no-relative-import-paths': [
+      'warn',
+      {
+        allowSameFolder: true,
+        rootDir: 'src',
+        prefix: '@src',
       },
     ],
   },
