@@ -23,7 +23,12 @@ export abstract class ArticleRepository {
 
   abstract update(
     id: Article['id'],
-    payload: DeepPartial<Article>,
+    payload: DeepPartial<
+      Omit<
+        Article,
+        'id' | 'tagList' | 'comments' | 'author' | 'created_at' | 'updated_at'
+      >
+    >,
   ): Promise<Article | null>;
 
   abstract remove(id: Article['id']): Promise<void>;

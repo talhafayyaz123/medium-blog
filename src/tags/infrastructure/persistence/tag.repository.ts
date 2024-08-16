@@ -8,6 +8,10 @@ export abstract class TagRepository {
     data: Omit<Tag, 'id' | 'created_at' | 'updated_at'>,
   ): Promise<Tag>;
 
+  abstract createMany(
+    data: Omit<Tag, 'id' | 'created_at' | 'updated_at'>[],
+  ): Promise<Tag[]>;
+
   abstract findAllWithPagination({
     paginationOptions,
   }: {
@@ -15,6 +19,8 @@ export abstract class TagRepository {
   }): Promise<Tag[]>;
 
   abstract findById(id: Tag['id']): Promise<NullableType<Tag>>;
+
+  abstract findByNames(name: Tag['name'][]): Promise<NullableType<Tag[]>>;
 
   abstract update(
     id: Tag['id'],

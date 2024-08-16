@@ -1,9 +1,11 @@
-import { IsString } from 'class-validator';
+import { IsArray, IsOptional, IsString } from 'class-validator';
 
 import {
   // decorators here
   ApiProperty,
+  ApiPropertyOptional,
 } from '@nestjs/swagger';
+import { Tag } from '../../tags/domain/tag';
 
 export class CreateArticleDto {
   @ApiProperty()
@@ -21,6 +23,12 @@ export class CreateArticleDto {
   @ApiProperty()
   @IsString()
   slug: string;
+
+  @ApiPropertyOptional({ type: [String] })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  tagList?: Tag['name'][];
 
   // Don't forget to use the class-validator decorators in the DTO properties.
 }

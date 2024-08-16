@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { TagEntity } from '../entities/tag.entity';
 import { NullableType } from '../../../../../utils/types/nullable.type';
 import { Tag } from '../../../../domain/tag';
@@ -23,6 +23,16 @@ export class TagRelationalRepository implements TagRepository {
     return TagMapper.toDomain(newEntity);
   }
 
+  async createMany(data: Tag[]): Promise<Tag[]> {
+    const persistenceModel = data.map((tag) => TagMapper.toPersistence(tag));
+
+    const newEntity = await this.tagRepository.save(
+      this.tagRepository.create(persistenceModel),
+    );
+
+    return newEntity.map((entity) => TagMapper.toDomain(entity));
+  }
+
   async findAllWithPagination({
     paginationOptions,
   }: {
@@ -42,6 +52,16 @@ export class TagRelationalRepository implements TagRepository {
     });
 
     return entity ? TagMapper.toDomain(entity) : null;
+  }
+
+  async findByNames(names: Tag['name'][]): Promise<NullableType<Tag[]>> {
+    const entities = await this.tagRepository.find({
+      where: {
+        name: In(names),
+      },
+    });
+
+    return entities.map((entity) => TagMapper.toDomain(entity));
   }
 
   async update(id: Tag['id'], payload: Partial<Tag>): Promise<Tag> {

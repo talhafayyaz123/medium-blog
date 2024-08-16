@@ -4,9 +4,15 @@ import { ArticlesController } from './articles.controller';
 import { RelationalArticlePersistenceModule } from './infrastructure/persistence/relational/relational-persistence.module';
 import { UsersModule } from '../users/users.module';
 import { CommentsModule } from '../comments/comments.module';
+import { TagsModule } from '../tags/tags.module';
 
 @Module({
-  imports: [RelationalArticlePersistenceModule, UsersModule, CommentsModule],
+  imports: [
+    RelationalArticlePersistenceModule,
+    UsersModule,
+    CommentsModule,
+    TagsModule,
+  ],
   controllers: [ArticlesController],
   providers: [ArticlesService],
   exports: [ArticlesService, RelationalArticlePersistenceModule],
