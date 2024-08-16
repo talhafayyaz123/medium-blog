@@ -3,18 +3,20 @@ import {
   Injectable,
   UnprocessableEntityException,
 } from '@nestjs/common';
+import bcrypt from 'bcryptjs';
+
+import { AuthProvidersEnum } from '@src/auth/auth-providers.enum';
+import { FilesService } from '@src/files/files.service';
+import { RoleEnum } from '@src/roles/roles.enum';
+import { StatusEnum } from '@src/statuses/statuses.enum';
+import { DeepPartial } from '@src/utils/types/deep-partial.type';
+import { NullableType } from '@src/utils/types/nullable.type';
+import { IPaginationOptions } from '@src/utils/types/pagination-options';
+
+import { User } from './domain/user';
 import { CreateUserDto } from './dto/create-user.dto';
-import { NullableType } from '../utils/types/nullable.type';
 import { FilterUserDto, SortUserDto } from './dto/query-user.dto';
 import { UserRepository } from './infrastructure/persistence/user.repository';
-import { User } from './domain/user';
-import bcrypt from 'bcryptjs';
-import { AuthProvidersEnum } from '../auth/auth-providers.enum';
-import { FilesService } from '../files/files.service';
-import { RoleEnum } from '../roles/roles.enum';
-import { StatusEnum } from '../statuses/statuses.enum';
-import { IPaginationOptions } from '../utils/types/pagination-options';
-import { DeepPartial } from '../utils/types/deep-partial.type';
 
 @Injectable()
 export class UsersService {

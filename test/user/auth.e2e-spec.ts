@@ -1,4 +1,5 @@
 import request from 'supertest';
+
 import {
   APP_URL,
   TESTER_EMAIL,

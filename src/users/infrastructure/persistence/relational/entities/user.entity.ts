@@ -1,3 +1,5 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { Exclude, Expose } from 'class-transformer';
 import {
   Column,
   AfterLoad,
@@ -11,18 +13,16 @@ import {
   JoinColumn,
   OneToOne,
 } from 'typeorm';
-import { RoleEntity } from '../../../../../roles/infrastructure/persistence/relational/entities/role.entity';
-import { StatusEntity } from '../../../../../statuses/infrastructure/persistence/relational/entities/status.entity';
-import { FileEntity } from '../../../../../files/infrastructure/persistence/relational/entities/file.entity';
 
-import { AuthProvidersEnum } from '../../../../../auth/auth-providers.enum';
-import { EntityRelationalHelper } from '../../../../../utils/relational-entity-helper';
+import { AuthProvidersEnum } from '@src/auth/auth-providers.enum';
+import { FileEntity } from '@src/files/infrastructure/persistence/relational/entities/file.entity';
+import { RoleEntity } from '@src/roles/infrastructure/persistence/relational/entities/role.entity';
+import { StatusEntity } from '@src/statuses/infrastructure/persistence/relational/entities/status.entity';
+import { EntityRelationalHelper } from '@src/utils/relational-entity-helper';
 
 // We use class-transformer in ORM entity and domain entity.
 // We duplicate these rules because you can choose not to use adapters
 // in your project and return an ORM entity directly in response.
-import { Exclude, Expose } from 'class-transformer';
-import { ApiProperty } from '@nestjs/swagger';
 
 @Entity({
   name: 'user',

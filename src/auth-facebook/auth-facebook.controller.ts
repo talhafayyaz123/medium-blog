@@ -7,10 +7,12 @@ import {
   SerializeOptions,
 } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { AuthService } from '../auth/auth.service';
+
+import { AuthService } from '@src/auth/auth.service';
+import { LoginResponseDto } from '@src/auth/dto/login-response.dto';
+
 import { AuthFacebookService } from './auth-facebook.service';
 import { AuthFacebookLoginDto } from './dto/auth-facebook-login.dto';
-import { LoginResponseDto } from '../auth/dto/login-response.dto';
 
 @ApiTags('Auth')
 @Controller({

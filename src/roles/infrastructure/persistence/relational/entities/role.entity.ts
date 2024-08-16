@@ -1,6 +1,7 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
-import { EntityRelationalHelper } from '../../../../../utils/relational-entity-helper';
 import { ApiProperty } from '@nestjs/swagger';
+import { Column, Entity, PrimaryColumn } from 'typeorm';
+
+import { EntityRelationalHelper } from '@src/utils/relational-entity-helper';
 
 @Entity({
   name: 'role',

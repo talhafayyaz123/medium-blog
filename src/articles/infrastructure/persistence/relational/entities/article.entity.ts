@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   CreateDateColumn,
   Entity,
@@ -8,10 +9,10 @@ import {
   JoinColumn,
   OneToMany,
 } from 'typeorm';
-import { EntityRelationalHelper } from '../../../../../utils/relational-entity-helper';
-import { ApiProperty } from '@nestjs/swagger';
-import { UserEntity } from '../../../../../users/infrastructure/persistence/relational/entities/user.entity';
-import { CommentEntity } from '../../../../../comments/infrastructure/persistence/relational/entities/comment.entity';
+
+import { CommentEntity } from '@src/comments/infrastructure/persistence/relational/entities/comment.entity';
+import { UserEntity } from '@src/users/infrastructure/persistence/relational/entities/user.entity';
+import { EntityRelationalHelper } from '@src/utils/relational-entity-helper';
 
 @Entity({
   name: 'article',

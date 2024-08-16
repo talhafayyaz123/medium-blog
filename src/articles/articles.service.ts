@@ -1,13 +1,15 @@
 import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+
+import { JwtPayloadType } from '@src/auth/strategies/types/jwt-payload.type';
+import { CommentsService } from '@src/comments/comments.service';
+import { Comment } from '@src/comments/domain/comment';
+import { UsersService } from '@src/users/users.service';
+import { IPaginationOptions } from '@src/utils/types/pagination-options';
+
+import { Article } from './domain/article';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { ArticleRepository } from './infrastructure/persistence/article.repository';
-import { IPaginationOptions } from '../utils/types/pagination-options';
-import { Article } from './domain/article';
-import { JwtPayloadType } from '../auth/strategies/types/jwt-payload.type';
-import { UsersService } from '../users/users.service';
-import { CommentsService } from '../comments/comments.service';
-import { Comment } from '../comments/domain/comment';
 
 @Injectable()
 export class ArticlesService {

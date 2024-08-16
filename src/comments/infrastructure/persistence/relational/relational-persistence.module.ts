@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
-import { CommentRepository } from '../comment.repository';
-import { CommentRelationalRepository } from './repositories/comment.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { CommentRepository } from '@src/comments/infrastructure/persistence/comment.repository';
+
 import { CommentEntity } from './entities/comment.entity';
+import { CommentRelationalRepository } from './repositories/comment.repository';
 
 @Module({
   imports: [TypeOrmModule.forFeature([CommentEntity])],

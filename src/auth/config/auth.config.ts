@@ -1,7 +1,8 @@
 import { registerAs } from '@nestjs/config';
-
 import { IsString } from 'class-validator';
-import validateConfig from '../../utils/validate-config';
+
+import validateConfig from '@src/utils/validate-config';
+
 import { AuthConfig } from './auth-config.type';
 
 class EnvironmentVariablesValidator {

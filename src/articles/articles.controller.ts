@@ -10,9 +10,7 @@ import {
   Request,
   Query,
 } from '@nestjs/common';
-import { ArticlesService } from './articles.service';
-import { CreateArticleDto } from './dto/create-article.dto';
-import { UpdateArticleDto } from './dto/update-article.dto';
+import { AuthGuard } from '@nestjs/passport';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
@@ -20,19 +18,23 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { Article } from './domain/article';
-import { AuthGuard } from '@nestjs/passport';
+
+import { Comment } from '@src/comments/domain/comment';
 import {
   InfinityPaginationResponse,
   InfinityPaginationResponseDto,
-} from '../utils/dto/infinity-pagination-response.dto';
-import { infinityPagination } from '../utils/infinity-pagination';
-import { FindAllArticlesDto } from './dto/find-all-articles.dto';
-import { CreateCommentDto } from './dto/create-comment.dto';
+} from '@src/utils/dto/infinity-pagination-response.dto';
+import { infinityPagination } from '@src/utils/infinity-pagination';
+
+import { ArticlesService } from './articles.service';
+import { Article } from './domain/article';
+import { CreateArticleDto } from './dto/create-article.dto';
 import { CreateCommentPathParamDto } from './dto/create-comment-path-param.dto';
-import { Comment } from '../comments/domain/comment';
-import { FindAllCommentsDto } from './dto/find-all-comments.dto';
+import { CreateCommentDto } from './dto/create-comment.dto';
 import { DeleteCommentPathParamDto } from './dto/delete-comment-path-param.dto';
+import { FindAllArticlesDto } from './dto/find-all-articles.dto';
+import { FindAllCommentsDto } from './dto/find-all-comments.dto';
+import { UpdateArticleDto } from './dto/update-article.dto';
 
 @ApiTags('Articles')
 @Controller({

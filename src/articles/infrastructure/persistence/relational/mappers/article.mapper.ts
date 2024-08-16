@@ -1,6 +1,6 @@
-import { UserMapper } from '../../../../../users/infrastructure/persistence/relational/mappers/user.mapper';
-import { Article } from '../../../../domain/article';
-import { ArticleEntity } from '../entities/article.entity';
+import { Article } from '@src/articles/domain/article';
+import { ArticleEntity } from '@src/articles/infrastructure/persistence/relational/entities/article.entity';
+import { UserMapper } from '@src/users/infrastructure/persistence/relational/mappers/user.mapper';
 
 export class ArticleMapper {
   static toDomain(raw: ArticleEntity): Article {

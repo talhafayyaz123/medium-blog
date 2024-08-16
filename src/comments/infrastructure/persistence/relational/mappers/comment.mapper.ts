@@ -1,6 +1,6 @@
-import { UserMapper } from '../../../../../users/infrastructure/persistence/relational/mappers/user.mapper';
-import { Comment } from '../../../../domain/comment';
-import { CommentEntity } from '../entities/comment.entity';
+import { Comment } from '@src/comments/domain/comment';
+import { CommentEntity } from '@src/comments/infrastructure/persistence/relational/entities/comment.entity';
+import { UserMapper } from '@src/users/infrastructure/persistence/relational/mappers/user.mapper';
 
 export class CommentMapper {
   static toDomain(raw: CommentEntity): Comment {

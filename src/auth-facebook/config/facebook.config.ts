@@ -1,7 +1,8 @@
 import { registerAs } from '@nestjs/config';
-
 import { IsOptional, IsString } from 'class-validator';
-import validateConfig from '../../utils/validate-config';
+
+import validateConfig from '@src/utils/validate-config';
+
 import { FacebookConfig } from './facebook-config.type';
 
 class EnvironmentVariablesValidator {

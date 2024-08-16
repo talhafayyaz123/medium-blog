@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { FileRepository } from '@src/files/infrastructure/persistence/file.repository';
+
 import { FileEntity } from './entities/file.entity';
-import { FileRepository } from '../file.repository';
 import { FileRelationalRepository } from './repositories/file.repository';
 
 @Module({
