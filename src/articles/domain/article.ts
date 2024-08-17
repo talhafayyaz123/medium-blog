@@ -33,8 +33,10 @@ export class Article {
   @ApiProperty()
   comments: Comment[];
 
-  @ApiProperty()
-  tagList?: NullableType<Tag[]>;
+  @ApiProperty({
+    type: [String],
+  })
+  tagList?: NullableType<Tag['name'][]>;
 
   // @custom-inject-point
   @ApiProperty()

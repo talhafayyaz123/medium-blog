@@ -15,6 +15,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { UserEntity } from '../../../../../users/infrastructure/persistence/relational/entities/user.entity';
 import { CommentEntity } from '../../../../../comments/infrastructure/persistence/relational/entities/comment.entity';
 import { TagEntity } from '../../../../../tags/infrastructure/persistence/relational/entities/tag.entity';
+import { NullableType } from '../../../../../utils/types/nullable.type';
 
 @Entity({
   name: 'article',
@@ -61,7 +62,7 @@ export class ArticleEntity extends EntityRelationalHelper {
       name: 'tag_id',
     },
   })
-  tagList: TagEntity[];
+  tagList?: NullableType<TagEntity[]>;
 
   // @custom-inject-point
   @ApiProperty()

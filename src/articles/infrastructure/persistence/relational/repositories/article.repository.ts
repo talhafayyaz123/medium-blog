@@ -7,6 +7,7 @@ import { Article } from '../../../../domain/article';
 import { ArticleRepository } from '../../article.repository';
 import { ArticleMapper } from '../mappers/article.mapper';
 import { IPaginationOptions } from '../../../../../utils/types/pagination-options';
+import { ArticleDTOWithTagDomains } from '../../../../articles.types';
 
 @Injectable()
 export class ArticleRelationalRepository implements ArticleRepository {
@@ -15,8 +16,9 @@ export class ArticleRelationalRepository implements ArticleRepository {
     private readonly articleRepository: Repository<ArticleEntity>,
   ) {}
 
-  async create(data: Article): Promise<Article> {
-    const persistenceModel = ArticleMapper.toPersistence(data);
+  async create(data: ArticleDTOWithTagDomains): Promise<Article> {
+    const persistenceModel =
+      ArticleMapper.toPersistenceFromDTOWithTagDomains(data);
     const newEntity = await this.articleRepository.save(
       this.articleRepository.create(persistenceModel),
     );
