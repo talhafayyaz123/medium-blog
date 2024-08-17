@@ -36,6 +36,10 @@ export class ArticleRelationalRepository implements ArticleRepository {
       take: paginationOptions.limit,
       relations: {
         author: true,
+        tagList: true,
+      },
+      order: {
+        created_at: 'DESC',
       },
     });
 
