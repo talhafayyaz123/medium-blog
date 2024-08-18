@@ -17,7 +17,7 @@ export class TagEntity extends EntityRelationalHelper {
   id: string;
 
   @ApiProperty()
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', unique: true })
   name: string;
 
   // @custom-inject-point
