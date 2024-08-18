@@ -70,6 +70,7 @@ export class ArticleRelationalRepository implements ArticleRepository {
       where: { id },
       relations: {
         author: true,
+        tagList: true,
       },
     });
 
@@ -87,6 +88,8 @@ export class ArticleRelationalRepository implements ArticleRepository {
     );
 
     updatedEntity.author = entity.author;
+
+    updatedEntity.tagList = entity.tagList;
 
     return ArticleMapper.toDomain(updatedEntity);
   }
