@@ -19,6 +19,7 @@ export class ArticleRelationalRepository implements ArticleRepository {
   async create(data: ArticleDTOWithTagDomains): Promise<Article> {
     const persistenceModel =
       ArticleMapper.toPersistenceFromDTOWithTagDomains(data);
+
     const newEntity = await this.articleRepository.save(
       this.articleRepository.create(persistenceModel),
     );

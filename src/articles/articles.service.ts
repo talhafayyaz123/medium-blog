@@ -13,6 +13,7 @@ import { diff } from 'radash';
 import { Tag } from '../tags/domain/tag';
 import { NullableType } from '../utils/types/nullable.type';
 import slugify from 'slugify';
+import { DatabaseHelperRepository } from '../database-helpers/database-helper';
 
 @Injectable()
 export class ArticlesService {
@@ -20,13 +21,24 @@ export class ArticlesService {
     private readonly articleRepository: ArticleRepository,
     private readonly commentsService: CommentsService,
     private readonly tagsService: TagsService,
+    private readonly dbHelperRepository: DatabaseHelperRepository,
     private userService: UsersService,
   ) {}
 
   async create(
     createArticleDto: CreateArticleDto,
     userJwtPayload: JwtPayloadType,
-  ) {
+  ): Promise<Article> {
+    return this.dbHelperRepository.transactionManager.runInTransaction(
+      async () =>
+        this.createArticleWithTransaction(createArticleDto, userJwtPayload),
+    );
+  }
+
+  private async createArticleWithTransaction(
+    createArticleDto: CreateArticleDto,
+    userJwtPayload: JwtPayloadType,
+  ): Promise<Article> {
     const clonedPayload = {
       ...createArticleDto,
       author_id: userJwtPayload.id,
