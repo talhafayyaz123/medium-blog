@@ -20,10 +20,6 @@ export class CreateArticleDto {
   @IsString()
   title: string;
 
-  @ApiProperty()
-  @IsString()
-  slug: string;
-
   @ApiPropertyOptional({ type: [String] })
   @IsOptional()
   @IsArray()

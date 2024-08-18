@@ -15,17 +15,21 @@ export abstract class ArticleRepository {
 
   abstract findById(id: Article['id']): Promise<NullableType<Article>>;
 
+  abstract findByIdWithRelations(
+    id: Article['id'],
+  ): Promise<NullableType<Article>>;
+
   abstract findBySlug(id: Article['slug']): Promise<NullableType<Article>>;
 
   abstract update(
-    id: Article['id'],
+    entity: Article,
     payload: DeepPartial<
       Omit<
         Article,
         'id' | 'tagList' | 'comments' | 'author' | 'created_at' | 'updated_at'
       >
     >,
-  ): Promise<Article | null>;
+  ): Promise<Article>;
 
   abstract remove(id: Article['id']): Promise<void>;
 }
