@@ -12,6 +12,13 @@ export class TagMapper {
     return domainEntity;
   }
 
+  static toDomainDTO(raw: TagEntity): Tag {
+    const domainEntity = new Tag();
+    domainEntity.name = raw.name;
+
+    return domainEntity;
+  }
+
   static toPersistence(domainEntity: Tag): TagEntity {
     const persistenceEntity = new TagEntity();
     persistenceEntity.name = domainEntity.name;
