@@ -9,7 +9,7 @@ import { UsersService } from '../users/users.service';
 import { CommentsService } from '../comments/comments.service';
 import { Comment } from '../comments/domain/comment';
 import { TagsService } from '../tags/tags.service';
-import { diff } from 'radash';
+import { diff, unique } from 'radash';
 import { Tag } from '../tags/domain/tag';
 import { NullableType } from '../utils/types/nullable.type';
 import slugify from 'slugify';
@@ -47,10 +47,12 @@ export class ArticlesService {
     let tags: NullableType<Tag[]> = [];
 
     if (createArticleDto.tagList && createArticleDto.tagList.length > 0) {
-      tags = await this.tagsService.findByNames(createArticleDto.tagList);
+      const uniqueTagList = unique(createArticleDto.tagList);
+
+      tags = await this.tagsService.findByNames(uniqueTagList);
 
       const newTagNames = diff(
-        createArticleDto.tagList,
+        uniqueTagList,
         tags?.map((tag) => tag.name) || [],
       );
 
