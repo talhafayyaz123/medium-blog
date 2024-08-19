@@ -71,13 +71,7 @@ export class ArticlesService {
 
     const article = await this.articleRepository.create(articlePayload);
 
-    const user = await this.userService.findById(userJwtPayload.id);
-
-    if (user) {
-      article.author = user;
-    }
-
-    return article;
+    return await this.validateAndFetchArticleWithRelationsById(article?.id);
   }
 
   slugify(title: string): string {
@@ -192,6 +186,23 @@ export class ArticlesService {
 
   async validateAndFetchArticleById(id: Article['id']): Promise<Article> {
     const article = await this.articleRepository.findById(id);
+
+    if (!article) {
+      throw new NotFoundException({
+        status: HttpStatus.NOT_FOUND,
+        errors: {
+          slug: 'Artilce not found',
+        },
+      });
+    }
+
+    return article;
+  }
+
+  async validateAndFetchArticleWithRelationsById(
+    id: Article['id'],
+  ): Promise<Article> {
+    const article = await this.articleRepository.findByIdWithRelations(id);
 
     if (!article) {
       throw new NotFoundException({
