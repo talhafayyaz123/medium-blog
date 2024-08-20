@@ -30,6 +30,7 @@ import mailConfig from './mail/config/mail.config';
 import { MailModule } from './mail/mail.module';
 import { MailerModule } from './mailer/mailer.module';
 import { SessionModule } from './session/session.module';
+import { TagsModule } from './tags/tags.module';
 import { UsersModule } from './users/users.module';
 
 const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
@@ -40,6 +41,7 @@ const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
 });
 @Module({
   imports: [
+    TagsModule,
     CommentsModule,
     ArticlesModule,
     ConfigModule.forRoot({

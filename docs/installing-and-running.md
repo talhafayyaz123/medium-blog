@@ -21,7 +21,7 @@ Interactions with the database are implemented based on [Hexagonal Architecture]
 1. Clone repository
 
    ```bash
-   git clone --depth 1 https://github.com/brocoders/nestjs-boilerplate.git my-app
+   git clone --depth 1 git@github.com:hhsadiq/medium-clone-nestjs.git my-app
    ```
 
 1. Go to folder, and copy `env-example-relational` as `.env`.
@@ -45,16 +45,6 @@ Interactions with the database are implemented based on [Hexagonal Architecture]
 
    ```bash
    npm install
-   ```
-
-1. Run app configuration
-
-   > You should run this command only the first time on initialization of your project, all next time skip it.
-
-   > If you want to contribute to the boilerplate, you should NOT run this command.
-
-   ```bash
-   npm run app:config
    ```
 
 1. Run migrations
@@ -86,7 +76,7 @@ If you want quick run your app, you can use following commands:
 1. Clone repository
 
    ```bash
-   git clone --depth 1 https://github.com/brocoders/nestjs-boilerplate.git my-app
+   git clone --depth 1 git@github.com:hhsadiq/medium-clone-nestjs.git my-app
    ```
 
 1. Go to folder, and copy `env-example-relational` as `.env`.

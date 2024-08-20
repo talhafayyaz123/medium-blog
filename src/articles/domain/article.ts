@@ -1,7 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 import { Comment } from '@src/comments/domain/comment';
+import { Tag } from '@src/tags/domain/tag';
 import { User } from '@src/users/domain/user';
+import { NullableType } from '@src/utils/types/nullable.type';
 
 export class Article {
   @ApiProperty({
@@ -31,6 +33,11 @@ export class Article {
 
   @ApiProperty()
   comments: Comment[];
+
+  @ApiProperty({
+    type: [String],
+  })
+  tagList?: NullableType<Tag['name'][]>;
 
   // @custom-inject-point
   @ApiProperty()

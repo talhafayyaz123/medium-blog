@@ -12,7 +12,8 @@
   - [Reason 4: Globalization](#reason-4-globalization)
 - [DB columns naming convention](#db-columns-naming-convention)
 - [Working with database schema (TypeORM)](#working-with-database-schema-typeorm)
-  - [Generate migration](#generate-migration)
+  - [Create a new migration without existing entities](#create-a-new-migration-without-existing-entities)
+  - [Generate migration from existing entities](#generate-migration-from-existing-entities)
   - [Run migration](#run-migration)
   - [Revert migration](#revert-migration)
   - [Drop all tables in database](#drop-all-tables-in-database)
@@ -82,7 +83,13 @@ The world is getting smaller, and you may have a team of different nationalities
 
 ## Working with database schema (TypeORM)
 
-### Generate migration
+### Create a new migration without existing entities
+
+E.g.
+
+`npm run migration:create -- ./src/database/migrations/MakeTagNameUnique`
+
+### Generate migration from existing entities
 
 1. Create entity file with extension `.entity.ts`. For example `post.entity.ts`:
 
