@@ -7,6 +7,7 @@ import { Article } from '../../../../domain/article';
 import { ArticleRepository } from '../../article.repository';
 import { ArticleMapper } from '../mappers/article.mapper';
 import { IPaginationOptions } from '../../../../../utils/types/pagination-options';
+import { ArticleDTOWithTagDomains } from '../../../../articles.types';
 
 @Injectable()
 export class ArticleRelationalRepository implements ArticleRepository {
@@ -15,8 +16,10 @@ export class ArticleRelationalRepository implements ArticleRepository {
     private readonly articleRepository: Repository<ArticleEntity>,
   ) {}
 
-  async create(data: Article): Promise<Article> {
-    const persistenceModel = ArticleMapper.toPersistence(data);
+  async create(data: ArticleDTOWithTagDomains): Promise<Article> {
+    const persistenceModel =
+      ArticleMapper.toPersistenceFromDTOWithTagDomains(data);
+
     const newEntity = await this.articleRepository.save(
       this.articleRepository.create(persistenceModel),
     );
@@ -34,6 +37,10 @@ export class ArticleRelationalRepository implements ArticleRepository {
       take: paginationOptions.limit,
       relations: {
         author: true,
+        tagList: true,
+      },
+      order: {
+        created_at: 'DESC',
       },
     });
 
@@ -43,8 +50,19 @@ export class ArticleRelationalRepository implements ArticleRepository {
   async findById(id: Article['id']): Promise<NullableType<Article>> {
     const entity = await this.articleRepository.findOne({
       where: { id },
+    });
+
+    return entity ? ArticleMapper.toDomain(entity) : null;
+  }
+
+  async findByIdWithRelations(
+    id: Article['id'],
+  ): Promise<NullableType<Article>> {
+    const entity = await this.articleRepository.findOne({
+      where: { id },
       relations: {
         author: true,
+        tagList: true,
       },
     });
 
@@ -59,28 +77,15 @@ export class ArticleRelationalRepository implements ArticleRepository {
     return entity ? ArticleMapper.toDomain(entity) : null;
   }
 
-  async update(id: Article['id'], payload: Partial<Article>): Promise<Article> {
-    const entity = await this.articleRepository.findOne({
-      where: { id },
-      relations: {
-        author: true,
-      },
-    });
-
-    if (!entity) {
-      throw new Error('Record not found');
-    }
-
+  async update(entity: Article, payload: Partial<Article>): Promise<Article> {
     const updatedEntity = await this.articleRepository.save(
       this.articleRepository.create(
         ArticleMapper.toPersistence({
-          ...ArticleMapper.toDomain(entity),
+          ...entity,
           ...payload,
         }),
       ),
     );
-
-    updatedEntity.author = entity.author;
 
     return ArticleMapper.toDomain(updatedEntity);
   }

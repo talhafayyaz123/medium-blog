@@ -1,0 +1,11 @@
+import { Tag } from '../tags/domain/tag';
+import { Article } from './domain/article';
+
+export type ArticleWithTagDomains = Omit<Article, 'tagList'> & {
+  tagList?: Tag[] | null;
+};
+
+export type ArticleDTOWithTagDomains = Omit<
+  ArticleWithTagDomains,
+  'id' | 'comments' | 'author' | 'created_at' | 'updated_at'
+>;

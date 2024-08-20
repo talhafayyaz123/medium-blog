@@ -20,7 +20,7 @@
 
 ## Drivers support
 
-Out-of-box boilerplate supports the following drivers: `local`, `s3`, and `s3-presigned`. You can set it in the `.env` file, variable `FILE_DRIVER`. If you want to use another service for storing files, you can extend it.
+Out-of-box we support the following drivers: `local`, `s3`, and `s3-presigned`. You can set it in the `.env` file, variable `FILE_DRIVER`. If you want to use another service for storing files, you can extend it.
 
 > For production we recommend using the "s3-presigned" driver to offload your server.
 

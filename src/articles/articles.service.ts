@@ -8,33 +8,97 @@ import { JwtPayloadType } from '../auth/strategies/types/jwt-payload.type';
 import { UsersService } from '../users/users.service';
 import { CommentsService } from '../comments/comments.service';
 import { Comment } from '../comments/domain/comment';
+import { TagsService } from '../tags/tags.service';
+import { diff, unique } from 'radash';
+import { Tag } from '../tags/domain/tag';
+import { NullableType } from '../utils/types/nullable.type';
+import slugify from 'slugify';
+import { DatabaseHelperRepository } from '../database-helpers/database-helper';
 
 @Injectable()
 export class ArticlesService {
   constructor(
     private readonly articleRepository: ArticleRepository,
     private readonly commentsService: CommentsService,
+    private readonly tagsService: TagsService,
+    private readonly dbHelperRepository: DatabaseHelperRepository,
     private userService: UsersService,
   ) {}
 
   async create(
     createArticleDto: CreateArticleDto,
     userJwtPayload: JwtPayloadType,
-  ) {
+  ): Promise<Article> {
+    return this.dbHelperRepository.transactionManager.runInTransaction(
+      async () =>
+        this.createArticleWithTransaction(createArticleDto, userJwtPayload),
+    );
+  }
+
+  private async createArticleWithTransaction(
+    createArticleDto: CreateArticleDto,
+    userJwtPayload: JwtPayloadType,
+  ): Promise<Article> {
     const clonedPayload = {
       ...createArticleDto,
       author_id: userJwtPayload.id,
     };
 
-    const article = await this.articleRepository.create(clonedPayload);
+    let tags: NullableType<Tag[]> = [];
 
-    const user = await this.userService.findById(userJwtPayload.id);
+    if (createArticleDto.tagList && createArticleDto.tagList.length > 0) {
+      const uniqueTagList = unique(createArticleDto.tagList);
 
-    if (user) {
-      article.author = user;
+      tags = await this.tagsService.findByNames(uniqueTagList);
+
+      const newTagNames = diff(
+        uniqueTagList,
+        tags?.map((tag) => tag.name) || [],
+      );
+
+      if (newTagNames.length > 0) {
+        const newTags = await this.tagsService.createMany(
+          this.tagsService.toCreateTagDtos(newTagNames),
+        );
+
+        tags = [...(tags || []), ...newTags];
+      }
     }
 
-    return article;
+    const articlePayload = {
+      ...clonedPayload,
+      tagList: tags,
+      slug: this.slugify(createArticleDto.title),
+    };
+
+    const article = await this.articleRepository.create(articlePayload);
+
+    return await this.validateAndFetchArticleWithRelationsById(article?.id);
+  }
+
+  slugify(title: string): string {
+    const baseSlug = slugify(title, {
+      lower: true,
+      strict: true,
+      remove: /[*+~.()'"!:@]/g,
+    });
+
+    const uniqueSuffix = this.generateUniqueSuffix();
+
+    return `${baseSlug}-${uniqueSuffix}`;
+  }
+
+  generateUniqueSuffix(length: number = 11): string {
+    const charset =
+      'useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict';
+    let id = '';
+    const randomValues = crypto.getRandomValues(new Uint8Array(length));
+
+    for (let i = 0; i < length; i++) {
+      id += charset[randomValues[i] & 63]; // Ensure the index is twithin the range 0-63
+    }
+
+    return id;
   }
 
   findAllWithPagination({
@@ -51,11 +115,28 @@ export class ArticlesService {
   }
 
   findOne(id: Article['id']) {
-    return this.articleRepository.findById(id);
+    return this.articleRepository.findByIdWithRelations(id);
   }
 
-  update(id: Article['id'], updateArticleDto: UpdateArticleDto) {
-    return this.articleRepository.update(id, updateArticleDto);
+  async update(id: Article['id'], updateArticleDto: UpdateArticleDto) {
+    const article = await this.validateAndFetchArticleById(id);
+
+    const { title, ...rest } = updateArticleDto;
+
+    const payload = {
+      ...rest,
+      title,
+      ...(title && title !== article.title && { slug: this.slugify(title) }),
+    };
+
+    const updatedArticle = await this.articleRepository.update(
+      article,
+      payload,
+    );
+
+    return await this.articleRepository.findByIdWithRelations(
+      updatedArticle.id,
+    );
   }
 
   remove(id: Article['id']) {
@@ -67,7 +148,7 @@ export class ArticlesService {
     body: Comment['body'],
     userJwtPayload: JwtPayloadType,
   ) {
-    const article = await this.validateAndFetchArticle(slug);
+    const article = await this.validateAndFetchArticleBySlug(slug);
 
     return await this.commentsService.create(article.id, body, userJwtPayload);
   }
@@ -79,7 +160,7 @@ export class ArticlesService {
     paginationOptions: IPaginationOptions;
     slug: Article['slug'];
   }) {
-    const article = await this.validateAndFetchArticle(slug);
+    const article = await this.validateAndFetchArticleBySlug(slug);
 
     return this.commentsService.findAllWithPagination({
       paginationOptions: {
@@ -90,8 +171,40 @@ export class ArticlesService {
     });
   }
 
-  async validateAndFetchArticle(slug: Article['slug']): Promise<Article> {
+  async validateAndFetchArticleBySlug(slug: Article['slug']): Promise<Article> {
     const article = await this.articleRepository.findBySlug(slug);
+
+    if (!article) {
+      throw new NotFoundException({
+        status: HttpStatus.NOT_FOUND,
+        errors: {
+          slug: 'Artilce not found',
+        },
+      });
+    }
+
+    return article;
+  }
+
+  async validateAndFetchArticleById(id: Article['id']): Promise<Article> {
+    const article = await this.articleRepository.findById(id);
+
+    if (!article) {
+      throw new NotFoundException({
+        status: HttpStatus.NOT_FOUND,
+        errors: {
+          slug: 'Artilce not found',
+        },
+      });
+    }
+
+    return article;
+  }
+
+  async validateAndFetchArticleWithRelationsById(
+    id: Article['id'],
+  ): Promise<Article> {
+    const article = await this.articleRepository.findByIdWithRelations(id);
 
     if (!article) {
       throw new NotFoundException({

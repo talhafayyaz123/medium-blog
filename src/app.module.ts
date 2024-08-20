@@ -39,8 +39,11 @@ import { ArticlesModule } from './articles/articles.module';
 
 import { CommentsModule } from './comments/comments.module';
 
+import { TagsModule } from './tags/tags.module';
+
 @Module({
   imports: [
+    TagsModule,
     CommentsModule,
     ArticlesModule,
     ConfigModule.forRoot({
