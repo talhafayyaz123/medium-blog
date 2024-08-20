@@ -1,5 +1,5 @@
-import { Tag } from '../../../../domain/tag';
-import { TagEntity } from '../entities/tag.entity';
+import { Tag } from '@src/tags/domain/tag';
+import { TagEntity } from '@src/tags/infrastructure/persistence/relational/entities/tag.entity';
 
 export class TagMapper {
   static toDomain(raw: TagEntity): Tag {

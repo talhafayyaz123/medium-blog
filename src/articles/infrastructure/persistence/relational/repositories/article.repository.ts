@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ArticleEntity } from '../entities/article.entity';
-import { NullableType } from '../../../../../utils/types/nullable.type';
-import { Article } from '../../../../domain/article';
-import { ArticleRepository } from '../../article.repository';
-import { ArticleMapper } from '../mappers/article.mapper';
-import { IPaginationOptions } from '../../../../../utils/types/pagination-options';
-import { ArticleDTOWithTagDomains } from '../../../../articles.types';
+
+import { ArticleDTOWithTagDomains } from '@src/articles/articles.types';
+import { Article } from '@src/articles/domain/article';
+import { ArticleRepository } from '@src/articles/infrastructure/persistence/article.repository';
+import { ArticleEntity } from '@src/articles/infrastructure/persistence/relational/entities/article.entity';
+import { ArticleMapper } from '@src/articles/infrastructure/persistence/relational/mappers/article.mapper';
+import { NullableType } from '@src/utils/types/nullable.type';
+import { IPaginationOptions } from '@src/utils/types/pagination-options';
 
 @Injectable()
 export class ArticleRelationalRepository implements ArticleRepository {

@@ -1,4 +1,5 @@
-import { Tag } from '../tags/domain/tag';
+import { Tag } from '@src/tags/domain/tag';
+
 import { Article } from './domain/article';
 
 export type ArticleWithTagDomains = Omit<Article, 'tagList'> & {

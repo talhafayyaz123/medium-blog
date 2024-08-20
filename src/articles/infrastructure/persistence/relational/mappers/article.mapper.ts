@@ -1,10 +1,11 @@
-import { TagEntity } from '../../../../../tags/infrastructure/persistence/relational/entities/tag.entity';
-import { UserMapper } from '../../../../../users/infrastructure/persistence/relational/mappers/user.mapper';
-import { Article } from '../../../../domain/article';
-import { ArticleDTOWithTagDomains } from '../../../../articles.types';
-import { ArticleEntity } from '../entities/article.entity';
-import { TagMapper } from '../../../../../tags/infrastructure/persistence/relational/mappers/tag.mapper';
 import { isArray, isEmpty, isNumber } from 'radash';
+
+import { ArticleDTOWithTagDomains } from '@src/articles/articles.types';
+import { Article } from '@src/articles/domain/article';
+import { ArticleEntity } from '@src/articles/infrastructure/persistence/relational/entities/article.entity';
+import { TagEntity } from '@src/tags/infrastructure/persistence/relational/entities/tag.entity';
+import { TagMapper } from '@src/tags/infrastructure/persistence/relational/mappers/tag.mapper';
+import { UserMapper } from '@src/users/infrastructure/persistence/relational/mappers/user.mapper';
 
 export class ArticleMapper {
   static toDomain(raw: ArticleEntity): Article {
@@ -18,7 +19,7 @@ export class ArticleMapper {
       domainEntity.author = UserMapper.toDomain(raw.author);
     }
     if (isArray(raw.tagList) && !isEmpty(raw.tagList)) {
-      domainEntity.tagList = raw.tagList.map(
+      domainEntity.tagList = raw.tagList?.map(
         (tagEntity: TagEntity) => tagEntity.name,
       );
     }

@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from '../../users/domain/user';
-import { Comment } from '../../comments/domain/comment';
-import { Tag } from '../../tags/domain/tag';
-import { NullableType } from '../../utils/types/nullable.type';
+
+import { Comment } from '@src/comments/domain/comment';
+import { Tag } from '@src/tags/domain/tag';
+import { User } from '@src/users/domain/user';
+import { NullableType } from '@src/utils/types/nullable.type';
 
 export class Article {
   @ApiProperty({

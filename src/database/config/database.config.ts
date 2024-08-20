@@ -1,5 +1,4 @@
 import { registerAs } from '@nestjs/config';
-
 import {
   IsOptional,
   IsInt,
@@ -9,7 +8,9 @@ import {
   ValidateIf,
   IsBoolean,
 } from 'class-validator';
-import validateConfig from '../../utils/validate-config';
+
+import validateConfig from '@src/utils/validate-config';
+
 import { DatabaseConfig } from './database-config.type';
 
 class EnvironmentVariablesValidator {

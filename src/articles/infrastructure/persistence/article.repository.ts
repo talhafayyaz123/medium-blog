@@ -1,8 +1,8 @@
-import { DeepPartial } from '../../../utils/types/deep-partial.type';
-import { NullableType } from '../../../utils/types/nullable.type';
-import { IPaginationOptions } from '../../../utils/types/pagination-options';
-import { ArticleDTOWithTagDomains } from '../../articles.types';
-import { Article } from '../../domain/article';
+import { ArticleDTOWithTagDomains } from '@src/articles/articles.types';
+import { Article } from '@src/articles/domain/article';
+import { DeepPartial } from '@src/utils/types/deep-partial.type';
+import { NullableType } from '@src/utils/types/nullable.type';
+import { IPaginationOptions } from '@src/utils/types/pagination-options';
 
 export abstract class ArticleRepository {
   abstract create(data: ArticleDTOWithTagDomains): Promise<Article>;

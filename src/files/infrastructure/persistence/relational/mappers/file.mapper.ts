@@ -1,5 +1,5 @@
-import { FileType } from '../../../../domain/file';
-import { FileEntity } from '../entities/file.entity';
+import { FileType } from '@src/files/domain/file';
+import { FileEntity } from '@src/files/infrastructure/persistence/relational/entities/file.entity';
 
 export class FileMapper {
   static toDomain(raw: FileEntity): FileType {

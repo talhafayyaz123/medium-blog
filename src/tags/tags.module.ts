@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
-import { TagsService } from './tags.service';
-import { TagsController } from './tags.controller';
+
 import { RelationalTagPersistenceModule } from './infrastructure/persistence/relational/relational-persistence.module';
+import { TagsController } from './tags.controller';
+import { TagsService } from './tags.service';
 
 @Module({
   imports: [RelationalTagPersistenceModule],

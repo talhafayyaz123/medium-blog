@@ -1,11 +1,11 @@
-import { IsArray, IsOptional, IsString } from 'class-validator';
-
 import {
   // decorators here
   ApiProperty,
   ApiPropertyOptional,
 } from '@nestjs/swagger';
-import { Tag } from '../../tags/domain/tag';
+import { IsArray, IsOptional, IsString } from 'class-validator';
+
+import { Tag } from '@src/tags/domain/tag';
 
 export class CreateArticleDto {
   @ApiProperty()

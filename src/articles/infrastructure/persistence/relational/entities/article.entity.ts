@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   CreateDateColumn,
   Entity,
@@ -10,12 +11,12 @@ import {
   ManyToMany,
   JoinTable,
 } from 'typeorm';
-import { EntityRelationalHelper } from '../../../../../utils/relational-entity-helper';
-import { ApiProperty } from '@nestjs/swagger';
-import { UserEntity } from '../../../../../users/infrastructure/persistence/relational/entities/user.entity';
-import { CommentEntity } from '../../../../../comments/infrastructure/persistence/relational/entities/comment.entity';
-import { TagEntity } from '../../../../../tags/infrastructure/persistence/relational/entities/tag.entity';
-import { NullableType } from '../../../../../utils/types/nullable.type';
+
+import { CommentEntity } from '@src/comments/infrastructure/persistence/relational/entities/comment.entity';
+import { TagEntity } from '@src/tags/infrastructure/persistence/relational/entities/tag.entity';
+import { UserEntity } from '@src/users/infrastructure/persistence/relational/entities/user.entity';
+import { EntityRelationalHelper } from '@src/utils/relational-entity-helper';
+import { NullableType } from '@src/utils/types/nullable.type';
 
 @Entity({
   name: 'article',

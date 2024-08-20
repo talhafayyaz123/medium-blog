@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
-import { TagEntity } from '../entities/tag.entity';
-import { NullableType } from '../../../../../utils/types/nullable.type';
-import { Tag } from '../../../../domain/tag';
-import { TagRepository } from '../../tag.repository';
-import { TagMapper } from '../mappers/tag.mapper';
+
+import { Tag } from '@src/tags/domain/tag';
+import { TagEntity } from '@src/tags/infrastructure/persistence/relational/entities/tag.entity';
+import { TagMapper } from '@src/tags/infrastructure/persistence/relational/mappers/tag.mapper';
+import { TagRepository } from '@src/tags/infrastructure/persistence/tag.repository';
+import { NullableType } from '@src/utils/types/nullable.type';
 
 @Injectable()
 export class TagRelationalRepository implements TagRepository {

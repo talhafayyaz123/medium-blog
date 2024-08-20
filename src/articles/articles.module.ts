@@ -1,11 +1,13 @@
 import { Module } from '@nestjs/common';
-import { ArticlesService } from './articles.service';
+
+import { CommentsModule } from '@src/comments/comments.module';
+import { DatabaseHelperModule } from '@src/database-helpers/database-helper.module';
+import { TagsModule } from '@src/tags/tags.module';
+import { UsersModule } from '@src/users/users.module';
+
 import { ArticlesController } from './articles.controller';
+import { ArticlesService } from './articles.service';
 import { RelationalArticlePersistenceModule } from './infrastructure/persistence/relational/relational-persistence.module';
-import { UsersModule } from '../users/users.module';
-import { CommentsModule } from '../comments/comments.module';
-import { TagsModule } from '../tags/tags.module';
-import { DatabaseHelperModule } from '../database-helpers/database-helper.module';
 
 @Module({
   imports: [

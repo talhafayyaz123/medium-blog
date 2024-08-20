@@ -1,19 +1,21 @@
 import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { diff, unique } from 'radash';
+import slugify from 'slugify';
+
+import { JwtPayloadType } from '@src/auth/strategies/types/jwt-payload.type';
+import { CommentsService } from '@src/comments/comments.service';
+import { Comment } from '@src/comments/domain/comment';
+import { DatabaseHelperRepository } from '@src/database-helpers/database-helper';
+import { Tag } from '@src/tags/domain/tag';
+import { TagsService } from '@src/tags/tags.service';
+import { UsersService } from '@src/users/users.service';
+import { NullableType } from '@src/utils/types/nullable.type';
+import { IPaginationOptions } from '@src/utils/types/pagination-options';
+
+import { Article } from './domain/article';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { ArticleRepository } from './infrastructure/persistence/article.repository';
-import { IPaginationOptions } from '../utils/types/pagination-options';
-import { Article } from './domain/article';
-import { JwtPayloadType } from '../auth/strategies/types/jwt-payload.type';
-import { UsersService } from '../users/users.service';
-import { CommentsService } from '../comments/comments.service';
-import { Comment } from '../comments/domain/comment';
-import { TagsService } from '../tags/tags.service';
-import { diff, unique } from 'radash';
-import { Tag } from '../tags/domain/tag';
-import { NullableType } from '../utils/types/nullable.type';
-import slugify from 'slugify';
-import { DatabaseHelperRepository } from '../database-helpers/database-helper';
 
 @Injectable()
 export class ArticlesService {

@@ -1,6 +1,6 @@
-import { NullableType } from '../../../utils/types/nullable.type';
-import { IPaginationOptions } from '../../../utils/types/pagination-options';
-import { Comment } from '../../domain/comment';
+import { Comment } from '@src/comments/domain/comment';
+import { NullableType } from '@src/utils/types/nullable.type';
+import { IPaginationOptions } from '@src/utils/types/pagination-options';
 
 export abstract class CommentRepository {
   abstract create(

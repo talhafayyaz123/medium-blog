@@ -1,12 +1,13 @@
+import { AuthConfig } from '@src/auth/config/auth-config.type';
+import { AppleConfig } from '@src/auth-apple/config/apple-config.type';
+import { FacebookConfig } from '@src/auth-facebook/config/facebook-config.type';
+import { GoogleConfig } from '@src/auth-google/config/google-config.type';
+import { TwitterConfig } from '@src/auth-twitter/config/twitter-config.type';
+import { DatabaseConfig } from '@src/database/config/database-config.type';
+import { FileConfig } from '@src/files/config/file-config.type';
+import { MailConfig } from '@src/mail/config/mail-config.type';
+
 import { AppConfig } from './app-config.type';
-import { AppleConfig } from '../auth-apple/config/apple-config.type';
-import { AuthConfig } from '../auth/config/auth-config.type';
-import { DatabaseConfig } from '../database/config/database-config.type';
-import { FacebookConfig } from '../auth-facebook/config/facebook-config.type';
-import { FileConfig } from '../files/config/file-config.type';
-import { GoogleConfig } from '../auth-google/config/google-config.type';
-import { MailConfig } from '../mail/config/mail-config.type';
-import { TwitterConfig } from '../auth-twitter/config/twitter-config.type';
 
 export type AllConfigType = {
   app: AppConfig;

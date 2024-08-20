@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
-import { TypeORMTransactionManager } from './transaction-manager/typeorm-transaction-manager';
-import { TransactionManagerPort } from './transaction-manager/transaction-manager.port';
+
 import { DatabaseHelperRepository } from './database-helper';
+import { TransactionManagerPort } from './transaction-manager/transaction-manager.port';
+import { TypeORMTransactionManager } from './transaction-manager/typeorm-transaction-manager';
 
 @Module({
   providers: [

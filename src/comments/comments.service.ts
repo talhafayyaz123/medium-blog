@@ -4,11 +4,13 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { CommentRepository } from './infrastructure/persistence/comment.repository';
-import { IPaginationOptions } from '../utils/types/pagination-options';
+
+import { JwtPayloadType } from '@src/auth/strategies/types/jwt-payload.type';
+import { UsersService } from '@src/users/users.service';
+import { IPaginationOptions } from '@src/utils/types/pagination-options';
+
 import { Comment } from './domain/comment';
-import { UsersService } from '../users/users.service';
-import { JwtPayloadType } from '../auth/strategies/types/jwt-payload.type';
+import { CommentRepository } from './infrastructure/persistence/comment.repository';
 
 @Injectable()
 export class CommentsService {

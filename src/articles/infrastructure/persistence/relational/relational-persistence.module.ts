@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
-import { ArticleRepository } from '../article.repository';
-import { ArticleRelationalRepository } from './repositories/article.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { ArticleRepository } from '@src/articles/infrastructure/persistence/article.repository';
+
 import { ArticleEntity } from './entities/article.entity';
+import { ArticleRelationalRepository } from './repositories/article.repository';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ArticleEntity])],

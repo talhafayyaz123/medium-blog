@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   CreateDateColumn,
   Entity,
@@ -5,8 +6,8 @@ import {
   UpdateDateColumn,
   Column,
 } from 'typeorm';
-import { EntityRelationalHelper } from '../../../../../utils/relational-entity-helper';
-import { ApiProperty } from '@nestjs/swagger';
+
+import { EntityRelationalHelper } from '@src/utils/relational-entity-helper';
 
 @Entity({
   name: 'tag',

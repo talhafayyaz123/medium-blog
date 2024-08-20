@@ -1,5 +1,5 @@
-import { NullableType } from '../../../utils/types/nullable.type';
-import { Tag } from '../../domain/tag';
+import { Tag } from '@src/tags/domain/tag';
+import { NullableType } from '@src/utils/types/nullable.type';
 
 export abstract class TagRepository {
   abstract createMany(

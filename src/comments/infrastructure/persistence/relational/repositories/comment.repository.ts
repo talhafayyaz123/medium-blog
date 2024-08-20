@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CommentEntity } from '../entities/comment.entity';
-import { Comment } from '../../../../domain/comment';
-import { CommentRepository } from '../../comment.repository';
-import { CommentMapper } from '../mappers/comment.mapper';
-import { IPaginationOptions } from '../../../../../utils/types/pagination-options';
-import { NullableType } from '../../../../../utils/types/nullable.type';
+
+import { Comment } from '@src/comments/domain/comment';
+import { CommentRepository } from '@src/comments/infrastructure/persistence/comment.repository';
+import { CommentEntity } from '@src/comments/infrastructure/persistence/relational/entities/comment.entity';
+import { CommentMapper } from '@src/comments/infrastructure/persistence/relational/mappers/comment.mapper';
+import { NullableType } from '@src/utils/types/nullable.type';
+import { IPaginationOptions } from '@src/utils/types/pagination-options';
 
 @Injectable()
 export class CommentRelationalRepository implements CommentRepository {

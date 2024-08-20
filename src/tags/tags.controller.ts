@@ -1,8 +1,9 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
-import { TagsService } from './tags.service';
-import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { Tag } from './domain/tag';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+
+import { Tag } from './domain/tag';
+import { TagsService } from './tags.service';
 
 @ApiTags('Tags')
 @ApiBearerAuth()

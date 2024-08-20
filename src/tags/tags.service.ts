@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
+
+import { NullableType } from '@src/utils/types/nullable.type';
+
+import { Tag } from './domain/tag';
 import { CreateTagDto } from './dto/create-tag.dto';
 import { TagRepository } from './infrastructure/persistence/tag.repository';
-import { Tag } from './domain/tag';
-import { NullableType } from '../utils/types/nullable.type';
 
 @Injectable()
 export class TagsService {
