@@ -4,6 +4,5 @@ to: src/<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize'
 before: "// @custom-inject-point"
 ---
 
-@ApiProperty()
 @Column({ type: '<%= type %>' })
 <%= property %>: <%= h.getType(type) %>;
