@@ -8,22 +8,18 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { EntityRelationalHelper } from '../../../../../utils/relational-entity-helper';
-import { ApiProperty } from '@nestjs/swagger';
 
 @Entity({
   name: '<%= h.inflection.transform(name, ['underscore']) %>',
 })
 export class <%= name %>Entity extends EntityRelationalHelper {
-  @ApiProperty()
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   // @custom-inject-point
-  @ApiProperty()
   @CreateDateColumn()
   created_at: Date;
 
-  @ApiProperty()
   @UpdateDateColumn()
   updated_at: Date;
 }
