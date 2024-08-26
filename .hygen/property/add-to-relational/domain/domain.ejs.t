@@ -5,4 +5,4 @@ before: "// @custom-inject-point"
 ---
 
 @ApiProperty()
-<%= property %>: <%= h.getType(type) %>;
+<%= h.inflection.camelize(property, true) %>: <%= h.getType(type) %>;
