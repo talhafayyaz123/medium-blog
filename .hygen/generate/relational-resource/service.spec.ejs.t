@@ -2,11 +2,9 @@
 to: src/<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>/<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>.service.spec.ts
 ---
 import { Test, TestingModule } from '@nestjs/testing';
-import { paginationOptions } from './__mock__/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.mock';
+import { paginationOptions, mockCreate<%= name %>Dto, mockUpdate<%= name %>Dto } from './__mock__/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.mock';
 import { <%= h.inflection.transform(name, ['pluralize']) %>Service } from './<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>.service';
 import { <%= name %>Repository } from './infrastructure/persistence/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.repository';
-import { Create<%= name %>Dto } from './dto/create-<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.dto';
-import { Update<%= name %>Dto } from './dto/update-<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.dto';
 
 describe('<%= h.inflection.transform(name, ['pluralize']) %>Service', () => {
   let service: <%= h.inflection.transform(name, ['pluralize']) %>Service;
@@ -38,11 +36,8 @@ describe('<%= h.inflection.transform(name, ['pluralize']) %>Service', () => {
   });
 
   it('should create a <%= name.toLowerCase() %>', async () => {
-    const create<%= name %>Dto: Create<%= name %>Dto = {
-      // provide necessary fields here
-    };
-    await service.create(create<%= name %>Dto);
-    expect(<%= h.inflection.camelize(name, true) %>Repository.create).toHaveBeenCalledWith(create<%= name %>Dto);
+    await service.create(mockCreate<%= name %>Dto);
+    expect(<%= h.inflection.camelize(name, true) %>Repository.create).toHaveBeenCalledWith(mockCreate<%= name %>Dto);
   });
 
   it('should find all <%= h.inflection.pluralize(name.toLowerCase()) %> with pagination', async () => {
@@ -60,11 +55,8 @@ describe('<%= h.inflection.transform(name, ['pluralize']) %>Service', () => {
 
   it('should update a <%= name.toLowerCase() %> by ID', async () => {
     const id = 'testId';
-    const update<%= name %>Dto: Update<%= name %>Dto = {
-      // provide necessary fields here
-    };
-    await service.update(id, update<%= name %>Dto);
-    expect(<%= h.inflection.camelize(name, true) %>Repository.update).toHaveBeenCalledWith(id, update<%= name %>Dto);
+    await service.update(id, mockUpdate<%= name %>Dto);
+    expect(<%= h.inflection.camelize(name, true) %>Repository.update).toHaveBeenCalledWith(id, mockUpdate<%= name %>Dto);
   });
 
   it('should remove a <%= name.toLowerCase() %> by ID', async () => {
