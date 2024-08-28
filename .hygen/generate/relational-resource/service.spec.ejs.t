@@ -2,7 +2,7 @@
 to: src/<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>/<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>.service.spec.ts
 ---
 import { Test, TestingModule } from '@nestjs/testing';
-import { paginationOptions, mockCreate<%= name %>Dto, mockUpdate<%= name %>Dto } from './__mock__/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.mock';
+import { paginationOptions, mock<%= name %>,mockCreate<%= name %>Dto, mockUpdate<%= name %>Dto } from './__mock__/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.mock';
 import { <%= h.inflection.transform(name, ['pluralize']) %>Service } from './<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>.service';
 import { <%= name %>Repository } from './infrastructure/persistence/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.repository';
 
@@ -47,14 +47,18 @@ describe('<%= h.inflection.transform(name, ['pluralize']) %>Service', () => {
     });
   });
 
-  it('should find one <%= name.toLowerCase() %> by ID', async () => {
-    const id = 'testId';
-    await service.findOne(id);
+  it('should return a bat when found by id', async () => {
+    const id = mock<%= name %>.id;
+    jest.spyOn(<%= h.inflection.camelize(name, true) %>Repository, 'findById').mockResolvedValue(mock<%= name %>);
+    const result = await service.findOne(id);
+
     expect(<%= h.inflection.camelize(name, true) %>Repository.findById).toHaveBeenCalledWith(id);
+    expect(result).toEqual(mock<%= name %>);
   });
 
   it('should update a <%= name.toLowerCase() %> by ID', async () => {
-    const id = 'testId';
+    const id = mock<%= name %>.id;
+    jest.spyOn(<%= h.inflection.camelize(name, true) %>Repository, 'update').mockResolvedValue(mock<%= name %>);
     await service.update(id, mockUpdate<%= name %>Dto);
     expect(<%= h.inflection.camelize(name, true) %>Repository.update).toHaveBeenCalledWith(id, mockUpdate<%= name %>Dto);
   });
