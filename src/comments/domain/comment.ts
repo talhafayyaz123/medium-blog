@@ -8,19 +8,19 @@ export class Comment {
   })
   id: string;
 
-  article_id: string;
+  articleId: string;
 
-  author_id: number | string;
+  authorId: number | string;
 
   @ApiProperty()
   body: string;
 
   // @custom-inject-point
   @ApiProperty()
-  created_at: Date;
+  createdAt: Date;
 
   @ApiProperty()
-  updated_at: Date;
+  updatedAt: Date;
 
   @ApiProperty()
   author: User;

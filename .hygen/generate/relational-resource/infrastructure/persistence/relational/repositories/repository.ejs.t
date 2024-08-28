@@ -50,14 +50,12 @@ export class <%= name %>RelationalRepository implements <%= name %>Repository {
   async update(
     id: <%= name %>['id'],
     payload: Partial<<%= name %>>,
-  ): Promise<<%= name %>> {
+  ): Promise<<%= name %> | null> {
     const entity = await this.<%= h.inflection.camelize(name, true) %>Repository.findOne({
       where: { id },
     });
 
-    if (!entity) {
-      throw new Error('Record not found');
-    }
+    if (!entity) return null
 
     const updatedEntity = await this.<%= h.inflection.camelize(name, true) %>Repository.save(
       this.<%= h.inflection.camelize(name, true) %>Repository.create(

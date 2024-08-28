@@ -1,11 +1,7 @@
-import {
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 
 import { JwtPayloadType } from '@src/auth/strategies/types/jwt-payload.type';
+import { NOT_FOUND, UNPROCESSABLE_ENTITY } from '@src/common/exceptions';
 import { UsersService } from '@src/users/users.service';
 import { IPaginationOptions } from '@src/utils/types/pagination-options';
 
@@ -20,14 +16,14 @@ export class CommentsService {
   ) {}
 
   async create(
-    article_id: Comment['article_id'],
+    articleId: Comment['articleId'],
     body: Comment['body'],
     userJwtPayload: JwtPayloadType,
   ) {
     const clonedPayload = {
-      article_id,
+      articleId,
       body,
-      author_id: userJwtPayload.id,
+      authorId: userJwtPayload.id,
     };
 
     const comment = await this.commentRepository.create(clonedPayload);
@@ -43,37 +39,22 @@ export class CommentsService {
 
   findAllWithPagination({
     paginationOptions,
-    article_id,
+    articleId,
   }: {
     paginationOptions: IPaginationOptions;
-    article_id: Comment['article_id'];
+    articleId: Comment['articleId'];
   }) {
     return this.commentRepository.findAllWithPagination({
       paginationOptions: {
         page: paginationOptions.page,
         limit: paginationOptions.limit,
       },
-      article_id,
+      articleId,
     });
   }
 
-  async validateAndFetchComment(id: Comment['id']) {
-    const comment = await this.commentRepository.findById(id);
-
-    if (!comment) {
-      throw new NotFoundException({
-        status: HttpStatus.NOT_FOUND,
-        errors: {
-          id: 'Comment not found',
-        },
-      });
-    }
-
-    return comment;
-  }
-
   async remove(id: Comment['id'], userJwtPayload: JwtPayloadType) {
-    const comment = await this.validateAndFetchComment(id);
+    const comment = await this.findAndValidate('id', id);
 
     if (comment?.author?.id !== userJwtPayload.id) {
       throw new UnauthorizedException({
@@ -85,5 +66,21 @@ export class CommentsService {
     }
 
     return this.commentRepository.remove(id);
+  }
+
+  async findAndValidate(field, value, fetchRelations = false) {
+    const repoFunction = `findBy${field.charAt(0).toUpperCase()}${field.slice(1)}${fetchRelations ? 'WithRelations' : ''}`; // captilize first letter of the field name
+    if (typeof this.commentRepository[repoFunction] !== 'function') {
+      throw UNPROCESSABLE_ENTITY(
+        `Method ${repoFunction} not found on comment repository.`,
+        field,
+      );
+    }
+
+    const comment = await this.commentRepository[repoFunction](value);
+    if (!comment) {
+      throw NOT_FOUND('Comment', { [field]: value });
+    }
+    return comment;
   }
 }

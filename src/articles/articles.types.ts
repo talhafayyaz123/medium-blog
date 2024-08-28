@@ -8,5 +8,5 @@ export type ArticleWithTagDomains = Omit<Article, 'tagList'> & {
 
 export type ArticleDTOWithTagDomains = Omit<
   ArticleWithTagDomains,
-  'id' | 'comments' | 'author' | 'created_at' | 'updated_at'
+  'id' | 'comments' | 'author' | 'createdAt' | 'updatedAt'
 >;

@@ -3,8 +3,6 @@ import crypto from 'crypto';
 import {
   HttpStatus,
   Injectable,
-  NotFoundException,
-  UnauthorizedException,
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { randomStringGenerator } from '@nestjs/common/utils/random-string-generator.util';
@@ -13,6 +11,11 @@ import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcryptjs';
 import ms from 'ms';
 
+import {
+  NOT_FOUND,
+  UNAUTHORIZED,
+  UNPROCESSABLE_ENTITY,
+} from '@src/common/exceptions';
 import { AllConfigType } from '@src/config/config.type';
 import { MailService } from '@src/mail/mail.service';
 import { RoleEnum } from '@src/roles/roles.enum';
@@ -43,33 +46,17 @@ export class AuthService {
   ) {}
 
   async validateLogin(loginDto: AuthEmailLoginDto): Promise<LoginResponseDto> {
-    const user = await this.usersService.findByEmail(loginDto.email);
-
-    if (!user) {
-      throw new UnprocessableEntityException({
-        status: HttpStatus.UNPROCESSABLE_ENTITY,
-        errors: {
-          email: 'notFound',
-        },
-      });
-    }
+    const user = await this.findAndValidate('email', loginDto.email);
 
     if (user.provider !== AuthProvidersEnum.email) {
-      throw new UnprocessableEntityException({
-        status: HttpStatus.UNPROCESSABLE_ENTITY,
-        errors: {
-          email: `needLoginViaProvider:${user.provider}`,
-        },
-      });
+      throw UNPROCESSABLE_ENTITY(
+        `needLoginViaProvider:${user.provider}`,
+        'email',
+      );
     }
 
     if (!user.password) {
-      throw new UnprocessableEntityException({
-        status: HttpStatus.UNPROCESSABLE_ENTITY,
-        errors: {
-          password: 'incorrectPassword',
-        },
-      });
+      throw UNPROCESSABLE_ENTITY('password is not correct', 'password');
     }
 
     const isValidPassword = await bcrypt.compare(
@@ -78,12 +65,7 @@ export class AuthService {
     );
 
     if (!isValidPassword) {
-      throw new UnprocessableEntityException({
-        status: HttpStatus.UNPROCESSABLE_ENTITY,
-        errors: {
-          password: 'incorrectPassword',
-        },
-      });
+      throw UNPROCESSABLE_ENTITY('password is not correct', 'password');
     }
 
     const hash = crypto
@@ -125,7 +107,7 @@ export class AuthService {
 
     if (socialData.id) {
       user = await this.usersService.findBySocialIdAndProvider({
-        social_id: socialData.id,
+        socialId: socialData.id,
         provider: authProvider,
       });
     }
@@ -147,9 +129,9 @@ export class AuthService {
 
       user = await this.usersService.create({
         email: socialEmail ?? null,
-        first_name: socialData.first_name ?? null,
-        last_name: socialData.last_name ?? null,
-        social_id: socialData.id,
+        firstName: socialData.first_name ?? null,
+        lastName: socialData.last_name ?? null,
+        socialId: socialData.id,
         provider: authProvider,
         role,
         status,
@@ -254,14 +236,8 @@ export class AuthService {
 
     const user = await this.usersService.findById(userId);
 
-    if (
-      !user ||
-      user?.status?.id?.toString() !== StatusEnum.inactive.toString()
-    ) {
-      throw new NotFoundException({
-        status: HttpStatus.NOT_FOUND,
-        error: `notFound`,
-      });
+    if (user?.status?.id?.toString() !== StatusEnum.inactive.toString()) {
+      throw NOT_FOUND('User', { id: userId } as Record<string, string>);
     }
 
     user.status = {
@@ -296,14 +272,7 @@ export class AuthService {
       });
     }
 
-    const user = await this.usersService.findById(userId);
-
-    if (!user) {
-      throw new NotFoundException({
-        status: HttpStatus.NOT_FOUND,
-        error: `notFound`,
-      });
-    }
+    const user = (await this.usersService.findById(userId)) as User;
 
     user.email = newEmail;
     user.status = {
@@ -314,16 +283,7 @@ export class AuthService {
   }
 
   async forgotPassword(email: string): Promise<void> {
-    const user = await this.usersService.findByEmail(email);
-
-    if (!user) {
-      throw new UnprocessableEntityException({
-        status: HttpStatus.UNPROCESSABLE_ENTITY,
-        errors: {
-          email: 'emailNotExists',
-        },
-      });
-    }
+    const user = await this.findAndValidate('email', email);
 
     const tokenExpiresIn = this.configService.getOrThrow('auth.forgotExpires', {
       infer: true,
@@ -374,16 +334,7 @@ export class AuthService {
       });
     }
 
-    const user = await this.usersService.findById(userId);
-
-    if (!user) {
-      throw new UnprocessableEntityException({
-        status: HttpStatus.UNPROCESSABLE_ENTITY,
-        errors: {
-          hash: `notFound`,
-        },
-      });
-    }
+    const user = (await this.usersService.findById(userId)) as User;
 
     user.password = password;
 
@@ -402,34 +353,20 @@ export class AuthService {
     userJwtPayload: JwtPayloadType,
     userDto: AuthUpdateDto,
   ): Promise<NullableType<User>> {
-    const currentUser = await this.usersService.findById(userJwtPayload.id);
-
-    if (!currentUser) {
-      throw new UnprocessableEntityException({
-        status: HttpStatus.UNPROCESSABLE_ENTITY,
-        errors: {
-          user: 'userNotFound',
-        },
-      });
-    }
+    const currentUser = (await this.usersService.findById(
+      userJwtPayload.id,
+    )) as User;
 
     if (userDto.password) {
       if (!userDto.oldPassword) {
-        throw new UnprocessableEntityException({
-          status: HttpStatus.UNPROCESSABLE_ENTITY,
-          errors: {
-            oldPassword: 'missingOldPassword',
-          },
-        });
+        throw UNPROCESSABLE_ENTITY('Old password is missing', 'oldPassword');
       }
 
       if (!currentUser.password) {
-        throw new UnprocessableEntityException({
-          status: HttpStatus.UNPROCESSABLE_ENTITY,
-          errors: {
-            oldPassword: 'incorrectOldPassword',
-          },
-        });
+        throw UNPROCESSABLE_ENTITY(
+          'Old password is not correct',
+          'oldPassword',
+        );
       }
 
       const isValidOldPassword = await bcrypt.compare(
@@ -438,12 +375,10 @@ export class AuthService {
       );
 
       if (!isValidOldPassword) {
-        throw new UnprocessableEntityException({
-          status: HttpStatus.UNPROCESSABLE_ENTITY,
-          errors: {
-            oldPassword: 'incorrectOldPassword',
-          },
-        });
+        throw UNPROCESSABLE_ENTITY(
+          'Old password is not correct',
+          'oldPassword',
+        );
       } else {
         await this.sessionService.deleteByUserIdWithExclude({
           userId: currentUser.id,
@@ -456,12 +391,7 @@ export class AuthService {
       const userByEmail = await this.usersService.findByEmail(userDto.email);
 
       if (userByEmail && userByEmail.id !== currentUser.id) {
-        throw new UnprocessableEntityException({
-          status: HttpStatus.UNPROCESSABLE_ENTITY,
-          errors: {
-            email: 'emailExists',
-          },
-        });
+        throw UNPROCESSABLE_ENTITY('Email already exists', 'email');
       }
 
       const hash = await this.jwtService.signAsync(
@@ -498,14 +428,12 @@ export class AuthService {
   async refreshToken(
     data: Pick<JwtRefreshPayloadType, 'sessionId' | 'hash'>,
   ): Promise<Omit<LoginResponseDto, 'user'>> {
-    const session = await this.sessionService.findById(data.sessionId);
-
-    if (!session) {
-      throw new UnauthorizedException();
-    }
+    const session = (await this.sessionService.findById(
+      data.sessionId,
+    )) as Session;
 
     if (session.hash !== data.hash) {
-      throw new UnauthorizedException();
+      throw UNAUTHORIZED('invalid session', 'session');
     }
 
     const hash = crypto
@@ -516,7 +444,7 @@ export class AuthService {
     const user = await this.usersService.findById(session.user.id);
 
     if (!user?.role) {
-      throw new UnauthorizedException();
+      throw UNAUTHORIZED('User not found with the valid role', 'role');
     }
 
     await this.sessionService.update(session.id, {
@@ -592,5 +520,21 @@ export class AuthService {
       refreshToken,
       tokenExpires,
     };
+  }
+
+  async findAndValidate(field, value, fetchRelations = false) {
+    const userServiceFunction = `findBy${field.charAt(0).toUpperCase()}${field.slice(1)}${fetchRelations ? 'WithRelations' : ''}`; // captilize first letter of the field name
+    if (typeof this.usersService[userServiceFunction] !== 'function') {
+      throw UNPROCESSABLE_ENTITY(
+        `Method ${userServiceFunction} not found on user service.`,
+        'id',
+      );
+    }
+
+    const user = await this.usersService[userServiceFunction](value);
+    if (!user) {
+      throw NOT_FOUND('User', { [field]: value });
+    }
+    return user;
   }
 }

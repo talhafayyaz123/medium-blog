@@ -26,7 +26,7 @@ export class Article {
   @ApiProperty({
     type: Number,
   })
-  author_id: number | string;
+  authorId: number | string;
 
   @ApiProperty()
   author: User;
@@ -41,8 +41,8 @@ export class Article {
 
   // @custom-inject-point
   @ApiProperty()
-  created_at: Date;
+  createdAt: Date;
 
   @ApiProperty()
-  updated_at: Date;
+  updatedAt: Date;
 }

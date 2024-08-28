@@ -6,8 +6,8 @@ export class TagMapper {
     const domainEntity = new Tag();
     domainEntity.name = raw.name;
     domainEntity.id = raw.id;
-    domainEntity.created_at = raw.created_at;
-    domainEntity.updated_at = raw.updated_at;
+    domainEntity.createdAt = raw.created_at;
+    domainEntity.updatedAt = raw.updated_at;
 
     return domainEntity;
   }
@@ -25,8 +25,8 @@ export class TagMapper {
     if (domainEntity.id) {
       persistenceEntity.id = domainEntity.id;
     }
-    persistenceEntity.created_at = domainEntity.created_at;
-    persistenceEntity.updated_at = domainEntity.updated_at;
+    persistenceEntity.created_at = domainEntity.createdAt;
+    persistenceEntity.updated_at = domainEntity.updatedAt;
 
     return persistenceEntity;
   }

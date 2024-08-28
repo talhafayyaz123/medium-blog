@@ -1,4 +1,3 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 import {
   Column,
@@ -15,6 +14,7 @@ import {
 } from 'typeorm';
 
 import { AuthProvidersEnum } from '@src/auth/auth-providers.enum';
+import { TABLES } from '@src/common/constants';
 import { FileEntity } from '@src/files/infrastructure/persistence/relational/entities/file.entity';
 import { RoleEntity } from '@src/roles/infrastructure/persistence/relational/entities/role.entity';
 import { StatusEntity } from '@src/statuses/infrastructure/persistence/relational/entities/status.entity';
@@ -25,19 +25,12 @@ import { EntityRelationalHelper } from '@src/utils/relational-entity-helper';
 // in your project and return an ORM entity directly in response.
 
 @Entity({
-  name: 'user',
+  name: TABLES.user,
 })
 export class UserEntity extends EntityRelationalHelper {
-  @ApiProperty({
-    type: Number,
-  })
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ApiProperty({
-    type: String,
-    example: 'john.doe@example.com',
-  })
   // For "string | null" we need to use String type.
   // More info: https://github.com/typeorm/typeorm/issues/2567
   @Column({ type: String, unique: true, nullable: true })
@@ -56,75 +49,47 @@ export class UserEntity extends EntityRelationalHelper {
     this.previous_password = this.password;
   }
 
-  @ApiProperty({
-    type: String,
-    example: 'email',
-  })
   @Column({ default: AuthProvidersEnum.email })
   @Expose({ groups: ['me', 'admin'] })
   provider: string;
 
-  @ApiProperty({
-    type: String,
-    example: '1234567890',
-  })
   @Index()
   @Column({ type: String, nullable: true })
   @Expose({ groups: ['me', 'admin'] })
   social_id?: string | null;
 
-  @ApiProperty({
-    type: String,
-    example: 'John',
-  })
   @Index()
   @Column({ type: String, nullable: true })
   first_name: string | null;
 
-  @ApiProperty({
-    type: String,
-    example: 'Doe',
-  })
   @Index()
   @Column({ type: String, nullable: true })
   last_name: string | null;
 
-  @ApiProperty({
-    type: () => FileEntity,
-  })
   @OneToOne(() => FileEntity, {
     eager: true,
   })
   @JoinColumn({ name: 'photo_id' })
   photo?: FileEntity | null;
 
-  @ApiProperty({
-    type: () => RoleEntity,
-  })
   @ManyToOne(() => RoleEntity, {
     eager: true,
   })
   @JoinColumn({ name: 'role_id' })
   role?: RoleEntity | null;
 
-  @ApiProperty({
-    type: () => StatusEntity,
-  })
   @ManyToOne(() => StatusEntity, {
     eager: true,
   })
   @JoinColumn({ name: 'status_id' })
   status?: StatusEntity;
 
-  @ApiProperty()
   @CreateDateColumn()
   created_at: Date;
 
-  @ApiProperty()
   @UpdateDateColumn()
   updated_at: Date;
 
-  @ApiProperty()
   @DeleteDateColumn()
   deleted_at: Date;
 }

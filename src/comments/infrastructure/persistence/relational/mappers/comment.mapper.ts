@@ -10,8 +10,8 @@ export class CommentMapper {
     if (raw.author) {
       domainEntity.author = UserMapper.toDomain(raw.author);
     }
-    domainEntity.created_at = raw.created_at;
-    domainEntity.updated_at = raw.updated_at;
+    domainEntity.createdAt = raw.created_at;
+    domainEntity.updatedAt = raw.updated_at;
 
     return domainEntity;
   }
@@ -19,15 +19,15 @@ export class CommentMapper {
   static toPersistence(domainEntity: Comment): CommentEntity {
     const persistenceEntity = new CommentEntity();
     persistenceEntity.body = domainEntity.body;
-    if (domainEntity.author_id && typeof domainEntity.author_id === 'number') {
-      persistenceEntity.author_id = domainEntity.author_id;
+    if (domainEntity.authorId && typeof domainEntity.authorId === 'number') {
+      persistenceEntity.author_id = domainEntity.authorId;
     }
-    persistenceEntity.article_id = domainEntity.article_id;
+    persistenceEntity.article_id = domainEntity.articleId;
     if (domainEntity.id) {
       persistenceEntity.id = domainEntity.id;
     }
-    persistenceEntity.created_at = domainEntity.created_at;
-    persistenceEntity.updated_at = domainEntity.updated_at;
+    persistenceEntity.created_at = domainEntity.createdAt;
+    persistenceEntity.updated_at = domainEntity.updatedAt;
 
     return persistenceEntity;
   }

@@ -11,8 +11,8 @@ export class Tag {
 
   // @custom-inject-point
   @ApiProperty()
-  created_at: Date;
+  createdAt: Date;
 
   @ApiProperty()
-  updated_at: Date;
+  updatedAt: Date;
 }

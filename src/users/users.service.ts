@@ -1,11 +1,8 @@
-import {
-  HttpStatus,
-  Injectable,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import bcrypt from 'bcryptjs';
 
 import { AuthProvidersEnum } from '@src/auth/auth-providers.enum';
+import { NOT_FOUND, UNPROCESSABLE_ENTITY } from '@src/common/exceptions';
 import { FilesService } from '@src/files/files.service';
 import { RoleEnum } from '@src/roles/roles.enum';
 import { StatusEnum } from '@src/statuses/statuses.enum';
@@ -41,12 +38,7 @@ export class UsersService {
         clonedPayload.email,
       );
       if (userObject) {
-        throw new UnprocessableEntityException({
-          status: HttpStatus.UNPROCESSABLE_ENTITY,
-          errors: {
-            email: 'emailAlreadyExists',
-          },
-        });
+        throw UNPROCESSABLE_ENTITY('Email already exists', 'email');
       }
     }
 
@@ -55,12 +47,7 @@ export class UsersService {
         clonedPayload.photo.id,
       );
       if (!fileObject) {
-        throw new UnprocessableEntityException({
-          status: HttpStatus.UNPROCESSABLE_ENTITY,
-          errors: {
-            photo: 'imageNotExists',
-          },
-        });
+        throw UNPROCESSABLE_ENTITY('Image does not exist', 'photo');
       }
       clonedPayload.photo = fileObject;
     }
@@ -70,12 +57,7 @@ export class UsersService {
         .map(String)
         .includes(String(clonedPayload.role.id));
       if (!roleObject) {
-        throw new UnprocessableEntityException({
-          status: HttpStatus.UNPROCESSABLE_ENTITY,
-          errors: {
-            role: 'roleNotExists',
-          },
-        });
+        throw UNPROCESSABLE_ENTITY('Role does not exist', 'role');
       }
     }
 
@@ -84,12 +66,7 @@ export class UsersService {
         .map(String)
         .includes(String(clonedPayload.status.id));
       if (!statusObject) {
-        throw new UnprocessableEntityException({
-          status: HttpStatus.UNPROCESSABLE_ENTITY,
-          errors: {
-            status: 'statusNotExists',
-          },
-        });
+        throw UNPROCESSABLE_ENTITY('Status does not exist', 'status');
       }
     }
 
@@ -113,7 +90,7 @@ export class UsersService {
   }
 
   findById(id: User['id']): Promise<NullableType<User>> {
-    return this.usersRepository.findById(id);
+    return this.findAndValidate('id', id);
   }
 
   findByEmail(email: User['email']): Promise<NullableType<User>> {
@@ -121,14 +98,14 @@ export class UsersService {
   }
 
   findBySocialIdAndProvider({
-    social_id,
+    socialId,
     provider,
   }: {
-    social_id: User['social_id'];
+    socialId: User['socialId'];
     provider: User['provider'];
   }): Promise<NullableType<User>> {
     return this.usersRepository.findBySocialIdAndProvider({
-      social_id,
+      socialId,
       provider,
     });
   }
@@ -141,7 +118,7 @@ export class UsersService {
 
     if (
       clonedPayload.password &&
-      clonedPayload.previous_password !== clonedPayload.password
+      clonedPayload.previousPassword !== clonedPayload.password
     ) {
       const salt = await bcrypt.genSalt();
       clonedPayload.password = await bcrypt.hash(clonedPayload.password, salt);
@@ -153,12 +130,7 @@ export class UsersService {
       );
 
       if (userObject && userObject.id !== id) {
-        throw new UnprocessableEntityException({
-          status: HttpStatus.UNPROCESSABLE_ENTITY,
-          errors: {
-            email: 'emailAlreadyExists',
-          },
-        });
+        throw UNPROCESSABLE_ENTITY('Email already exists', 'email');
       }
     }
 
@@ -167,12 +139,7 @@ export class UsersService {
         clonedPayload.photo.id,
       );
       if (!fileObject) {
-        throw new UnprocessableEntityException({
-          status: HttpStatus.UNPROCESSABLE_ENTITY,
-          errors: {
-            photo: 'imageNotExists',
-          },
-        });
+        throw UNPROCESSABLE_ENTITY('Image does not exist', 'photo');
       }
       clonedPayload.photo = fileObject;
     }
@@ -182,12 +149,7 @@ export class UsersService {
         .map(String)
         .includes(String(clonedPayload.role.id));
       if (!roleObject) {
-        throw new UnprocessableEntityException({
-          status: HttpStatus.UNPROCESSABLE_ENTITY,
-          errors: {
-            role: 'roleNotExists',
-          },
-        });
+        throw UNPROCESSABLE_ENTITY('Role does not exist', 'role');
       }
     }
 
@@ -196,12 +158,7 @@ export class UsersService {
         .map(String)
         .includes(String(clonedPayload.status.id));
       if (!statusObject) {
-        throw new UnprocessableEntityException({
-          status: HttpStatus.UNPROCESSABLE_ENTITY,
-          errors: {
-            status: 'statusNotExists',
-          },
-        });
+        throw UNPROCESSABLE_ENTITY('Status does not exist', 'status');
       }
     }
 
@@ -210,5 +167,21 @@ export class UsersService {
 
   async remove(id: User['id']): Promise<void> {
     await this.usersRepository.remove(id);
+  }
+
+  async findAndValidate(field, value, fetchRelations = false) {
+    const repoFunction = `findBy${field.charAt(0).toUpperCase()}${field.slice(1)}${fetchRelations ? 'WithRelations' : ''}`; // captilize first letter of the field name
+    if (typeof this.usersRepository[repoFunction] !== 'function') {
+      throw UNPROCESSABLE_ENTITY(
+        `Method ${repoFunction} not found on user repository.`,
+        'id',
+      );
+    }
+
+    const user = await this.usersRepository[repoFunction](value);
+    if (!user) {
+      throw NOT_FOUND('User', { [field]: value });
+    }
+    return user;
   }
 }
