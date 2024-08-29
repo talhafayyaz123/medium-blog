@@ -29,7 +29,7 @@ export class SessionService {
   ): Promise<Session | null> {
     const updatedEntity = this.sessionRepository.update(id, payload);
     if (!updatedEntity) {
-      throw NOT_FOUND('session', { id } as Record<string, string>);
+      throw NOT_FOUND('session', { id });
     }
     return updatedEntity;
   }

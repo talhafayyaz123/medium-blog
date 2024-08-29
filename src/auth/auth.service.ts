@@ -1,17 +1,15 @@
 import crypto from 'crypto';
 
-import {
-  HttpStatus,
-  Injectable,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { randomStringGenerator } from '@nestjs/common/utils/random-string-generator.util';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcryptjs';
 import ms from 'ms';
 
+import { ERROR_MESSAGES } from '@src/common/constants';
 import {
+  FORBIDDEN,
   NOT_FOUND,
   UNAUTHORIZED,
   UNPROCESSABLE_ENTITY,
@@ -56,7 +54,10 @@ export class AuthService {
     }
 
     if (!user.password) {
-      throw UNPROCESSABLE_ENTITY('password is not correct', 'password');
+      throw UNPROCESSABLE_ENTITY(
+        ERROR_MESSAGES.NOT_PRESENT('password'),
+        'password',
+      );
     }
 
     const isValidPassword = await bcrypt.compare(
@@ -65,7 +66,10 @@ export class AuthService {
     );
 
     if (!isValidPassword) {
-      throw UNPROCESSABLE_ENTITY('password is not correct', 'password');
+      throw UNPROCESSABLE_ENTITY(
+        ERROR_MESSAGES.INCORRECT('password'),
+        'password',
+      );
     }
 
     const hash = crypto
@@ -141,11 +145,9 @@ export class AuthService {
     }
 
     if (!user) {
-      throw new UnprocessableEntityException({
-        status: HttpStatus.UNPROCESSABLE_ENTITY,
-        errors: {
-          user: 'userNotFound',
-        },
+      throw NOT_FOUND('User', {
+        socialId: socialData.id,
+        ...(socialEmail && { email: socialEmail }),
       });
     }
 
@@ -226,18 +228,13 @@ export class AuthService {
 
       userId = jwtData.confirmEmailUserId;
     } catch {
-      throw new UnprocessableEntityException({
-        status: HttpStatus.UNPROCESSABLE_ENTITY,
-        errors: {
-          hash: `invalidHash`,
-        },
-      });
+      throw UNPROCESSABLE_ENTITY(ERROR_MESSAGES.INCORRECT('hash'), 'hash');
     }
 
     const user = await this.usersService.findById(userId);
 
     if (user?.status?.id?.toString() !== StatusEnum.inactive.toString()) {
-      throw NOT_FOUND('User', { id: userId } as Record<string, string>);
+      throw NOT_FOUND('User', { id: userId });
     }
 
     user.status = {
@@ -264,12 +261,7 @@ export class AuthService {
       userId = jwtData.confirmEmailUserId;
       newEmail = jwtData.newEmail;
     } catch {
-      throw new UnprocessableEntityException({
-        status: HttpStatus.UNPROCESSABLE_ENTITY,
-        errors: {
-          hash: `invalidHash`,
-        },
-      });
+      throw UNPROCESSABLE_ENTITY(ERROR_MESSAGES.INCORRECT('hash'), 'hash');
     }
 
     const user = (await this.usersService.findById(userId)) as User;
@@ -326,12 +318,7 @@ export class AuthService {
 
       userId = jwtData.forgotUserId;
     } catch {
-      throw new UnprocessableEntityException({
-        status: HttpStatus.UNPROCESSABLE_ENTITY,
-        errors: {
-          hash: `invalidHash`,
-        },
-      });
+      throw UNPROCESSABLE_ENTITY(ERROR_MESSAGES.INCORRECT('hash'), 'hash');
     }
 
     const user = (await this.usersService.findById(userId)) as User;
@@ -359,13 +346,16 @@ export class AuthService {
 
     if (userDto.password) {
       if (!userDto.oldPassword) {
-        throw UNPROCESSABLE_ENTITY('Old password is missing', 'oldPassword');
+        throw UNPROCESSABLE_ENTITY(
+          ERROR_MESSAGES.NOT_PRESENT('oldPassword'),
+          'oldPassword',
+        );
       }
 
       if (!currentUser.password) {
         throw UNPROCESSABLE_ENTITY(
-          'Old password is not correct',
-          'oldPassword',
+          ERROR_MESSAGES.NOT_PRESENT('password'),
+          'password',
         );
       }
 
@@ -376,7 +366,7 @@ export class AuthService {
 
       if (!isValidOldPassword) {
         throw UNPROCESSABLE_ENTITY(
-          'Old password is not correct',
+          ERROR_MESSAGES.INCORRECT('oldPassword'),
           'oldPassword',
         );
       } else {
@@ -391,7 +381,7 @@ export class AuthService {
       const userByEmail = await this.usersService.findByEmail(userDto.email);
 
       if (userByEmail && userByEmail.id !== currentUser.id) {
-        throw UNPROCESSABLE_ENTITY('Email already exists', 'email');
+        throw FORBIDDEN(ERROR_MESSAGES.ALREADY_EXISTS('email'), 'email');
       }
 
       const hash = await this.jwtService.signAsync(
@@ -527,7 +517,7 @@ export class AuthService {
     if (typeof this.usersService[userServiceFunction] !== 'function') {
       throw UNPROCESSABLE_ENTITY(
         `Method ${userServiceFunction} not found on user service.`,
-        'id',
+        field,
       );
     }
 

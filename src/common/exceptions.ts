@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   HttpStatus,
   InternalServerErrorException,
   NotFoundException,
@@ -8,7 +9,7 @@ import {
 
 export const NOT_FOUND = (
   entityName: string,
-  attributes: Record<string, string>,
+  attributes: Record<string, string | number>,
 ) => {
   const errors = Object.entries(attributes).reduce((acc, [key, value]) => {
     acc[key] = `${entityName} not found for ${key}: ${value}`;
@@ -38,6 +39,15 @@ export const UNPROCESSABLE_ENTITY = (message: string, attribute: string) => {
 export const UNAUTHORIZED = (message: string, attribute: string) => {
   return new UnprocessableEntityException({
     statusCode: HttpStatus.UNAUTHORIZED,
+    errors: {
+      [attribute]: message,
+    },
+  });
+};
+
+export const FORBIDDEN = (message: string, attribute: string) => {
+  return new ForbiddenException({
+    statusCode: HttpStatus.FORBIDDEN,
     errors: {
       [attribute]: message,
     },

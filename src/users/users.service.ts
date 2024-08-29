@@ -2,7 +2,12 @@ import { Injectable } from '@nestjs/common';
 import bcrypt from 'bcryptjs';
 
 import { AuthProvidersEnum } from '@src/auth/auth-providers.enum';
-import { NOT_FOUND, UNPROCESSABLE_ENTITY } from '@src/common/exceptions';
+import { ERROR_MESSAGES } from '@src/common/constants';
+import {
+  FORBIDDEN,
+  NOT_FOUND,
+  UNPROCESSABLE_ENTITY,
+} from '@src/common/exceptions';
 import { FilesService } from '@src/files/files.service';
 import { RoleEnum } from '@src/roles/roles.enum';
 import { StatusEnum } from '@src/statuses/statuses.enum';
@@ -38,7 +43,7 @@ export class UsersService {
         clonedPayload.email,
       );
       if (userObject) {
-        throw UNPROCESSABLE_ENTITY('Email already exists', 'email');
+        throw FORBIDDEN(ERROR_MESSAGES.ALREADY_EXISTS('email'), 'email');
       }
     }
 
@@ -47,7 +52,7 @@ export class UsersService {
         clonedPayload.photo.id,
       );
       if (!fileObject) {
-        throw UNPROCESSABLE_ENTITY('Image does not exist', 'photo');
+        throw NOT_FOUND('File', { id: clonedPayload.photo.id });
       }
       clonedPayload.photo = fileObject;
     }
@@ -57,7 +62,7 @@ export class UsersService {
         .map(String)
         .includes(String(clonedPayload.role.id));
       if (!roleObject) {
-        throw UNPROCESSABLE_ENTITY('Role does not exist', 'role');
+        throw NOT_FOUND('Role', { id: clonedPayload.role.id });
       }
     }
 
@@ -66,7 +71,7 @@ export class UsersService {
         .map(String)
         .includes(String(clonedPayload.status.id));
       if (!statusObject) {
-        throw UNPROCESSABLE_ENTITY('Status does not exist', 'status');
+        throw NOT_FOUND('Status', { id: clonedPayload.status.id });
       }
     }
 
@@ -130,7 +135,7 @@ export class UsersService {
       );
 
       if (userObject && userObject.id !== id) {
-        throw UNPROCESSABLE_ENTITY('Email already exists', 'email');
+        throw FORBIDDEN(ERROR_MESSAGES.ALREADY_EXISTS('email'), 'email');
       }
     }
 
@@ -139,7 +144,7 @@ export class UsersService {
         clonedPayload.photo.id,
       );
       if (!fileObject) {
-        throw UNPROCESSABLE_ENTITY('Image does not exist', 'photo');
+        throw NOT_FOUND('File', { id: clonedPayload.photo.id });
       }
       clonedPayload.photo = fileObject;
     }
@@ -149,7 +154,7 @@ export class UsersService {
         .map(String)
         .includes(String(clonedPayload.role.id));
       if (!roleObject) {
-        throw UNPROCESSABLE_ENTITY('Role does not exist', 'role');
+        throw NOT_FOUND('Role', { id: clonedPayload.role.id });
       }
     }
 
@@ -158,7 +163,7 @@ export class UsersService {
         .map(String)
         .includes(String(clonedPayload.status.id));
       if (!statusObject) {
-        throw UNPROCESSABLE_ENTITY('Status does not exist', 'status');
+        throw NOT_FOUND('Status', { id: clonedPayload.status.id });
       }
     }
 

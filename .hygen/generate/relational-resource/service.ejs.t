@@ -37,7 +37,7 @@ export class <%= h.inflection.transform(name, ['pluralize']) %>Service {
   update(id: <%= name %>['id'], update<%= name %>Dto: Update<%= name %>Dto) {
     const <%= h.inflection.camelize(name, true) %> =  this.<%= h.inflection.camelize(name, true) %>Repository.update(id, update<%= name %>Dto)
     if(!<%= h.inflection.camelize(name, true) %>) {
-      throw NOT_FOUND('<%= name %>', { id } as Record<string, string>)
+      throw NOT_FOUND('<%= name %>', { id })
     }
     return ;
   }
