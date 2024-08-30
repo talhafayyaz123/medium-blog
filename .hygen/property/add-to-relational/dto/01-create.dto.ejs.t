@@ -17,5 +17,5 @@ before: "// @custom-inject-point"
   <% } else if (h.getType(type) === 'object') { -%>
   @IsObject()
   <% } -%>
-  <%= property %>: <%= h.getType(type) %>;
+  <%= h.inflection.camelize(property, true) %>: <%= h.getType(type) %>;
 <% } -%>
