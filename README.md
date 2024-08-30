@@ -6,6 +6,23 @@ Implementing the [Realworld Medium Clone Specifications](https://realworld-docs.
 
 [Full documentation here](/docs/readme.md)
 
+## Roadmap
+
+1. **Implement Views with Best Practices**
+   - Develop views using best practices and demonstrate their real-world usage to enhance maintainability and performance.
+
+2. **Integrate with Real-World Open Source Third-Party APIs**
+   - Build a solid architecture for interacting with third-party APIs to ensure seamless and reliable integrations.
+
+3. **Implement the Remaining [RealWorld API Specifications](https://realworld-docs.netlify.app/specifications/backend/endpoints/)**
+   - [Follow User](https://realworld-docs.netlify.app/specifications/backend/endpoints/#follow-user)
+   - [Unfollow User](https://realworld-docs.netlify.app/specifications/backend/endpoints/#unfollow-user)
+   - [Feed Articles](https://realworld-docs.netlify.app/specifications/backend/endpoints/#feed-articles)
+   - [Favorite Article](https://realworld-docs.netlify.app/specifications/backend/endpoints/#favorite-article)
+   - [Unfavorite Article](https://realworld-docs.netlify.app/specifications/backend/endpoints/#unfavorite-article)
+
+
+
 ## Features
 
 - [x] This project is using [TypeORM](https://www.npmjs.com/package/typeorm) along with [PostgreSQL](https://www.postgresql.org/).
