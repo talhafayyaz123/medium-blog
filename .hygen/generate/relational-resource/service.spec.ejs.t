@@ -47,7 +47,7 @@ describe('<%= h.inflection.transform(name, ['pluralize']) %>Service', () => {
     });
   });
 
-  it('should return a bat when found by id', async () => {
+  it('should return a <%= name.toLowerCase() %> when found by id', async () => {
     const id = mock<%= name %>.id;
     jest.spyOn(<%= h.inflection.camelize(name, true) %>Repository, 'findById').mockResolvedValue(mock<%= name %>);
     const result = await service.findOne(id);
