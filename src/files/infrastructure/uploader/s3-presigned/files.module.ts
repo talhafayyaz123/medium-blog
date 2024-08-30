@@ -1,14 +1,12 @@
 import { S3Client } from '@aws-sdk/client-s3';
-import {
-  HttpStatus,
-  Module,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { randomStringGenerator } from '@nestjs/common/utils/random-string-generator.util';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MulterModule } from '@nestjs/platform-express';
 import multerS3 from 'multer-s3';
 
+import { ERROR_MESSAGES } from '@src/common/constants';
+import { UNPROCESSABLE_ENTITY } from '@src/common/exceptions';
 import { AllConfigType } from '@src/config/config.type';
 import { RelationalFilePersistenceModule } from '@src/files/infrastructure/persistence/relational/relational-persistence.module';
 
@@ -40,12 +38,10 @@ const infrastructurePersistenceModule = RelationalFilePersistenceModule;
           fileFilter: (request, file, callback) => {
             if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
               return callback(
-                new UnprocessableEntityException({
-                  status: HttpStatus.UNPROCESSABLE_ENTITY,
-                  errors: {
-                    file: `cantUploadFileType`,
-                  },
-                }),
+                UNPROCESSABLE_ENTITY(
+                  ERROR_MESSAGES.INCORRECT('fileType'),
+                  'fileType',
+                ),
                 false,
               );
             }

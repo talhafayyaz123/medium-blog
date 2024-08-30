@@ -26,7 +26,7 @@ export abstract class ArticleRepository {
     payload: DeepPartial<
       Omit<
         Article,
-        'id' | 'tagList' | 'comments' | 'author' | 'created_at' | 'updated_at'
+        'id' | 'tagList' | 'comments' | 'author' | 'createdAt' | 'updatedAt'
       >
     >,
   ): Promise<Article>;

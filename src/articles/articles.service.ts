@@ -1,10 +1,11 @@
-import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { diff, unique } from 'radash';
 import slugify from 'slugify';
 
 import { JwtPayloadType } from '@src/auth/strategies/types/jwt-payload.type';
 import { CommentsService } from '@src/comments/comments.service';
 import { Comment } from '@src/comments/domain/comment';
+import { NOT_FOUND, UNPROCESSABLE_ENTITY } from '@src/common/exceptions';
 import { DatabaseHelperRepository } from '@src/database-helpers/database-helper';
 import { Tag } from '@src/tags/domain/tag';
 import { TagsService } from '@src/tags/tags.service';
@@ -43,7 +44,7 @@ export class ArticlesService {
   ): Promise<Article> {
     const clonedPayload = {
       ...createArticleDto,
-      author_id: userJwtPayload.id,
+      authorId: userJwtPayload.id,
     };
 
     let tags: NullableType<Tag[]> = [];
@@ -74,8 +75,7 @@ export class ArticlesService {
     };
 
     const article = await this.articleRepository.create(articlePayload);
-
-    return await this.validateAndFetchArticleWithRelationsById(article?.id);
+    return await this.findAndValidate('id', article?.id, true);
   }
 
   slugify(title: string): string {
@@ -117,11 +117,11 @@ export class ArticlesService {
   }
 
   findOne(id: Article['id']) {
-    return this.articleRepository.findByIdWithRelations(id);
+    return this.findAndValidate('id', id, true);
   }
 
   async update(id: Article['id'], updateArticleDto: UpdateArticleDto) {
-    const article = await this.validateAndFetchArticleById(id);
+    const article = await this.findAndValidate('id', id);
 
     const { title, ...rest } = updateArticleDto;
 
@@ -136,9 +136,7 @@ export class ArticlesService {
       payload,
     );
 
-    return await this.articleRepository.findByIdWithRelations(
-      updatedArticle.id,
-    );
+    return await this.findAndValidate('id', updatedArticle.id, true);
   }
 
   remove(id: Article['id']) {
@@ -150,7 +148,7 @@ export class ArticlesService {
     body: Comment['body'],
     userJwtPayload: JwtPayloadType,
   ) {
-    const article = await this.validateAndFetchArticleBySlug(slug);
+    const article = await this.findAndValidate('slug', slug);
 
     return await this.commentsService.create(article.id, body, userJwtPayload);
   }
@@ -162,75 +160,15 @@ export class ArticlesService {
     paginationOptions: IPaginationOptions;
     slug: Article['slug'];
   }) {
-    const article = await this.validateAndFetchArticleBySlug(slug);
+    const article = await this.findAndValidate('slug', slug);
 
     return this.commentsService.findAllWithPagination({
       paginationOptions: {
         page: paginationOptions.page,
         limit: paginationOptions.limit,
       },
-      article_id: article.id,
+      articleId: article.id,
     });
-  }
-
-  async validateAndFetchArticleBySlug(slug: Article['slug']): Promise<Article> {
-    const article = await this.articleRepository.findBySlug(slug);
-
-    if (!article) {
-      throw new NotFoundException({
-        status: HttpStatus.NOT_FOUND,
-        errors: {
-          slug: 'Artilce not found',
-        },
-      });
-    }
-
-    return article;
-  }
-
-  async validateAndFetchArticleById(id: Article['id']): Promise<Article> {
-    const article = await this.articleRepository.findById(id);
-
-    if (!article) {
-      throw new NotFoundException({
-        status: HttpStatus.NOT_FOUND,
-        errors: {
-          slug: 'Artilce not found',
-        },
-      });
-    }
-
-    return article;
-  }
-
-  async validateAndFetchArticleWithRelationsById(
-    id: Article['id'],
-  ): Promise<Article> {
-    const article = await this.articleRepository.findByIdWithRelations(id);
-
-    if (!article) {
-      throw new NotFoundException({
-        status: HttpStatus.NOT_FOUND,
-        errors: {
-          slug: 'Artilce not found',
-        },
-      });
-    }
-
-    return article;
-  }
-
-  async validateArticle(slug: Article['slug']): Promise<void> {
-    const article = await this.articleRepository.findBySlug(slug);
-
-    if (!article) {
-      throw new NotFoundException({
-        status: HttpStatus.NOT_FOUND,
-        errors: {
-          slug: 'Artilce not found',
-        },
-      });
-    }
   }
 
   async removeComment(
@@ -238,8 +176,27 @@ export class ArticlesService {
     slug: Article['slug'],
     userJwtPayload: JwtPayloadType,
   ) {
-    await this.validateArticle(slug);
+    const article = await this.articleRepository.findBySlug(slug);
+    if (!article) {
+      throw NOT_FOUND('Article', { slug });
+    }
 
     return await this.commentsService.remove(id, userJwtPayload);
+  }
+
+  async findAndValidate(field, value, fetchRelations = false) {
+    const repoFunction = `findBy${field.charAt(0).toUpperCase()}${field.slice(1)}${fetchRelations ? 'WithRelations' : ''}`; // captilize first letter of the field name
+    if (typeof this.articleRepository[repoFunction] !== 'function') {
+      throw UNPROCESSABLE_ENTITY(
+        `Method ${repoFunction} not found on article repository.`,
+        field,
+      );
+    }
+
+    const article = await this.articleRepository[repoFunction](value);
+    if (!article) {
+      throw NOT_FOUND('Article', { [field]: value });
+    }
+    return article;
   }
 }

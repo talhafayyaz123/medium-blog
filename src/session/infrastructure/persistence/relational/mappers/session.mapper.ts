@@ -11,9 +11,9 @@ export class SessionMapper {
       domainEntity.user = UserMapper.toDomain(raw.user);
     }
     domainEntity.hash = raw.hash;
-    domainEntity.created_at = raw.created_at;
-    domainEntity.updated_at = raw.updated_at;
-    domainEntity.deleted_at = raw.deleted_at;
+    domainEntity.createdAt = raw.created_at;
+    domainEntity.updatedAt = raw.updated_at;
+    domainEntity.deletedAt = raw.deleted_at;
     return domainEntity;
   }
 
@@ -27,9 +27,9 @@ export class SessionMapper {
     }
     persistenceEntity.hash = domainEntity.hash;
     persistenceEntity.user = user;
-    persistenceEntity.created_at = domainEntity.created_at;
-    persistenceEntity.updated_at = domainEntity.updated_at;
-    persistenceEntity.deleted_at = domainEntity.deleted_at;
+    persistenceEntity.created_at = domainEntity.createdAt;
+    persistenceEntity.updated_at = domainEntity.updatedAt;
+    persistenceEntity.deleted_at = domainEntity.deletedAt;
 
     return persistenceEntity;
   }

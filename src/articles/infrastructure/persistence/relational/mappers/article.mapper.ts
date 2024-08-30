@@ -24,8 +24,8 @@ export class ArticleMapper {
       );
     }
 
-    domainEntity.created_at = raw.created_at;
-    domainEntity.updated_at = raw.updated_at;
+    domainEntity.createdAt = raw.created_at;
+    domainEntity.updatedAt = raw.updated_at;
 
     return domainEntity;
   }
@@ -39,12 +39,12 @@ export class ArticleMapper {
     if (domainEntity.id) {
       persistenceEntity.id = domainEntity.id;
     }
-    if (isNumber(domainEntity.author_id)) {
-      persistenceEntity.author_id = domainEntity.author_id;
+    if (isNumber(domainEntity.authorId)) {
+      persistenceEntity.author_id = domainEntity.authorId;
     }
 
-    persistenceEntity.created_at = domainEntity.created_at;
-    persistenceEntity.updated_at = domainEntity.updated_at;
+    persistenceEntity.created_at = domainEntity.createdAt;
+    persistenceEntity.updated_at = domainEntity.updatedAt;
 
     return persistenceEntity;
   }
@@ -64,8 +64,8 @@ export class ArticleMapper {
       );
     }
 
-    if (isNumber(domainEntity.author_id)) {
-      persistenceEntity.author_id = domainEntity.author_id;
+    if (isNumber(domainEntity.authorId)) {
+      persistenceEntity.author_id = domainEntity.authorId;
     }
 
     return persistenceEntity;

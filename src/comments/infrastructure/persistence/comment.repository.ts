@@ -6,16 +6,16 @@ export abstract class CommentRepository {
   abstract create(
     data: Omit<
       Comment,
-      'id' | 'author' | 'author_id' | 'created_at' | 'updated_at'
+      'id' | 'author' | 'authorId' | 'createdAt' | 'updatedAt'
     >,
   ): Promise<Comment>;
 
   abstract findAllWithPagination({
     paginationOptions,
-    article_id,
+    articleId,
   }: {
     paginationOptions: IPaginationOptions;
-    article_id: Comment['article_id'];
+    articleId: Comment['articleId'];
   }): Promise<Comment[]>;
 
   abstract findById(id: Comment['id']): Promise<NullableType<Comment>>;

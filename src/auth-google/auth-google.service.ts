@@ -1,11 +1,9 @@
-import {
-  HttpStatus,
-  Injectable,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { OAuth2Client } from 'google-auth-library';
 
+import { ERROR_MESSAGES } from '@src/common/constants';
+import { UNPROCESSABLE_ENTITY } from '@src/common/exceptions';
 import { AllConfigType } from '@src/config/config.type';
 import { SocialInterface } from '@src/social/interfaces/social.interface';
 
@@ -35,12 +33,7 @@ export class AuthGoogleService {
     const data = ticket.getPayload();
 
     if (!data) {
-      throw new UnprocessableEntityException({
-        status: HttpStatus.UNPROCESSABLE_ENTITY,
-        errors: {
-          user: 'wrongToken',
-        },
-      });
+      throw UNPROCESSABLE_ENTITY(ERROR_MESSAGES.INCORRECT('token'), 'token');
     }
 
     return {

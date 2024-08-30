@@ -11,19 +11,19 @@ export class UserMapper {
     domainEntity.id = raw.id;
     domainEntity.email = raw.email;
     domainEntity.password = raw.password;
-    domainEntity.previous_password = raw.previous_password;
+    domainEntity.previousPassword = raw.previous_password;
     domainEntity.provider = raw.provider;
-    domainEntity.social_id = raw.social_id;
-    domainEntity.first_name = raw.first_name;
-    domainEntity.last_name = raw.last_name;
+    domainEntity.socialId = raw.social_id;
+    domainEntity.firstName = raw.first_name;
+    domainEntity.lastName = raw.last_name;
     if (raw.photo) {
       domainEntity.photo = FileMapper.toDomain(raw.photo);
     }
     domainEntity.role = raw.role;
     domainEntity.status = raw.status;
-    domainEntity.created_at = raw.created_at;
-    domainEntity.updated_at = raw.updated_at;
-    domainEntity.deleted_at = raw.deleted_at;
+    domainEntity.createdAt = raw.created_at;
+    domainEntity.updatedAt = raw.updated_at;
+    domainEntity.deletedAt = raw.deleted_at;
     return domainEntity;
   }
 
@@ -58,17 +58,17 @@ export class UserMapper {
     }
     persistenceEntity.email = domainEntity.email;
     persistenceEntity.password = domainEntity.password;
-    persistenceEntity.previous_password = domainEntity.previous_password;
+    persistenceEntity.previous_password = domainEntity.previousPassword;
     persistenceEntity.provider = domainEntity.provider;
-    persistenceEntity.social_id = domainEntity.social_id;
-    persistenceEntity.first_name = domainEntity.first_name;
-    persistenceEntity.last_name = domainEntity.last_name;
+    persistenceEntity.social_id = domainEntity.socialId;
+    persistenceEntity.first_name = domainEntity.firstName;
+    persistenceEntity.last_name = domainEntity.lastName;
     persistenceEntity.photo = photo;
     persistenceEntity.role = role;
     persistenceEntity.status = status;
-    persistenceEntity.created_at = domainEntity.created_at;
-    persistenceEntity.updated_at = domainEntity.updated_at;
-    persistenceEntity.deleted_at = domainEntity.deleted_at;
+    persistenceEntity.created_at = domainEntity.createdAt;
+    persistenceEntity.updated_at = domainEntity.updatedAt;
+    persistenceEntity.deleted_at = domainEntity.deletedAt;
     return persistenceEntity;
   }
 }
