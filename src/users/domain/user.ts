@@ -24,7 +24,7 @@ export class User {
   password?: string;
 
   @Exclude({ toPlainOnly: true })
-  previous_password?: string;
+  previousPassword?: string;
 
   @ApiProperty({
     type: String,
@@ -38,19 +38,19 @@ export class User {
     example: '1234567890',
   })
   @Expose({ groups: ['me', 'admin'] })
-  social_id?: string | null;
+  socialId?: string | null;
 
   @ApiProperty({
     type: String,
     example: 'John',
   })
-  first_name: string | null;
+  firstName: string | null;
 
   @ApiProperty({
     type: String,
     example: 'Doe',
   })
-  last_name: string | null;
+  lastName: string | null;
 
   @ApiProperty({
     type: () => FileType,
@@ -68,11 +68,11 @@ export class User {
   status?: Status;
 
   @ApiProperty()
-  created_at: Date;
+  createdAt: Date;
 
   @ApiProperty()
-  updated_at: Date;
+  updatedAt: Date;
 
   @ApiProperty()
-  deleted_at: Date;
+  deletedAt: Date;
 }

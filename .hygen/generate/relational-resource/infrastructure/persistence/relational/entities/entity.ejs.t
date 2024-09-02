@@ -7,10 +7,11 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { EntityRelationalHelper } from '../../../../../utils/relational-entity-helper';
+import { EntityRelationalHelper } from '@src/utils/relational-entity-helper';
+import { TABLES } from '@src/common/constants';
 
 @Entity({
-  name: '<%= h.inflection.transform(name, ['underscore']) %>',
+  name: TABLES.<%= h.inflection.camelize(name, true) %>,
 })
 export class <%= name %>Entity extends EntityRelationalHelper {
   @PrimaryGeneratedColumn('uuid')

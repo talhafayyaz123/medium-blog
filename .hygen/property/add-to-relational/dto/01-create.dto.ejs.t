@@ -1,7 +1,7 @@
 ---
 inject: true
 to: src/<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>/dto/create-<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.dto.ts
-before: "// @custom-inject-point"
+after: "export class"
 ---
 
 <% if (isAddToDto) { -%>
@@ -17,5 +17,5 @@ before: "// @custom-inject-point"
   <% } else if (h.getType(type) === 'object') { -%>
   @IsObject()
   <% } -%>
-  <%= property %>: <%= h.getType(type) %>;
+  <%= h.inflection.camelize(property, true) %>: <%= h.getType(type) %>;
 <% } -%>

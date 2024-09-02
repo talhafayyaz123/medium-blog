@@ -1,8 +1,8 @@
 ---
 inject: true
 to: src/<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>/domain/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.ts
-before: "// @custom-inject-point"
+after: "export class"
 ---
 
 @ApiProperty()
-<%= property %>: <%= h.getType(type) %>;
+<%= h.inflection.camelize(property, true) %>: <%= h.getType(type) %>;

@@ -1,22 +1,15 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
+import { TABLES } from '@src/common/constants';
 import { EntityRelationalHelper } from '@src/utils/relational-entity-helper';
 
 @Entity({
-  name: 'role',
+  name: TABLES.role,
 })
 export class RoleEntity extends EntityRelationalHelper {
-  @ApiProperty({
-    type: Number,
-  })
   @PrimaryColumn()
   id: number;
 
-  @ApiProperty({
-    type: String,
-    example: 'admin',
-  })
   @Column()
   name?: string;
 }

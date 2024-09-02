@@ -3,7 +3,7 @@ import { NullableType } from '@src/utils/types/nullable.type';
 
 export abstract class TagRepository {
   abstract createMany(
-    data: Omit<Tag, 'id' | 'created_at' | 'updated_at'>[],
+    data: Omit<Tag, 'id' | 'createdAt' | 'updatedAt'>[],
   ): Promise<Tag[]>;
 
   abstract findAll(): Promise<NullableType<Tag[]>>;

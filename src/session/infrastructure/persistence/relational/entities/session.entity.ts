@@ -10,11 +10,12 @@ import {
   JoinColumn,
 } from 'typeorm';
 
+import { TABLES } from '@src/common/constants';
 import { UserEntity } from '@src/users/infrastructure/persistence/relational/entities/user.entity';
 import { EntityRelationalHelper } from '@src/utils/relational-entity-helper';
 
 @Entity({
-  name: 'session',
+  name: TABLES.session,
 })
 export class SessionEntity extends EntityRelationalHelper {
   @PrimaryGeneratedColumn()

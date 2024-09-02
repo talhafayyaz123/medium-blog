@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
+import { NOT_FOUND, UNPROCESSABLE_ENTITY } from '@src/common/exceptions';
 import { User } from '@src/users/domain/user';
 import { NullableType } from '@src/utils/types/nullable.type';
 
@@ -11,11 +12,11 @@ export class SessionService {
   constructor(private readonly sessionRepository: SessionRepository) {}
 
   findById(id: Session['id']): Promise<NullableType<Session>> {
-    return this.sessionRepository.findById(id);
+    return this.findAndValidate('id', id);
   }
 
   create(
-    data: Omit<Session, 'id' | 'created_at' | 'updated_at' | 'deleted_at'>,
+    data: Omit<Session, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>,
   ): Promise<Session> {
     return this.sessionRepository.create(data);
   }
@@ -23,10 +24,14 @@ export class SessionService {
   update(
     id: Session['id'],
     payload: Partial<
-      Omit<Session, 'id' | 'created_at' | 'updated_at' | 'deleted_at'>
+      Omit<Session, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>
     >,
   ): Promise<Session | null> {
-    return this.sessionRepository.update(id, payload);
+    const updatedEntity = this.sessionRepository.update(id, payload);
+    if (!updatedEntity) {
+      throw NOT_FOUND('session', { id });
+    }
+    return updatedEntity;
   }
 
   deleteById(id: Session['id']): Promise<void> {
@@ -42,5 +47,21 @@ export class SessionService {
     excludeSessionId: Session['id'];
   }): Promise<void> {
     return this.sessionRepository.deleteByUserIdWithExclude(conditions);
+  }
+
+  async findAndValidate(field, value, fetchRelations = false) {
+    const repoFunction = `findBy${field.charAt(0).toUpperCase()}${field.slice(1)}${fetchRelations ? 'WithRelations' : ''}`; // captilize first letter of the field name
+    if (typeof this.sessionRepository[repoFunction] !== 'function') {
+      throw UNPROCESSABLE_ENTITY(
+        `Method ${repoFunction} not found on session repository.`,
+        field,
+      );
+    }
+
+    const session = await this.sessionRepository[repoFunction](value);
+    if (!session) {
+      throw NOT_FOUND('session', { [field]: value });
+    }
+    return session;
   }
 }

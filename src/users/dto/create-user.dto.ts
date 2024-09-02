@@ -26,15 +26,15 @@ export class CreateUserDto {
 
   provider?: string;
 
-  social_id?: string | null;
+  socialId?: string | null;
 
   @ApiProperty({ example: 'John', type: String })
   @IsNotEmpty()
-  first_name: string | null;
+  firstName: string | null;
 
   @ApiProperty({ example: 'Doe', type: String })
   @IsNotEmpty()
-  last_name: string | null;
+  lastName: string | null;
 
   @ApiPropertyOptional({ type: () => FileDto })
   @IsOptional()

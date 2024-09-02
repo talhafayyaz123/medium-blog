@@ -4,11 +4,12 @@ import {
   HttpStatus,
   Injectable,
   PayloadTooLargeException,
-  UnprocessableEntityException,
 } from '@nestjs/common';
 import { randomStringGenerator } from '@nestjs/common/utils/random-string-generator.util';
 import { ConfigService } from '@nestjs/config';
 
+import { ERROR_MESSAGES } from '@src/common/constants';
+import { UNPROCESSABLE_ENTITY } from '@src/common/exceptions';
 import { FileType } from '@src/files/domain/file';
 import { FileRepository } from '@src/files/infrastructure/persistence/file.repository';
 
@@ -39,21 +40,14 @@ export class FilesS3PresignedService {
     file: FileUploadDto,
   ): Promise<{ file: FileType; uploadSignedUrl: string }> {
     if (!file) {
-      throw new UnprocessableEntityException({
-        status: HttpStatus.UNPROCESSABLE_ENTITY,
-        errors: {
-          file: 'selectFile',
-        },
-      });
+      throw UNPROCESSABLE_ENTITY(ERROR_MESSAGES.NOT_PRESENT('file'), 'file');
     }
 
     if (!file.fileName.match(/\.(jpg|jpeg|png|gif)$/i)) {
-      throw new UnprocessableEntityException({
-        status: HttpStatus.UNPROCESSABLE_ENTITY,
-        errors: {
-          file: `cantUploadFileType`,
-        },
-      });
+      throw UNPROCESSABLE_ENTITY(
+        ERROR_MESSAGES.INCORRECT('fileType'),
+        'fileType',
+      );
     }
 
     if (
