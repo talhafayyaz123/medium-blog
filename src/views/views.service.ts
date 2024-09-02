@@ -1,21 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { SelectQueryBuilder } from 'typeorm/query-builder/SelectQueryBuilder';
 
+import { QueryBuilder } from '@src/database/utils/query-builder';
 import { UserSummary } from '@src/views/domain/user-summary';
 import { UserSummaryViewEntity } from '@src/views/infrastructure/persistence/relational/entities/user-summary-view.entity';
-import { UserSummaryViewRepository } from '@src/views/infrastructure/persistence/relational/user-summary-view.repository';
+import { ViewsRepository } from '@src/views/infrastructure/persistence/view.repository';
 
 @Injectable()
 export class ViewsService {
-  constructor(
-    private readonly userSummaryRepository: UserSummaryViewRepository,
-  ) {}
+  constructor(private readonly viewsRepository: ViewsRepository) {}
 
-  getActiveUsersQueryBuilder(): SelectQueryBuilder<UserSummaryViewEntity> {
-    return this.userSummaryRepository.getActiveUsersQueryBuilder();
+  getUsersSummaryView(): QueryBuilder<UserSummaryViewEntity> {
+    return this.viewsRepository.getUsersSummaryView();
   }
 
-  getActiveUsers(): Promise<UserSummary[]> {
-    return this.userSummaryRepository.getActiveUsers();
+  getUsersSummary(): Promise<UserSummary[]> {
+    return this.viewsRepository.getUsersSummary();
   }
 }

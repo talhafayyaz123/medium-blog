@@ -48,30 +48,6 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @ApiOkResponse({
-    type: User,
-  })
-  @SerializeOptions({
-    groups: ['admin'],
-  })
-  @Get('summary')
-  @HttpCode(HttpStatus.OK)
-  findUserSummary() {
-    return this.usersService.getActiveUsersSummary();
-  }
-
-  @ApiOkResponse({
-    type: User,
-  })
-  @SerializeOptions({
-    groups: ['admin'],
-  })
-  @Get('summary/qb')
-  @HttpCode(HttpStatus.OK)
-  findUserSummaryV1() {
-    return this.usersService.getActiveUsersSummaryQueryBuilder();
-  }
-
   @ApiCreatedResponse({
     type: User,
   })
