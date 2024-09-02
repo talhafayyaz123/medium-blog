@@ -12,6 +12,8 @@ import { StatusEnum } from '@src/statuses/statuses.enum';
 import { DeepPartial } from '@src/utils/types/deep-partial.type';
 import { NullableType } from '@src/utils/types/nullable.type';
 import { IPaginationOptions } from '@src/utils/types/pagination-options';
+import { UserSummary } from '@src/views/domain/user-summary';
+import { ViewsService } from '@src/views/views.service';
 
 import { User } from './domain/user';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -23,7 +25,21 @@ export class UsersService {
   constructor(
     private readonly usersRepository: UserRepository,
     private readonly filesService: FilesService,
+    private readonly viewService: ViewsService,
   ) {}
+
+  async getActiveUsersSummary(): Promise<UserSummary[]> {
+    return await this.viewService.getActiveUsers();
+  }
+
+  async getActiveUsersSummaryQueryBuilder() {
+    const userQueryBuilder = this.viewService.getActiveUsersQueryBuilder();
+
+    // You can now join this view with other entities or views
+    const query = userQueryBuilder.getRawMany();
+
+    return await query;
+  }
 
   async create(createProfileDto: CreateUserDto): Promise<User> {
     const clonedPayload = {
