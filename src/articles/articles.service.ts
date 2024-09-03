@@ -12,12 +12,12 @@ import { TagsService } from '@src/tags/tags.service';
 import { UsersService } from '@src/users/users.service';
 import { NullableType } from '@src/utils/types/nullable.type';
 import { IPaginationOptions } from '@src/utils/types/pagination-options';
+import { webPagination } from '@src/utils/web-pagination';
 
 import { Article } from './domain/article';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { ArticleRepository } from './infrastructure/persistence/article.repository';
-import { webPagination } from '@src/utils/web-pagination';
 
 @Injectable()
 export class ArticlesService {

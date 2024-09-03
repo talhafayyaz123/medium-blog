@@ -1,5 +1,4 @@
 import { WebPaginationResponseDto } from './dto/web-pagination-response.dto';
-
 import { IPaginationOptions } from './types/pagination-options';
 
 export const webPagination = <T>(

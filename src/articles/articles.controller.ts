@@ -24,6 +24,10 @@ import {
   InfinityPaginationResponse,
   InfinityPaginationResponseDto,
 } from '@src/utils/dto/infinity-pagination-response.dto';
+import {
+  WebPaginationResponse,
+  WebPaginationResponseDto,
+} from '@src/utils/dto/web-pagination-response.dto';
 import { infinityPagination } from '@src/utils/infinity-pagination';
 
 import { ArticlesService } from './articles.service';
@@ -35,10 +39,6 @@ import { DeleteCommentPathParamDto } from './dto/delete-comment-path-param.dto';
 import { FindAllArticlesDto } from './dto/find-all-articles.dto';
 import { FindAllCommentsDto } from './dto/find-all-comments.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
-import {
-  WebPaginationResponse,
-  WebPaginationResponseDto,
-} from '@src/utils/dto/web-pagination-response.dto';
 
 @ApiTags('Articles')
 @Controller({
