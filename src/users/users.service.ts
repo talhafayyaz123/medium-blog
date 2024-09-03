@@ -14,6 +14,8 @@ import { StatusEnum } from '@src/statuses/statuses.enum';
 import { DeepPartial } from '@src/utils/types/deep-partial.type';
 import { NullableType } from '@src/utils/types/nullable.type';
 import { IPaginationOptions } from '@src/utils/types/pagination-options';
+import { UserSummary } from '@src/views/domain/user-summary';
+import { ViewsService } from '@src/views/views.service';
 
 import { User } from './domain/user';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -25,6 +27,7 @@ export class UsersService {
   constructor(
     private readonly usersRepository: UserRepository,
     private readonly filesService: FilesService,
+    private readonly viewsService: ViewsService,
   ) {}
 
   async create(createProfileDto: CreateUserDto): Promise<User> {
@@ -188,5 +191,14 @@ export class UsersService {
       throw NOT_FOUND('User', { [field]: value });
     }
     return user;
+  }
+
+  getUsersSummary(): Promise<UserSummary[]> {
+    return this.viewsService.getUsersSummary();
+  }
+
+  getUserSummary(id: User['id']): Promise<NullableType<UserSummary>> {
+    const userSummaryView = this.viewsService.getUsersSummaryView();
+    return this.usersRepository.getUserSummary(id, userSummaryView);
   }
 }

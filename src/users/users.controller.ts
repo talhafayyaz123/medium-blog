@@ -30,6 +30,7 @@ import {
 } from '@src/utils/dto/infinity-pagination-response.dto';
 import { infinityPagination } from '@src/utils/infinity-pagination';
 import { NullableType } from '@src/utils/types/nullable.type';
+import { UserSummary } from '@src/views/domain/user-summary';
 
 import { User } from './domain/user';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -47,6 +48,36 @@ import { UsersService } from './users.service';
 })
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
+  @ApiOkResponse({
+    type: User,
+  })
+  @SerializeOptions({
+    groups: ['admin'],
+  })
+  @Get('summary')
+  @HttpCode(HttpStatus.OK)
+  getUsersSummary(): Promise<NullableType<UserSummary[]>> {
+    return this.usersService.getUsersSummary();
+  }
+
+  @ApiOkResponse({
+    type: User,
+  })
+  @SerializeOptions({
+    groups: ['admin'],
+  })
+  @Get('summary/:id')
+  @HttpCode(HttpStatus.OK)
+  @ApiParam({
+    name: 'id',
+    type: String,
+    required: true,
+  })
+  getUserSummary(
+    @Param('id') id: User['id'],
+  ): Promise<NullableType<UserSummary>> {
+    return this.usersService.getUserSummary(id);
+  }
 
   @ApiCreatedResponse({
     type: User,
