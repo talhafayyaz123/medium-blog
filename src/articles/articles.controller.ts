@@ -35,6 +35,10 @@ import { DeleteCommentPathParamDto } from './dto/delete-comment-path-param.dto';
 import { FindAllArticlesDto } from './dto/find-all-articles.dto';
 import { FindAllCommentsDto } from './dto/find-all-comments.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
+import {
+  WebPaginationResponse,
+  WebPaginationResponseDto,
+} from '@src/utils/dto/web-pagination-response.dto';
 
 @ApiTags('Articles')
 @Controller({
@@ -52,6 +56,28 @@ export class ArticlesController {
   })
   async create(@Body() createArticleDto: CreateArticleDto, @Request() request) {
     return await this.articlesService.create(createArticleDto, request.user);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Get('web')
+  @ApiOkResponse({
+    type: WebPaginationResponse(Article),
+  })
+  findAllWeb(
+    @Query() query: FindAllArticlesDto,
+  ): Promise<WebPaginationResponseDto<Article>> {
+    const page = query?.page ?? 1;
+    let limit = query?.limit ?? 10;
+    if (limit > 50) {
+      limit = 50;
+    }
+    return this.articlesService.findAllWithPaginationWeb({
+      paginationOptions: {
+        page,
+        limit,
+      },
+    });
   }
 
   @ApiBearerAuth()

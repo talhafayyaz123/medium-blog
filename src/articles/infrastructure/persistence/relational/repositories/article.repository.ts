@@ -48,6 +48,29 @@ export class ArticleRelationalRepository implements ArticleRepository {
     return entities.map((entity) => ArticleMapper.toDomain(entity));
   }
 
+  async findAllWithPaginationWeb({
+    paginationOptions,
+  }: {
+    paginationOptions: IPaginationOptions;
+  }): Promise<[Article[], number]> {
+    const [entities, total] = await this.articleRepository.findAndCount({
+      skip: (paginationOptions.page - 1) * paginationOptions.limit,
+      take: paginationOptions.limit,
+      relations: {
+        author: true,
+        tagList: true,
+      },
+      order: {
+        created_at: 'DESC',
+      },
+    });
+
+    const data: Article[] = entities.map((entity) =>
+      ArticleMapper.toDomain(entity),
+    );
+    return [data, total];
+  }
+
   async findById(id: Article['id']): Promise<NullableType<Article>> {
     const entity = await this.articleRepository.findOne({
       where: { id },

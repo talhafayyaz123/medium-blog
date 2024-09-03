@@ -17,6 +17,7 @@ import { Article } from './domain/article';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { ArticleRepository } from './infrastructure/persistence/article.repository';
+import { webPagination } from '@src/utils/web-pagination';
 
 @Injectable()
 export class ArticlesService {
@@ -114,6 +115,21 @@ export class ArticlesService {
         limit: paginationOptions.limit,
       },
     });
+  }
+
+  async findAllWithPaginationWeb({
+    paginationOptions,
+  }: {
+    paginationOptions: IPaginationOptions;
+  }) {
+    const [data, total]: [Article[], number] =
+      await this.articleRepository.findAllWithPaginationWeb({
+        paginationOptions: {
+          page: paginationOptions.page,
+          limit: paginationOptions.limit,
+        },
+      });
+    return webPagination(data, total, paginationOptions);
   }
 
   findOne(id: Article['id']) {
