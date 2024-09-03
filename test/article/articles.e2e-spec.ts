@@ -48,7 +48,5 @@ describe('ArticlesController (e2e)', () => {
     expect(response.body.pageNumber).toBe(1);
     expect(response.body.pageLimit).toBe(5);
     expect(response.body.from).toBe(1);
-    // expect(response.body.hasNextPage).toBe(true);
-    // expect(response.body.to).toBe(5);
   });
 });
