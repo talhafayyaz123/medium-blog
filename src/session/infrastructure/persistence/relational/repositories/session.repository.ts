@@ -28,9 +28,10 @@ export class SessionRelationalRepository implements SessionRepository {
 
   async create(data: Session): Promise<Session> {
     const persistenceModel = SessionMapper.toPersistence(data);
-    return this.sessionRepository.save(
+    const newEntity = await this.sessionRepository.save(
       this.sessionRepository.create(persistenceModel),
     );
+    return SessionMapper.toDomain(newEntity);
   }
 
   async update(
@@ -43,9 +44,7 @@ export class SessionRelationalRepository implements SessionRepository {
       where: { id: Number(id) },
     });
 
-    if (!entity) {
-      throw new Error('Session not found');
-    }
+    if (!entity) return null;
 
     const updatedEntity = await this.sessionRepository.save(
       this.sessionRepository.create(

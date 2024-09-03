@@ -6,7 +6,7 @@ import { IPaginationOptions } from '@src/utils/types/pagination-options';
 
 export abstract class UserRepository {
   abstract create(
-    data: Omit<User, 'id' | 'created_at' | 'deleted_at' | 'updated_at'>,
+    data: Omit<User, 'id' | 'createdAt' | 'deletedAt' | 'updatedAt'>,
   ): Promise<User>;
 
   abstract findManyWithPagination({
@@ -24,10 +24,10 @@ export abstract class UserRepository {
   abstract findByEmail(email: User['email']): Promise<NullableType<User>>;
 
   abstract findBySocialIdAndProvider({
-    social_id,
+    socialId,
     provider,
   }: {
-    social_id: User['social_id'];
+    socialId: User['socialId'];
     provider: User['provider'];
   }): Promise<NullableType<User>>;
 

@@ -16,9 +16,9 @@ export class AuthRegisterLoginDto {
 
   @ApiProperty({ example: 'John' })
   @IsNotEmpty()
-  first_name: string;
+  firstName: string;
 
   @ApiProperty({ example: 'Doe' })
   @IsNotEmpty()
-  last_name: string;
+  lastName: string;
 }
