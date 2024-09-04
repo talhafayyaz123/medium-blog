@@ -1,12 +1,12 @@
-import { WebPaginationResponseDto } from '@src/utils/dto/web-pagination-response.dto';
+import { PaginationResponseDto } from '@src/utils/dto/pagination-response.dto';
 
 import { IPaginationOptions } from './types/pagination-options';
-import { webPagination } from './web-pagination';
+import { pagination } from './pagination';
 
 //mock type for testing purposes
 type MockDataType = { id: number; name: string };
 
-describe('webPagination', () => {
+describe('Pagination', () => {
   let data: MockDataType[];
   let options: IPaginationOptions;
 
@@ -28,7 +28,7 @@ describe('webPagination', () => {
   it('should return correct pagination structure', () => {
     const total = 10;
 
-    const result: WebPaginationResponseDto<MockDataType> = webPagination(
+    const result: PaginationResponseDto<MockDataType> = pagination(
       data,
       total,
       options,
@@ -49,7 +49,7 @@ describe('webPagination', () => {
     options.page = 2;
     const total = 10;
 
-    const result: WebPaginationResponseDto<MockDataType> = webPagination(
+    const result: PaginationResponseDto<MockDataType> = pagination(
       data,
       total,
       options,
@@ -63,7 +63,7 @@ describe('webPagination', () => {
     const limitedData = [{ id: 1, name: 'Item 1' }]; // Less than the limit
     const total = 4;
 
-    const result: WebPaginationResponseDto<MockDataType> = webPagination(
+    const result: PaginationResponseDto<MockDataType> = pagination(
       limitedData,
       total,
       options,
@@ -76,7 +76,7 @@ describe('webPagination', () => {
     const emptyData: MockDataType[] = [];
     const total = 0;
 
-    const result: WebPaginationResponseDto<MockDataType> = webPagination(
+    const result: PaginationResponseDto<MockDataType> = pagination(
       emptyData,
       total,
       options,

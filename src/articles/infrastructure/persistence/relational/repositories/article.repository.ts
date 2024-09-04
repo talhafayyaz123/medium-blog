@@ -48,7 +48,7 @@ export class ArticleRelationalRepository implements ArticleRepository {
     return entities.map((entity) => ArticleMapper.toDomain(entity));
   }
 
-  async findAllWithPaginationWeb({
+  async findAllWithPaginationStandard({
     paginationOptions,
   }: {
     paginationOptions: IPaginationOptions;

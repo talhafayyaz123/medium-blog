@@ -13,7 +13,7 @@ export abstract class ArticleRepository {
     paginationOptions: IPaginationOptions;
   }): Promise<Article[]>;
 
-  abstract findAllWithPaginationWeb({
+  abstract findAllWithPaginationStandard({
     paginationOptions,
   }: {
     paginationOptions: IPaginationOptions;

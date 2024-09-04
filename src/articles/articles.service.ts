@@ -12,7 +12,7 @@ import { TagsService } from '@src/tags/tags.service';
 import { UsersService } from '@src/users/users.service';
 import { NullableType } from '@src/utils/types/nullable.type';
 import { IPaginationOptions } from '@src/utils/types/pagination-options';
-import { webPagination } from '@src/utils/web-pagination';
+import { pagination } from '@src/utils/pagination';
 
 import { Article } from './domain/article';
 import { CreateArticleDto } from './dto/create-article.dto';
@@ -117,19 +117,19 @@ export class ArticlesService {
     });
   }
 
-  async findAllWithPaginationWeb({
+  async findAllWithPaginationStandard({
     paginationOptions,
   }: {
     paginationOptions: IPaginationOptions;
   }) {
     const [data, total]: [Article[], number] =
-      await this.articleRepository.findAllWithPaginationWeb({
+      await this.articleRepository.findAllWithPaginationStandard({
         paginationOptions: {
           page: paginationOptions.page,
           limit: paginationOptions.limit,
         },
       });
-    return webPagination(data, total, paginationOptions);
+    return pagination(data, total, paginationOptions);
   }
 
   findOne(id: Article['id']) {

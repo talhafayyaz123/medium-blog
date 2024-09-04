@@ -1,7 +1,7 @@
 import { Type } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class WebPaginationResponseDto<T> {
+export class PaginationResponseDto<T> {
   data: T[];
   hasNextPage: boolean;
   totalRecords: number;
@@ -11,8 +11,8 @@ export class WebPaginationResponseDto<T> {
   from: number;
 }
 
-export function WebPaginationResponse<T>(classReference: Type<T>) {
-  abstract class WebPagination {
+export function PaginationResponse<T>(classReference: Type<T>) {
+  abstract class Pagination {
     @ApiProperty({ type: [classReference] })
     data!: T[];
 
@@ -53,10 +53,10 @@ export function WebPaginationResponse<T>(classReference: Type<T>) {
     to: number;
   }
 
-  Object.defineProperty(WebPagination, 'name', {
+  Object.defineProperty(Pagination, 'name', {
     writable: false,
-    value: `WebPagination${classReference.name}ResponseDto`,
+    value: `Pagination${classReference.name}ResponseDto`,
   });
 
-  return WebPagination;
+  return Pagination;
 }
