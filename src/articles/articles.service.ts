@@ -10,9 +10,9 @@ import { DatabaseHelperRepository } from '@src/database-helpers/database-helper'
 import { Tag } from '@src/tags/domain/tag';
 import { TagsService } from '@src/tags/tags.service';
 import { UsersService } from '@src/users/users.service';
+import { pagination } from '@src/utils/pagination';
 import { NullableType } from '@src/utils/types/nullable.type';
 import { IPaginationOptions } from '@src/utils/types/pagination-options';
-import { pagination } from '@src/utils/pagination';
 
 import { Article } from './domain/article';
 import { CreateArticleDto } from './dto/create-article.dto';

@@ -1,7 +1,7 @@
 import { PaginationResponseDto } from '@src/utils/dto/pagination-response.dto';
 
-import { IPaginationOptions } from './types/pagination-options';
 import { pagination } from './pagination';
+import { IPaginationOptions } from './types/pagination-options';
 
 //mock type for testing purposes
 type MockDataType = { id: number; name: string };
