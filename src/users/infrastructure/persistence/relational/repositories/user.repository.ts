@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsWhere, Repository } from 'typeorm';
+import { FindOptionsWhere, Repository, SelectQueryBuilder } from 'typeorm';
 
 import { User } from '@src/users/domain/user';
 import { FilterUserDto, SortUserDto } from '@src/users/dto/query-user.dto';
@@ -9,6 +9,9 @@ import { UserMapper } from '@src/users/infrastructure/persistence/relational/map
 import { UserRepository } from '@src/users/infrastructure/persistence/user.repository';
 import { NullableType } from '@src/utils/types/nullable.type';
 import { IPaginationOptions } from '@src/utils/types/pagination-options';
+import { UserSummary } from '@src/views/domain/user-summary';
+import { UserSummaryViewEntity } from '@src/views/infrastructure/persistence/relational/entities/user-summary-view.entity';
+import { UserSummaryMapper } from '@src/views/infrastructure/persistence/relational/mappers/user.summary.mapper';
 
 @Injectable()
 export class UsersRelationalRepository implements UserRepository {
@@ -114,5 +117,13 @@ export class UsersRelationalRepository implements UserRepository {
 
   async remove(id: User['id']): Promise<void> {
     await this.usersRepository.softDelete(id);
+  }
+
+  async getUserSummary(
+    id: User['id'],
+    query: SelectQueryBuilder<UserSummaryViewEntity>,
+  ): Promise<NullableType<UserSummary>> {
+    const summary = await query.where({ id: Number(id) }).getOne();
+    return summary ? UserSummaryMapper.toDomain(summary) : null;
   }
 }

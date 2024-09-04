@@ -1,8 +1,12 @@
+import { SelectQueryBuilder } from 'typeorm';
+
 import { User } from '@src/users/domain/user';
 import { FilterUserDto, SortUserDto } from '@src/users/dto/query-user.dto';
 import { DeepPartial } from '@src/utils/types/deep-partial.type';
 import { NullableType } from '@src/utils/types/nullable.type';
 import { IPaginationOptions } from '@src/utils/types/pagination-options';
+import { UserSummary } from '@src/views/domain/user-summary';
+import { UserSummaryViewEntity } from '@src/views/infrastructure/persistence/relational/entities/user-summary-view.entity';
 
 export abstract class UserRepository {
   abstract create(
@@ -37,4 +41,8 @@ export abstract class UserRepository {
   ): Promise<User | null>;
 
   abstract remove(id: User['id']): Promise<void>;
+  abstract getUserSummary(
+    id: User['id'],
+    query: SelectQueryBuilder<UserSummaryViewEntity>,
+  ): Promise<NullableType<UserSummary>>;
 }

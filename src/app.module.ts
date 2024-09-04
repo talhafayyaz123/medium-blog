@@ -32,6 +32,7 @@ import { MailerModule } from './mailer/mailer.module';
 import { SessionModule } from './session/session.module';
 import { TagsModule } from './tags/tags.module';
 import { UsersModule } from './users/users.module';
+import { ViewsModule } from './views/views.module';
 
 const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
   useClass: TypeOrmConfigService,
@@ -39,8 +40,10 @@ const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
     return new DataSource(options).initialize();
   },
 });
+
 @Module({
   imports: [
+    ViewsModule,
     TagsModule,
     CommentsModule,
     ArticlesModule,
