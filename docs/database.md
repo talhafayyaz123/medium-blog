@@ -265,6 +265,194 @@ npm run seed:run:relational
    ```
 
 ---
+# Adding Views
+
+To create a new view in the application, follow these steps:
+
+## 1. Define the SQL Query for the View
+
+Add the SQL query for your new view in `src/modules/views/infrastructure/persistence/view.const.ts`. The query defines the structure of the view.
+
+For example:
+
+```ts
+export const USER_SUMMARY_VIEW: ViewConst = {
+  name: 'user_summary_view',
+  expression: `
+    SELECT
+      u.id,
+      u.first_name,
+      u.last_name,
+      u.email,
+      r.name AS role_name,
+      s.name AS status_name,
+      f.path AS photo_url
+    FROM "user" u
+    LEFT JOIN role r ON u.role_id = r.id
+    LEFT JOIN status s ON u.status_id = s.id
+    LEFT JOIN file f ON u.photo_id = f.id
+    WHERE s.name = 'Active'
+  `,
+};
+```
+## 2. Create the View Migration
+
+Use the view query in a new migration to ensure it is properly created in the database. You can create the migration like this:
+
+```ts
+export class CreateUserSummaryView1725255027168 implements MigrationInterface {
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    const { name, expression } = USER_SUMMARY_VIEW;
+
+    await queryRunner.query(`
+        CREATE VIEW ${name} AS
+        ${expression}
+      `);
+  }
+
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`DROP VIEW ${USER_SUMMARY_VIEW.name}`);
+  }
+}
+```
+
+## 3. Add a View Entity
+
+Create an entity that maps the view in the src/modules/views/infrastructure/persistence/entities folder. This allows TypeORM to interact with the view.
+
+```ts
+import { ViewEntity, ViewColumn } from 'typeorm';
+
+import { USER_SUMMARY_VIEW } from '@src/views/infrastructure/persistence/view.consts';
+
+@ViewEntity(USER_SUMMARY_VIEW)
+export class UserSummaryViewEntity {
+  @ViewColumn()
+  id: number;
+
+  @ViewColumn()
+  first_name: string;
+
+  @ViewColumn()
+  last_name: string;
+
+  @ViewColumn()
+  email: string;
+
+  @ViewColumn()
+  role_name: string;
+
+  @ViewColumn()
+  status_name: string;
+
+  @ViewColumn()
+  photo_url: string;
+}
+```
+
+## 4. Add a Domain Class
+
+Create a corresponding domain class for this view. This class represents the data structure in the domain layer.
+
+```ts
+export class UserSummary {
+  @ApiProperty({
+    type: idType,
+  })
+  id: number | string;
+
+  @ApiProperty({
+    type: String,
+    example: 'John',
+  })
+  firstName: string | null;
+
+  @ApiProperty({
+    type: String,
+    example: 'Doe',
+  })
+  lastName: string | null;
+
+  @ApiProperty({
+    type: String,
+    example: 'john.doe@example.com',
+  })
+  @Expose({ groups: ['me', 'admin'] })
+  email: string | null;
+
+  @ApiProperty({
+    type: String,
+    example: 'User',
+  })
+  roleName: string | null;
+
+  @ApiProperty({
+    type: String,
+    example: 'Active',
+  })
+  statusName: string | null;
+
+  @ApiProperty({
+    type: String,
+    example: 'www.s3.com/image-path',
+  })
+  photoUrl: string | null;
+}
+```
+
+## 5. Add a Mapper
+
+Add a mapper to convert the data from the view entity into the domain class.
+
+```ts
+export class UserSummaryMapper {
+  static toDomain(raw: UserSummaryViewEntity): UserSummary {
+    const domainEntity = new UserSummary();
+    domainEntity.id = raw.id;
+    domainEntity.email = raw.email;
+    domainEntity.firstName = raw.first_name;
+    domainEntity.lastName = raw.last_name;
+    domainEntity.roleName = raw.role_name;
+    domainEntity.statusName = raw.status_name;
+    domainEntity.photoUrl = raw.photo_url;
+    return domainEntity;
+  }
+}
+```
+## 6. Inject the View Repository
+
+Inject the repository for the view entity in the repository layer to interact with the view.
+For example, in view.repository.ts:
+```ts
+constructor(
+  @InjectRepository(UserSummaryViewEntity)
+  private readonly userSummaryRepository: Repository<UserSummaryViewEntity>,
+) {}
+```
+## 7. Implement View-Specific Methods
+
+Finally, add the necessary methods to the abstract repository and implement them in the corresponding relational repository class.
+
+For example, add specific methods to the abstract class:
+```ts
+export abstract class AbstractViewRepository {
+  abstract findActiveUsers(): Promise<UserSummaryViewEntity[]>;
+}
+```
+
+Then implement them in your concrete repository:
+```ts
+export class ViewRelationalRepository implements AbstractViewRepository {
+  constructor(
+    @InjectRepository(UserSummaryViewEntity)
+    private readonly userSummaryRepository: Repository<UserSummaryViewEntity>,
+  ) {}
+
+  async findActiveUsers(): Promise<UserSummaryViewEntity[]> {
+    return this.userSummaryRepository.find({ where: { status_name: 'Active' } });
+  }
+}
+```
 
 ## Performance optimization (PostgreSQL + TypeORM)
 
