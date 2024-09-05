@@ -10,6 +10,7 @@ import { DatabaseHelperRepository } from '@src/database-helpers/database-helper'
 import { Tag } from '@src/tags/domain/tag';
 import { TagsService } from '@src/tags/tags.service';
 import { UsersService } from '@src/users/users.service';
+import { pagination } from '@src/utils/pagination';
 import { NullableType } from '@src/utils/types/nullable.type';
 import { IPaginationOptions } from '@src/utils/types/pagination-options';
 
@@ -114,6 +115,21 @@ export class ArticlesService {
         limit: paginationOptions.limit,
       },
     });
+  }
+
+  async findAllWithPaginationStandard({
+    paginationOptions,
+  }: {
+    paginationOptions: IPaginationOptions;
+  }) {
+    const [data, total]: [Article[], number] =
+      await this.articleRepository.findAllWithPaginationStandard({
+        paginationOptions: {
+          page: paginationOptions.page,
+          limit: paginationOptions.limit,
+        },
+      });
+    return pagination(data, total, paginationOptions);
   }
 
   findOne(id: Article['id']) {

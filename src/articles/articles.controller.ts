@@ -24,6 +24,10 @@ import {
   InfinityPaginationResponse,
   InfinityPaginationResponseDto,
 } from '@src/utils/dto/infinity-pagination-response.dto';
+import {
+  PaginationResponse,
+  PaginationResponseDto,
+} from '@src/utils/dto/pagination-response.dto';
 import { infinityPagination } from '@src/utils/infinity-pagination';
 
 import { ArticlesService } from './articles.service';
@@ -52,6 +56,28 @@ export class ArticlesController {
   })
   async create(@Body() createArticleDto: CreateArticleDto, @Request() request) {
     return await this.articlesService.create(createArticleDto, request.user);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Get('standard')
+  @ApiOkResponse({
+    type: PaginationResponse(Article),
+  })
+  findAllPaginated(
+    @Query() query: FindAllArticlesDto,
+  ): Promise<PaginationResponseDto<Article>> {
+    const page = query?.page ?? 1;
+    let limit = query?.limit ?? 10;
+    if (limit > 50) {
+      limit = 50;
+    }
+    return this.articlesService.findAllWithPaginationStandard({
+      paginationOptions: {
+        page,
+        limit,
+      },
+    });
   }
 
   @ApiBearerAuth()

@@ -13,6 +13,12 @@ export abstract class ArticleRepository {
     paginationOptions: IPaginationOptions;
   }): Promise<Article[]>;
 
+  abstract findAllWithPaginationStandard({
+    paginationOptions,
+  }: {
+    paginationOptions: IPaginationOptions;
+  }): Promise<[Article[], number]>;
+
   abstract findById(id: Article['id']): Promise<NullableType<Article>>;
 
   abstract findByIdWithRelations(
