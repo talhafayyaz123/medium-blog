@@ -87,7 +87,7 @@ describe('Pagination', () => {
     expect(result.totalRecords).toBe(0);
     expect(result.pageNumber).toBe(1);
     expect(result.pageLimit).toBe(options.limit);
-    expect(result.from).toBe(1);
+    expect(result.from).toBe(0);
     expect(result.to).toBe(0);
   });
 });
