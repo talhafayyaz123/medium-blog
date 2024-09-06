@@ -4,11 +4,11 @@ import { NullableType } from '@src/utils/types/nullable.type';
 
 import { Tag } from './domain/tag';
 import { CreateTagDto } from './dto/create-tag.dto';
-import { TagRepository } from './infrastructure/persistence/tag.repository';
+import { TagAbstractRepository } from './infrastructure/persistence/tag.abstract.repository';
 
 @Injectable()
 export class TagsService {
-  constructor(private readonly tagRepository: TagRepository) {}
+  constructor(private readonly tagRepository: TagAbstractRepository) {}
 
   createMany(createTagDto: CreateTagDto[]) {
     return this.tagRepository.createMany(createTagDto);

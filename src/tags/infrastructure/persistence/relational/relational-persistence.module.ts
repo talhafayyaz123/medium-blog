@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { TagRepository } from '@src/tags/infrastructure/persistence/tag.repository';
+import { TagAbstractRepository } from '@src/tags/infrastructure/persistence/tag.abstract.repository';
 
 import { TagEntity } from './entities/tag.entity';
 import { TagRelationalRepository } from './repositories/tag.repository';
@@ -10,10 +10,10 @@ import { TagRelationalRepository } from './repositories/tag.repository';
   imports: [TypeOrmModule.forFeature([TagEntity])],
   providers: [
     {
-      provide: TagRepository,
+      provide: TagAbstractRepository,
       useClass: TagRelationalRepository,
     },
   ],
-  exports: [TagRepository],
+  exports: [TagAbstractRepository],
 })
 export class RelationalTagPersistenceModule {}

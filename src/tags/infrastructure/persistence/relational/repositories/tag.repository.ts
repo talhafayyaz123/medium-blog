@@ -5,11 +5,11 @@ import { In, Repository } from 'typeorm';
 import { Tag } from '@src/tags/domain/tag';
 import { TagEntity } from '@src/tags/infrastructure/persistence/relational/entities/tag.entity';
 import { TagMapper } from '@src/tags/infrastructure/persistence/relational/mappers/tag.mapper';
-import { TagRepository } from '@src/tags/infrastructure/persistence/tag.repository';
+import { TagAbstractRepository } from '@src/tags/infrastructure/persistence/tag.abstract.repository';
 import { NullableType } from '@src/utils/types/nullable.type';
 
 @Injectable()
-export class TagRelationalRepository implements TagRepository {
+export class TagRelationalRepository implements TagAbstractRepository {
   constructor(
     @InjectRepository(TagEntity)
     private readonly tagRepository: Repository<TagEntity>,
