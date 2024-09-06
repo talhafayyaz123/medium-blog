@@ -6,12 +6,12 @@ import { UsersService } from '@src/users/users.service';
 import { IPaginationOptions } from '@src/utils/types/pagination-options';
 
 import { Comment } from './domain/comment';
-import { CommentRepository } from './infrastructure/persistence/comment.repository';
+import { CommentAbstractRepository } from './infrastructure/persistence/comment.abstract.repository';
 
 @Injectable()
 export class CommentsService {
   constructor(
-    private readonly commentRepository: CommentRepository,
+    private readonly commentRepository: CommentAbstractRepository,
     private userService: UsersService,
   ) {}
 

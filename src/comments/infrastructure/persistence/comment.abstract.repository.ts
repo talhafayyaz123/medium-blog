@@ -2,7 +2,7 @@ import { Comment } from '@src/comments/domain/comment';
 import { NullableType } from '@src/utils/types/nullable.type';
 import { IPaginationOptions } from '@src/utils/types/pagination-options';
 
-export abstract class CommentRepository {
+export abstract class CommentAbstractRepository {
   abstract create(
     data: Omit<
       Comment,
