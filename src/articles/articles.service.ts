@@ -17,12 +17,12 @@ import { IPaginationOptions } from '@src/utils/types/pagination-options';
 import { Article } from './domain/article';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
-import { ArticleRepository } from './infrastructure/persistence/article.repository';
+import { ArticleAbstractRepository } from './infrastructure/persistence/article.abstract.repository';
 
 @Injectable()
 export class ArticlesService {
   constructor(
-    private readonly articleRepository: ArticleRepository,
+    private readonly articleRepository: ArticleAbstractRepository,
     private readonly commentsService: CommentsService,
     private readonly tagsService: TagsService,
     private readonly dbHelperRepository: DatabaseHelperRepository,
