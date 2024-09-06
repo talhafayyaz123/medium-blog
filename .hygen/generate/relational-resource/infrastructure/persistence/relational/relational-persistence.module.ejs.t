@@ -2,7 +2,7 @@
 to: src/<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>/infrastructure/persistence/relational/relational-persistence.module.ts
 ---
 import { Module } from '@nestjs/common';
-import { <%= name %>Repository } from '../<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.repository';
+import { <%= name %>AbstractRepository } from '../<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.abstract.repository';
 import { <%= name %>RelationalRepository } from './repositories/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { <%= name %>Entity } from './entities/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.entity';
@@ -11,10 +11,10 @@ import { <%= name %>Entity } from './entities/<%= h.inflection.transform(name, [
   imports: [TypeOrmModule.forFeature([<%= name %>Entity])],
   providers: [
     {
-      provide: <%= name %>Repository,
+      provide: <%= name %>AbstractRepository,
       useClass: <%= name %>RelationalRepository,
     },
   ],
-  exports: [<%= name %>Repository],
+  exports: [<%= name %>AbstractRepository],
 })
 export class Relational<%= name %>PersistenceModule {}

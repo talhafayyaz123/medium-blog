@@ -4,14 +4,14 @@ to: src/<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize'
 import { Injectable } from '@nestjs/common';
 import { Create<%= name %>Dto } from './dto/create-<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.dto';
 import { Update<%= name %>Dto } from './dto/update-<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.dto';
-import { <%= name %>Repository } from './infrastructure/persistence/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.repository';
+import { <%= name %>AbstractRepository } from './infrastructure/persistence/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.abstract.repository';
 import { IPaginationOptions } from '../utils/types/pagination-options';
 import { <%= name %> } from './domain/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>';
 import { NOT_FOUND, UNPROCESSABLE_ENTITY } from '@src/common/exceptions'
 
 @Injectable()
 export class <%= h.inflection.transform(name, ['pluralize']) %>Service {
-  constructor(private readonly <%= h.inflection.camelize(name, true) %>Repository: <%= name %>Repository) {}
+  constructor(private readonly <%= h.inflection.camelize(name, true) %>Repository: <%= name %>AbstractRepository) {}
 
   create(create<%= name %>Dto: Create<%= name %>Dto) {
     return this.<%= h.inflection.camelize(name, true) %>Repository.create(create<%= name %>Dto);
