@@ -5,13 +5,13 @@ import { ERROR_MESSAGES } from '@src/common/constants';
 import { UNPROCESSABLE_ENTITY } from '@src/common/exceptions';
 import { AllConfigType } from '@src/config/config.type';
 import { FileType } from '@src/files/domain/file';
-import { FileRepository } from '@src/files/infrastructure/persistence/file.repository';
+import { FileAbstractRepository } from '@src/files/infrastructure/persistence/file.abstract.repository';
 
 @Injectable()
 export class FilesLocalService {
   constructor(
     private readonly configService: ConfigService<AllConfigType>,
-    private readonly fileRepository: FileRepository,
+    private readonly fileRepository: FileAbstractRepository,
   ) {}
 
   async create(file: Express.Multer.File): Promise<{ file: FileType }> {
