@@ -5,11 +5,11 @@ import { Repository, SelectQueryBuilder } from 'typeorm';
 import { UserSummary } from '@src/views/domain/user-summary';
 import { UserSummaryViewEntity } from '@src/views/infrastructure/persistence/relational/entities/user-summary-view.entity';
 import { UserSummaryMapper } from '@src/views/infrastructure/persistence/relational/mappers/user.summary.mapper';
+import { ViewsAbstractRepository } from '@src/views/infrastructure/persistence/view.abstract.repository';
 import { USER_SUMMARY_VIEW } from '@src/views/infrastructure/persistence/view.consts';
-import { ViewsRepository } from '@src/views/infrastructure/persistence/view.repository';
 
 @Injectable()
-export class ViewsRelationalRepository implements ViewsRepository {
+export class ViewsRelationalRepository implements ViewsAbstractRepository {
   constructor(
     @InjectRepository(UserSummaryViewEntity)
     private readonly userSummaryRepository: Repository<UserSummaryViewEntity>,
