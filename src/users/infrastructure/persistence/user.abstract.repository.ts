@@ -8,7 +8,7 @@ import { IPaginationOptions } from '@src/utils/types/pagination-options';
 import { UserSummary } from '@src/views/domain/user-summary';
 import { UserSummaryViewEntity } from '@src/views/infrastructure/persistence/relational/entities/user-summary-view.entity';
 
-export abstract class UserRepository {
+export abstract class UserAbstractRepository {
   abstract create(
     data: Omit<User, 'id' | 'createdAt' | 'deletedAt' | 'updatedAt'>,
   ): Promise<User>;
