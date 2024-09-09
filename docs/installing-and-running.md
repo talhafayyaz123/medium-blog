@@ -59,6 +59,8 @@ Interactions with the database are implemented based on [Hexagonal Architecture]
    npm run seed:run:relational
    ```
 
+1. Update the auth secret keys in the .env files as per the guidelines outlined in the [auth section](auth.md#configure-auth)
+
 1. Run app in dev mode
 
    ```bash
