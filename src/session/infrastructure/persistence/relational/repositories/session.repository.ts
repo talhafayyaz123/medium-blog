@@ -5,12 +5,12 @@ import { Not, Repository } from 'typeorm';
 import { Session } from '@src/session/domain/session';
 import { SessionEntity } from '@src/session/infrastructure/persistence/relational/entities/session.entity';
 import { SessionMapper } from '@src/session/infrastructure/persistence/relational/mappers/session.mapper';
-import { SessionRepository } from '@src/session/infrastructure/persistence/session.repository';
+import { SessionAbstractRepository } from '@src/session/infrastructure/persistence/session.abstract.repository';
 import { User } from '@src/users/domain/user';
 import { NullableType } from '@src/utils/types/nullable.type';
 
 @Injectable()
-export class SessionRelationalRepository implements SessionRepository {
+export class SessionRelationalRepository implements SessionAbstractRepository {
   constructor(
     @InjectRepository(SessionEntity)
     private readonly sessionRepository: Repository<SessionEntity>,

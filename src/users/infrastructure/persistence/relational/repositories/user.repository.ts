@@ -6,7 +6,7 @@ import { User } from '@src/users/domain/user';
 import { FilterUserDto, SortUserDto } from '@src/users/dto/query-user.dto';
 import { UserEntity } from '@src/users/infrastructure/persistence/relational/entities/user.entity';
 import { UserMapper } from '@src/users/infrastructure/persistence/relational/mappers/user.mapper';
-import { UserRepository } from '@src/users/infrastructure/persistence/user.repository';
+import { UserAbstractRepository } from '@src/users/infrastructure/persistence/user.abstract.repository';
 import { NullableType } from '@src/utils/types/nullable.type';
 import { IPaginationOptions } from '@src/utils/types/pagination-options';
 import { UserSummary } from '@src/views/domain/user-summary';
@@ -14,7 +14,7 @@ import { UserSummaryViewEntity } from '@src/views/infrastructure/persistence/rel
 import { UserSummaryMapper } from '@src/views/infrastructure/persistence/relational/mappers/user.summary.mapper';
 
 @Injectable()
-export class UsersRelationalRepository implements UserRepository {
+export class UsersRelationalRepository implements UserAbstractRepository {
   constructor(
     @InjectRepository(UserEntity)
     private readonly usersRepository: Repository<UserEntity>,

@@ -11,7 +11,7 @@ import { ConfigService } from '@nestjs/config';
 import { ERROR_MESSAGES } from '@src/common/constants';
 import { UNPROCESSABLE_ENTITY } from '@src/common/exceptions';
 import { FileType } from '@src/files/domain/file';
-import { FileRepository } from '@src/files/infrastructure/persistence/file.repository';
+import { FileAbstractRepository } from '@src/files/infrastructure/persistence/file.abstract.repository';
 
 import { FileUploadDto } from './dto/file.dto';
 
@@ -20,7 +20,7 @@ export class FilesS3PresignedService {
   private s3: S3Client;
 
   constructor(
-    private readonly fileRepository: FileRepository,
+    private readonly fileRepository: FileAbstractRepository,
     private readonly configService: ConfigService,
   ) {
     this.s3 = new S3Client({

@@ -5,11 +5,11 @@ import { User } from '@src/users/domain/user';
 import { NullableType } from '@src/utils/types/nullable.type';
 
 import { Session } from './domain/session';
-import { SessionRepository } from './infrastructure/persistence/session.repository';
+import { SessionAbstractRepository } from './infrastructure/persistence/session.abstract.repository';
 
 @Injectable()
 export class SessionService {
-  constructor(private readonly sessionRepository: SessionRepository) {}
+  constructor(private readonly sessionRepository: SessionAbstractRepository) {}
 
   findById(id: Session['id']): Promise<NullableType<Session>> {
     return this.findAndValidate('id', id);

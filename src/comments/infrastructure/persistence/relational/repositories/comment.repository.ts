@@ -3,14 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Comment } from '@src/comments/domain/comment';
-import { CommentRepository } from '@src/comments/infrastructure/persistence/comment.repository';
+import { CommentAbstractRepository } from '@src/comments/infrastructure/persistence/comment.abstract.repository';
 import { CommentEntity } from '@src/comments/infrastructure/persistence/relational/entities/comment.entity';
 import { CommentMapper } from '@src/comments/infrastructure/persistence/relational/mappers/comment.mapper';
 import { NullableType } from '@src/utils/types/nullable.type';
 import { IPaginationOptions } from '@src/utils/types/pagination-options';
 
 @Injectable()
-export class CommentRelationalRepository implements CommentRepository {
+export class CommentRelationalRepository implements CommentAbstractRepository {
   constructor(
     @InjectRepository(CommentEntity)
     private readonly commentRepository: Repository<CommentEntity>,

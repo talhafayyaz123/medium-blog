@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { UserRepository } from '@src/users/infrastructure/persistence/user.repository';
+import { UserAbstractRepository } from '@src/users/infrastructure/persistence/user.abstract.repository';
 
 import { UserEntity } from './entities/user.entity';
 import { UsersRelationalRepository } from './repositories/user.repository';
@@ -10,10 +10,10 @@ import { UsersRelationalRepository } from './repositories/user.repository';
   imports: [TypeOrmModule.forFeature([UserEntity])],
   providers: [
     {
-      provide: UserRepository,
+      provide: UserAbstractRepository,
       useClass: UsersRelationalRepository,
     },
   ],
-  exports: [UserRepository],
+  exports: [UserAbstractRepository],
 })
 export class RelationalUserPersistenceModule {}

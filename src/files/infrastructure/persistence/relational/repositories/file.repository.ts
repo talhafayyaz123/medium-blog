@@ -3,13 +3,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { FileType } from '@src/files/domain/file';
-import { FileRepository } from '@src/files/infrastructure/persistence/file.repository';
+import { FileAbstractRepository } from '@src/files/infrastructure/persistence/file.abstract.repository';
 import { FileEntity } from '@src/files/infrastructure/persistence/relational/entities/file.entity';
 import { FileMapper } from '@src/files/infrastructure/persistence/relational/mappers/file.mapper';
 import { NullableType } from '@src/utils/types/nullable.type';
 
 @Injectable()
-export class FileRelationalRepository implements FileRepository {
+export class FileRelationalRepository implements FileAbstractRepository {
   constructor(
     @InjectRepository(FileEntity)
     private readonly fileRepository: Repository<FileEntity>,

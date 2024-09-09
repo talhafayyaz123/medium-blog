@@ -4,7 +4,7 @@ import { DeepPartial } from '@src/utils/types/deep-partial.type';
 import { NullableType } from '@src/utils/types/nullable.type';
 import { IPaginationOptions } from '@src/utils/types/pagination-options';
 
-export abstract class ArticleRepository {
+export abstract class ArticleAbstractRepository {
   abstract create(data: ArticleDTOWithTagDomains): Promise<Article>;
 
   abstract findAllWithPagination({

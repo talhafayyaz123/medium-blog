@@ -1,7 +1,7 @@
 import { Tag } from '@src/tags/domain/tag';
 import { NullableType } from '@src/utils/types/nullable.type';
 
-export abstract class TagRepository {
+export abstract class TagAbstractRepository {
   abstract createMany(
     data: Omit<Tag, 'id' | 'createdAt' | 'updatedAt'>[],
   ): Promise<Tag[]>;

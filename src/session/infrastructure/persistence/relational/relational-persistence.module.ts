@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { SessionRepository } from '@src/session/infrastructure/persistence/session.repository';
+import { SessionAbstractRepository } from '@src/session/infrastructure/persistence/session.abstract.repository';
 
 import { SessionEntity } from './entities/session.entity';
 import { SessionRelationalRepository } from './repositories/session.repository';
@@ -10,10 +10,10 @@ import { SessionRelationalRepository } from './repositories/session.repository';
   imports: [TypeOrmModule.forFeature([SessionEntity])],
   providers: [
     {
-      provide: SessionRepository,
+      provide: SessionAbstractRepository,
       useClass: SessionRelationalRepository,
     },
   ],
-  exports: [SessionRepository],
+  exports: [SessionAbstractRepository],
 })
 export class RelationalSessionPersistenceModule {}

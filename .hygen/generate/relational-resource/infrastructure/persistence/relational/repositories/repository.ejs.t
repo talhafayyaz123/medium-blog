@@ -7,12 +7,12 @@ import { Repository } from 'typeorm';
 import { <%= name %>Entity } from '../entities/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.entity';
 import { NullableType } from '../../../../../utils/types/nullable.type';
 import { <%= name %> } from '../../../../domain/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>';
-import { <%= name %>Repository } from '../../<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.repository';
+import { <%= name %>AbstractRepository } from '../../<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.abstract.repository';
 import { <%= name %>Mapper } from '../mappers/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.mapper';
 import { IPaginationOptions } from '../../../../../utils/types/pagination-options';
 
 @Injectable()
-export class <%= name %>RelationalRepository implements <%= name %>Repository {
+export class <%= name %>RelationalRepository implements <%= name %>AbstractRepository {
   constructor(
     @InjectRepository(<%= name %>Entity)
     private readonly <%= h.inflection.camelize(name, true) %>Repository: Repository<<%= name %>Entity>,

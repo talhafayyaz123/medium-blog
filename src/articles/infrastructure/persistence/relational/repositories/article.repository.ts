@@ -4,14 +4,14 @@ import { Repository } from 'typeorm';
 
 import { ArticleDTOWithTagDomains } from '@src/articles/articles.types';
 import { Article } from '@src/articles/domain/article';
-import { ArticleRepository } from '@src/articles/infrastructure/persistence/article.repository';
+import { ArticleAbstractRepository } from '@src/articles/infrastructure/persistence/article.abstract.repository';
 import { ArticleEntity } from '@src/articles/infrastructure/persistence/relational/entities/article.entity';
 import { ArticleMapper } from '@src/articles/infrastructure/persistence/relational/mappers/article.mapper';
 import { NullableType } from '@src/utils/types/nullable.type';
 import { IPaginationOptions } from '@src/utils/types/pagination-options';
 
 @Injectable()
-export class ArticleRelationalRepository implements ArticleRepository {
+export class ArticleRelationalRepository implements ArticleAbstractRepository {
   constructor(
     @InjectRepository(ArticleEntity)
     private readonly articleRepository: Repository<ArticleEntity>,
