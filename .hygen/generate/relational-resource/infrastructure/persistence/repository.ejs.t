@@ -5,7 +5,7 @@ to: src/<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize'
 import { DeepPartial } from '../../../utils/types/deep-partial.type';
 <% } %>
 <% if (functionalities.includes('findOne')) { %>
-import { NullableType } from '../../../../../utils/types/nullable.type';
+import { NullableType } from '@src/utils/types/nullable.type';
 <% } %>
 <% if (functionalities.includes('create')) { %>
 import { IPaginationOptions } from '../../../utils/types/pagination-options';

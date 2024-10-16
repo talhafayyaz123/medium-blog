@@ -6,7 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { <%= name %>Entity } from '../entities/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.entity';
 <% if (functionalities.includes('findOne')) { %>
-import { NullableType } from '../../../../../utils/types/nullable.type';
+import { NullableType } from '@src/utils/types/nullable.type';
 <% } %>
 import { <%= name %> } from '../../../../domain/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>';
 import { <%= name %>AbstractRepository } from '../../<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.abstract.repository';

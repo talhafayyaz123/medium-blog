@@ -2,22 +2,20 @@
 to: "<%= isAddTestCase ? `src/${h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize'])}/${h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize'])}.service.spec.ts` : null %>"
 ---
 import { Test, TestingModule } from '@nestjs/testing';
-<% if (functionalities.includes('findAll')) { %>
 import { paginationOptions, mock<%= name %>, mockCreate<%= name %>Dto, mockUpdate<%= name %>Dto } from './__mock__/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.mock';
-<% } %>
 import { <%= h.inflection.transform(name, ['pluralize']) %>Service } from './<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>.service';
-import { <%= name %>Repository } from './infrastructure/persistence/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.repository';
+import { <%= name %>AbstractRepository } from './infrastructure/persistence/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.abstract.repository';
 
 describe('<%= h.inflection.transform(name, ['pluralize']) %>Service', () => {
   let service: <%= h.inflection.transform(name, ['pluralize']) %>Service;
-  let <%= h.inflection.camelize(name, true) %>Repository: <%= name %>Repository;
+  let <%= h.inflection.camelize(name, true) %>Repository: <%= name %>AbstractRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         <%= h.inflection.transform(name, ['pluralize']) %>Service,
         {
-          provide: <%= name %>Repository,
+          provide: <%= name %>AbstractRepository,
           useValue: {
             <% if (functionalities.includes('create')) { %>
             create: jest.fn(),
@@ -40,7 +38,7 @@ describe('<%= h.inflection.transform(name, ['pluralize']) %>Service', () => {
     }).compile();
 
     service = module.get<<%= h.inflection.transform(name, ['pluralize']) %>Service>(<%= h.inflection.transform(name, ['pluralize']) %>Service);
-    <%= h.inflection.camelize(name, true) %>Repository = module.get<<%= name %>Repository>(<%= name %>Repository);
+    <%= h.inflection.camelize(name, true) %>Repository = module.get<<%= name %>AbstractRepository>(<%= name %>AbstractRepository);
   });
 
   it('should be defined', () => {
