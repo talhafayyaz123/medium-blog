@@ -8,7 +8,7 @@
   - [Generate resource](#generate-resource)
     - [For relational database (PostgreSQL + TypeORM)](#for-relational-database-postgresql--typeorm)
     - [Property for relational database (PostgreSQL + TypeORM)](#property-for-relational-database-postgresql--typeorm)
-    - [Generate raw query](#generate-raw-query)
+    - [Generate a basic structure for raw queries](#generate-a-basic-structure-for-raw-queries)
   - [FAQ](#faq)
     - [Error: Unable to connect to the newly created relational entity](#error-unable-to-connect-to-the-newly-created-relational-entity)
     - [Can I create foreign key properties using the add:property command?](#can-i-create-foreign-key-properties-using-the-addproperty-command)
@@ -41,7 +41,7 @@ This command will trigger a terminal prompt with the following options:
    - Update
    - Delete
 
-Use the arrow keys to navigate and the spacebar to select multiple options. Press Enter key to move to next step.
+   Use the arrow keys to navigate and the spacebar to select multiple options. Press Enter key to move to next step.
 
 1. **Add Test Case**: You will be prompted with a confirmation question:
 
@@ -82,7 +82,7 @@ This command will initiate a terminal prompt to help you add a new property to a
 
 After the property is created, please check the DTO files and add the relevant imports. Otherwise, the file will have errors.
 
-### Generate raw query
+### Generate a basic structure for raw queries
 
 ```bash
 npm run generate:query
@@ -94,7 +94,7 @@ This command will initiate a terminal prompt to guide you in generating a raw qu
 
 2. **Name**: You will be asked to provide a name for the query (e.g., 'ListingQuery'). This name is also required, and validation ensures that it is not empty.
 
-Once you complete the prompt, the necessary query file will be generated, ready for customization as needed.
+Once you complete the prompt, the necessary query files will be generated, ready for customization as needed.
 
 ## FAQ
 
