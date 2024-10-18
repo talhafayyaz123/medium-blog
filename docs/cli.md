@@ -29,6 +29,24 @@ Example:
 npm run generate:resource -- Category
 ```
 
+This command will trigger a terminal prompt with the following options:
+
+1. **Functionality Selection**: You can choose which functionalities (CRUD operations) you want to generate for the resource. The available functionalities are:
+
+   - Create
+   - Find All
+   - Find One
+   - Update
+   - Delete
+
+   Use the arrow keys to navigate and the spacebar to select multiple options. Press Enter key to move to next step.
+
+2. **Add Test Case**: You will be prompted with a confirmation question:
+
+   - "Do you want to add test cases and mock data?"
+
+   If you choose "Yes", test case structure and mock data for the resource will also be generated along with the selected functionalities.
+
 ### Property for relational database (PostgreSQL + TypeORM)
 
 ```bash
@@ -38,6 +56,8 @@ npm run add:property
 It will initiate the terminal prompt to ask for property details.
 
 After the property is created, please check the DTO files and add the relevant imports. Otherwise, the file will have errors.
+
+---
 
 ## FAQ
 
