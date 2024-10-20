@@ -12,8 +12,19 @@ import { Update<%= name %>Dto } from './dto/update-<%= h.inflection.transform(na
 import { IPaginationOptions } from '../utils/types/pagination-options';
 <% } %>
 import { <%= name %>AbstractRepository } from './infrastructure/persistence/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.abstract.repository';
+<% if (functionalities.includes('findOne') || functionalities.includes('update') || functionalities.includes('delete')) { %>
 import { <%= name %> } from './domain/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>';
-import { NOT_FOUND, UNPROCESSABLE_ENTITY } from '@src/common/exceptions';
+<% } %>
+<% if (functionalities.includes('update') || functionalities.includes('findOne')) { %>
+import { 
+  <% if (functionalities.includes('update') || functionalities.includes('findOne')) { %>
+  NOT_FOUND,
+  <% } %>
+  <% if (functionalities.includes('findOne')) { %>
+  UNPROCESSABLE_ENTITY,
+  <% } %>
+} from '@src/common/exceptions';
+<% } %>
 
 @Injectable()
 export class <%= h.inflection.transform(name, ['pluralize']) %>Service {

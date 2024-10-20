@@ -2,7 +2,22 @@
 to: "<%= isAddTestCase ? `src/${h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize'])}/${h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize'])}.service.spec.ts` : null %>"
 ---
 import { Test, TestingModule } from '@nestjs/testing';
-import { paginationOptions, mock<%= name %>, mockCreate<%= name %>Dto, mockUpdate<%= name %>Dto } from './__mock__/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.mock';
+<% if (functionalities.includes('update') || functionalities.includes('create') || functionalities.includes('findOne') || functionalities.includes('findAll')) { %>
+import {
+  <% if (functionalities.includes('findAll')) { %> 
+  paginationOptions,
+  <% } %>
+  <% if (functionalities.includes('update') || functionalities.includes('findOne')) { %>
+  mock<%= name %>,
+  <% } %>
+  <% if (functionalities.includes('create')) { %>
+  mockCreate<%= name %>Dto,
+  <% } %>
+  <% if (functionalities.includes('update')) { %>
+  mockUpdate<%= name %>Dto,
+  <% } %>
+} from './__mock__/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.mock';
+<% } %>
 import { <%= h.inflection.transform(name, ['pluralize']) %>Service } from './<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>.service';
 import { <%= name %>AbstractRepository } from './infrastructure/persistence/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.abstract.repository';
 

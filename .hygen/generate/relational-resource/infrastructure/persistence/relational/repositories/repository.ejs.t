@@ -8,12 +8,14 @@ import { <%= name %>Entity } from '../entities/<%= h.inflection.transform(name, 
 <% if (functionalities.includes('findOne')) { %>
 import { NullableType } from '@src/utils/types/nullable.type';
 <% } %>
+<% if (functionalities.includes('update') || functionalities.includes('create') || functionalities.includes('findOne') || functionalities.includes('findAll') || functionalities.includes('delete')) { %>
 import { <%= name %> } from '../../../../domain/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>';
+<% } %>
 import { <%= name %>AbstractRepository } from '../../<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.abstract.repository';
 <% if (functionalities.includes('create') || functionalities.includes('findAll') || functionalities.includes('findOne') || functionalities.includes('update')) { %>
 import { <%= name %>Mapper } from '../mappers/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.mapper';
 <% } %>
-<% if (functionalities.includes('create')) { %>
+<% if (functionalities.includes('findAll')) { %>
 import { IPaginationOptions } from '../../../../../utils/types/pagination-options';
 <% } %>
 @Injectable()
