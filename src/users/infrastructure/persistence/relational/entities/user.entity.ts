@@ -11,16 +11,16 @@ import {
   UpdateDateColumn,
   JoinColumn,
   OneToOne,
-  OneToMany
+  //OneToMany
 } from 'typeorm';
 
+//import { FollowEntity } from '@src/articles/infrastructure/persistence/relational/entities/follow.entity';
 import { AuthProvidersEnum } from '@src/auth/auth-providers.enum';
 import { TABLES } from '@src/common/constants';
 import { FileEntity } from '@src/files/infrastructure/persistence/relational/entities/file.entity';
 import { RoleEntity } from '@src/roles/infrastructure/persistence/relational/entities/role.entity';
 import { StatusEntity } from '@src/statuses/infrastructure/persistence/relational/entities/status.entity';
 import { EntityRelationalHelper } from '@src/utils/relational-entity-helper';
-import { FollowEntity } from '@src/articles/infrastructure/persistence/relational/entities/follow.entity';
 // We use class-transformer in ORM entity and domain entity.
 // We duplicate these rules because you can choose not to use adapters
 // in your project and return an ORM entity directly in response.

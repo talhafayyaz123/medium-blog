@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { diff, unique } from 'radash';
 import slugify from 'slugify';
+import { Repository,In,FindManyOptions } from 'typeorm';
 
+import { ArticleEntity } from '@src/articles/infrastructure/persistence/relational/entities/article.entity';
 import { JwtPayloadType } from '@src/auth/strategies/types/jwt-payload.type';
 import { CommentsService } from '@src/comments/comments.service';
 import { Comment } from '@src/comments/domain/comment';
@@ -9,21 +12,19 @@ import { NOT_FOUND, UNPROCESSABLE_ENTITY } from '@src/common/exceptions';
 import { DatabaseHelperRepository } from '@src/database-helpers/database-helper';
 import { Tag } from '@src/tags/domain/tag';
 import { TagsService } from '@src/tags/tags.service';
+import { UserEntity } from '@src/users/infrastructure/persistence/relational/entities/user.entity';
 import { UsersService } from '@src/users/users.service';
 import { pagination } from '@src/utils/pagination';
 import { NullableType } from '@src/utils/types/nullable.type';
 import { IPaginationOptions } from '@src/utils/types/pagination-options';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository,In,FindManyOptions } from 'typeorm';
 
 
 import { Article } from './domain/article';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { ArticleAbstractRepository } from './infrastructure/persistence/article.abstract.repository';
-import { UserEntity } from '@src/users/infrastructure/persistence/relational/entities/user.entity';
-import { ArticleEntity } from '@src/articles/infrastructure/persistence/relational/entities/article.entity';
 import {FollowEntity} from './infrastructure/persistence/relational/entities/follow.entity'
+import {UserFollowEntity} from './infrastructure/persistence/relational/entities/userFollow.entity'
 
 
 @Injectable()
@@ -36,6 +37,8 @@ export class ArticlesService {
     private userService: UsersService,
     @InjectRepository(FollowEntity)
     private readonly followRepository: Repository<FollowEntity>,
+    @InjectRepository(UserFollowEntity)
+    private readonly useFollowRepository: Repository<UserFollowEntity>,
   ) {}
 
   async create(
@@ -294,22 +297,21 @@ async unfavoriteArticle(slug: string, user: UserEntity): Promise<Article> {
 
 
 
-/* async getFeedArticles(user: UserEntity, limit: string, offset: string): Promise<Article[]> {
+ async getFeedArticles(user: UserEntity, limit: string, offset: string): Promise<Article[]> {
 
-  const followedUsers: FollowEntity[] = await this.followRepository.find({
-    where: { user_id: user.id },
-    select: ['article_id'],
+  const followedUsers: UserFollowEntity[] = await this.useFollowRepository.find({
+    where: { follower_id: user.id },
+    select: ['following_id'],
   });
 
-  
-  const followingIds = followedUsers.map(follow => follow.article_id);
+  const followingIds = followedUsers.map(follow => follow.following_id);
   
   if (followingIds.length > 0) {
     const numericLimit = Number(limit);
     const numericOffset = Number(offset);
 
     const options: FindManyOptions<ArticleEntity> = {
-      where: { id: In(followingIds) },
+      where: { author_id: In(followingIds) },
       take: numericLimit,
       skip: numericOffset,
       order: { created_at: 'DESC' },
@@ -320,6 +322,6 @@ async unfavoriteArticle(slug: string, user: UserEntity): Promise<Article> {
   }
 
   return [];
-} */
+} 
 
 }

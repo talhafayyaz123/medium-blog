@@ -17,7 +17,8 @@ import { TagEntity } from '@src/tags/infrastructure/persistence/relational/entit
 import { UserEntity } from '@src/users/infrastructure/persistence/relational/entities/user.entity';
 import { EntityRelationalHelper } from '@src/utils/relational-entity-helper';
 import { NullableType } from '@src/utils/types/nullable.type';
-import { FollowEntity } from './follow.entity';
+
+//import { FollowEntity } from './follow.entity';
 
 
 @Entity({

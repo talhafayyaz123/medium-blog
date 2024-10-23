@@ -1,9 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Unique,ManyToOne ,JoinColumn} from 'typeorm';
+//import { UUID } from 'crypto';
+
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn} from 'typeorm';
 
 import { TABLES } from '@src/common/constants';
-import { UserEntity } from '@src/users/infrastructure/persistence/relational/entities/user.entity'; 
-import { ArticleEntity } from './article.entity';
-import { UUID } from 'crypto';
+//import { UserEntity } from '@src/users/infrastructure/persistence/relational/entities/user.entity';
+ 
+//import { ArticleEntity } from './article.entity';
 
 
 @Entity({

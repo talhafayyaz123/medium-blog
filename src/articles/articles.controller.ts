@@ -245,7 +245,7 @@ async unfavoriteArticle(@Param('slug') slug: string, @Request() request): Promis
   return this.articlesService.unfavoriteArticle(slug, user);
 }
 
-/* @ApiBearerAuth()
+ @ApiBearerAuth()
 @UseGuards(AuthGuard('jwt'))
 @Get('/user/feed')
 @ApiQuery({ name: 'limit', required: false, type: Number })
@@ -258,7 +258,7 @@ async getFeedArticles(
 ): Promise<Article[]> {
   const user = request.user;
   return this.articlesService.getFeedArticles(user, limit, offset);
-} */
+} 
 
 
 }

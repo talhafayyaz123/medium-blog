@@ -1,10 +1,11 @@
+import { FindManyOptions } from 'typeorm';
+
 import { ArticleDTOWithTagDomains } from '@src/articles/articles.types';
 import { Article } from '@src/articles/domain/article';
+import { ArticleEntity } from '@src/articles/infrastructure/persistence/relational/entities/article.entity';
 import { DeepPartial } from '@src/utils/types/deep-partial.type';
 import { NullableType } from '@src/utils/types/nullable.type';
 import { IPaginationOptions } from '@src/utils/types/pagination-options';
-import { FindManyOptions } from 'typeorm';
-import { ArticleEntity } from '@src/articles/infrastructure/persistence/relational/entities/article.entity';
 
 
 export abstract class ArticleAbstractRepository {
