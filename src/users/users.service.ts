@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import bcrypt from 'bcryptjs';
+import { Repository } from 'typeorm';
 
 import { AuthProvidersEnum } from '@src/auth/auth-providers.enum';
 import { ERROR_MESSAGES } from '@src/common/constants';
@@ -7,6 +9,7 @@ import {
   FORBIDDEN,
   NOT_FOUND,
   UNPROCESSABLE_ENTITY,
+  CustomException,
 } from '@src/common/exceptions';
 import { FilesService } from '@src/files/files.service';
 import { RoleEnum } from '@src/roles/roles.enum';
@@ -20,7 +23,10 @@ import { ViewsService } from '@src/views/views.service';
 import { User } from './domain/user';
 import { CreateUserDto } from './dto/create-user.dto';
 import { FilterUserDto, SortUserDto } from './dto/query-user.dto';
+import { FollowEntity } from './infrastructure/persistence/relational/entities/follow.entity';
 import { UserAbstractRepository } from './infrastructure/persistence/user.abstract.repository';
+
+
 
 @Injectable()
 export class UsersService {
@@ -28,6 +34,8 @@ export class UsersService {
     private readonly usersRepository: UserAbstractRepository,
     private readonly filesService: FilesService,
     private readonly viewsService: ViewsService,
+    @InjectRepository(FollowEntity)
+    private readonly followRepository: Repository<FollowEntity>
   ) {}
 
   async create(createProfileDto: CreateUserDto): Promise<User> {
@@ -200,5 +208,84 @@ export class UsersService {
   getUserSummary(id: User['id']): Promise<NullableType<UserSummary>> {
     const userSummaryView = this.viewsService.getUsersSummaryView();
     return this.usersRepository.getUserSummary(id, userSummaryView);
+  }
+
+  async unfollowUser(followerId: number, username: string): Promise<any> {
+
+    const followingUser = await this.usersRepository.findByUserName(username);
+    if (!followingUser) {
+      throw NOT_FOUND('User', { firstName: username });
+    }
+  
+    // Prevent unfollowing oneself
+    if (followerId === followingUser.id) {
+      throw CustomException('You cannot unfollow yourself', 'unfollow');
+    }
+  
+    const existingFollow = await this.followRepository.findOne({
+      where: {
+        follower_id: followerId,
+        following_id: Number(followingUser.id),
+      },
+    });
+  
+    
+     if(existingFollow){
+      await this.followRepository.remove(existingFollow);  
+     }
+    
+    const followerProfile = await this.findAndValidate('id', followerId);
+    
+    return {
+      id: followerProfile.id,
+      username: followerProfile.firstName,
+      followingUser: {
+        id: followingUser.id,
+        username: followingUser.firstName,
+        isFollowing: false,
+      },
+    };
+  }
+  
+  
+
+  async followUser(followerId: number, username: string): Promise<any> {
+  
+    const followingUser = await this.usersRepository.findByUserName(username);
+    if (!followingUser) {
+      throw NOT_FOUND('User', { firstName: username });
+    }
+
+    // Prevent following oneself
+    if (followerId === followingUser.id) {
+      throw CustomException('You cannot follow yourself', 'follow');
+    }
+
+      const existingFollow = await this.followRepository.findOne({
+        where: {
+          follower_id: followerId,
+          following_id: Number(followingUser.id),
+        },
+      });
+   
+        if (!existingFollow) {
+          const follow = this.followRepository.create({
+            follower_id: followerId,
+            following_id:Number( followingUser.id),
+          });
+      
+           await this.followRepository.save(follow);
+        }
+    
+        const followerProfile =  await this.findAndValidate('id', followerId);
+        return {
+          id: followerProfile.id,
+          username: followerProfile.firstName,
+          followingUser: {
+            id: followingUser.id,
+            username: followingUser.firstName,
+            isFollowing: true, 
+          },
+        };
   }
 }

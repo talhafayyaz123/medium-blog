@@ -53,3 +53,12 @@ export const FORBIDDEN = (message: string, attribute: string) => {
     },
   });
 };
+
+export const CustomException = (message: string, attribute: string) => {
+  return new ForbiddenException({
+    statusCode: HttpStatus.CONFLICT,
+    errors: {
+      [attribute]: message,
+    },
+  });
+};
