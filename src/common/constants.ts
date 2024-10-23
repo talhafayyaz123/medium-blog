@@ -7,6 +7,7 @@ export const TABLES = {
   status: 'status',
   tag: 'tag',
   user: 'user',
+  articleFollow:'user_favorite_article',
 };
 
 export const ERROR_MESSAGES = {

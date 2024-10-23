@@ -9,6 +9,7 @@ import {
   UseGuards,
   Request,
   Query,
+  
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {
@@ -16,7 +17,9 @@ import {
   ApiCreatedResponse,
   ApiOkResponse,
   ApiParam,
+  ApiResponse,
   ApiTags,
+  ApiQuery
 } from '@nestjs/swagger';
 
 import { Comment } from '@src/comments/domain/comment';
@@ -205,4 +208,57 @@ export class ArticlesController {
     const { id, slug } = params;
     return this.articlesService.removeComment(id, slug, request.user);
   }
+
+
+
+@ApiBearerAuth()
+@UseGuards(AuthGuard('jwt'))
+@Post(':slug/favorite')
+@ApiParam({
+  name:'slug',
+  type:String,
+  required:true
+})
+
+@ApiResponse({
+  type:Article
+})
+
+async favoriteArticle(@Param('slug') slug:string,@Request() request):Promise<Article>{
+  const user=request.user;
+  return this.articlesService.favoriteArticle(slug,user);
+}
+
+@ApiBearerAuth()
+@UseGuards(AuthGuard('jwt'))
+@Delete(':slug/favorite')
+@ApiParam({
+  name: 'slug',
+  type: String,
+  required: true
+})
+@ApiResponse({
+  type: Article
+})
+async unfavoriteArticle(@Param('slug') slug: string, @Request() request): Promise<Article> {
+  const user = request.user;
+  return this.articlesService.unfavoriteArticle(slug, user);
+}
+
+/* @ApiBearerAuth()
+@UseGuards(AuthGuard('jwt'))
+@Get('/user/feed')
+@ApiQuery({ name: 'limit', required: false, type: Number })
+@ApiQuery({ name: 'offset', required: false, type: Number })
+@ApiResponse({ type: [Article] })
+async getFeedArticles(
+  @Request() request,
+  @Query('limit') limit: string = '10',  
+  @Query('offset') offset: string = '0'
+): Promise<Article[]> {
+  const user = request.user;
+  return this.articlesService.getFeedArticles(user, limit, offset);
+} */
+
+
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository,FindManyOptions } from 'typeorm';
 
 import { ArticleDTOWithTagDomains } from '@src/articles/articles.types';
 import { Article } from '@src/articles/domain/article';
@@ -28,6 +28,12 @@ export class ArticleRelationalRepository implements ArticleAbstractRepository {
     return ArticleMapper.toDomain(newEntity);
   }
 
+  async find(criteria: FindManyOptions<ArticleEntity>): Promise<Article[]> {
+    const entities = await this.articleRepository.find(criteria);
+    return entities.map((entity) => ArticleMapper.toDomain(entity));
+  }
+
+  
   async findAllWithPagination({
     paginationOptions,
   }: {

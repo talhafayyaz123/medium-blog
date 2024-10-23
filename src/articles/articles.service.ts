@@ -13,11 +13,18 @@ import { UsersService } from '@src/users/users.service';
 import { pagination } from '@src/utils/pagination';
 import { NullableType } from '@src/utils/types/nullable.type';
 import { IPaginationOptions } from '@src/utils/types/pagination-options';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository,In,FindManyOptions } from 'typeorm';
+
 
 import { Article } from './domain/article';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { ArticleAbstractRepository } from './infrastructure/persistence/article.abstract.repository';
+import { UserEntity } from '@src/users/infrastructure/persistence/relational/entities/user.entity';
+import { ArticleEntity } from '@src/articles/infrastructure/persistence/relational/entities/article.entity';
+import {FollowEntity} from './infrastructure/persistence/relational/entities/follow.entity'
+
 
 @Injectable()
 export class ArticlesService {
@@ -27,6 +34,8 @@ export class ArticlesService {
     private readonly tagsService: TagsService,
     private readonly dbHelperRepository: DatabaseHelperRepository,
     private userService: UsersService,
+    @InjectRepository(FollowEntity)
+    private readonly followRepository: Repository<FollowEntity>,
   ) {}
 
   async create(
@@ -215,4 +224,102 @@ export class ArticlesService {
     }
     return article;
   }
+
+ async favoriteArticle(slug:string,user:UserEntity):Promise<Article>{
+  const article = await this.articleRepository.findBySlug(slug);
+    if (!article) {
+      throw NOT_FOUND('Article', { slug });
+    }
+
+     
+     const existingFollow = await this.followRepository.findOne({
+      where: {
+        user_id: Number(user.id),
+        article_id: (article.id),
+      },
+    });
+    
+  if (!existingFollow) {
+  
+    const follow = this.followRepository.create({
+      user_id: Number(user.id),
+      article_id: (article.id),
+    });
+    await this.followRepository.save(follow);
+  }
+
+    const responseArticle = {
+      ...article,
+      favorited:true,
+    };
+
+    return  responseArticle ;
+
+}
+
+async unfavoriteArticle(slug: string, user: UserEntity): Promise<Article> {
+  const article = await this.articleRepository.findBySlug(slug);
+  if (!article) {
+    throw NOT_FOUND('Article', { slug });
+  }
+
+  if (!article.id) {
+    console.error('Article ID is null or undefined:', article);
+  }
+  
+  if (!user.id) {
+    console.error('User ID is null or undefined:', user);
+  }
+
+  const existingFollow = await this.followRepository.findOne({
+    where: {
+      user_id: Number(user.id),
+      article_id: article.id
+    },
+  });
+
+  
+
+  if (existingFollow) {
+    await this.followRepository.remove(existingFollow);
+  }
+
+  const responseArticle = {
+    ...article,
+    favorited: false,
+  };
+
+  return responseArticle;
+}
+
+
+
+/* async getFeedArticles(user: UserEntity, limit: string, offset: string): Promise<Article[]> {
+
+  const followedUsers: FollowEntity[] = await this.followRepository.find({
+    where: { user_id: user.id },
+    select: ['article_id'],
+  });
+
+  
+  const followingIds = followedUsers.map(follow => follow.article_id);
+  
+  if (followingIds.length > 0) {
+    const numericLimit = Number(limit);
+    const numericOffset = Number(offset);
+
+    const options: FindManyOptions<ArticleEntity> = {
+      where: { id: In(followingIds) },
+      take: numericLimit,
+      skip: numericOffset,
+      order: { created_at: 'DESC' },
+    };
+
+        const articles = await this.articleRepository.find(options);
+        return articles;
+  }
+
+  return [];
+} */
+
 }

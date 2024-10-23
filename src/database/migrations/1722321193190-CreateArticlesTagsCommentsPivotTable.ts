@@ -65,6 +65,15 @@ export class CreateArticleTagCommentPivotTable1722321193190
       )`,
     );
 
+  
+
+    await queryRunner.query(
+      `ALTER TABLE "article" 
+        ADD CONSTRAINT "FK_9470701b13d0f33a3b97e25f075" 
+        FOREIGN KEY ("author_id") REFERENCES "user"("id") 
+        ON DELETE NO ACTION ON UPDATE NO ACTION`,
+    );
+
     await queryRunner.query(
       `CREATE TABLE "user_favorite_article" (
         "id" uuid NOT NULL DEFAULT uuid_generate_v4(), 
@@ -75,13 +84,6 @@ export class CreateArticleTagCommentPivotTable1722321193190
         CONSTRAINT "PK_1a7e9d2b1e2a2d2c6d7d44c0a67d" PRIMARY KEY ("id"), 
         CONSTRAINT "UQ_user_favorite_article_user_article" UNIQUE ("user_id", "article_id")
       )`,
-    );
-
-    await queryRunner.query(
-      `ALTER TABLE "article" 
-        ADD CONSTRAINT "FK_9470701b13d0f33a3b97e25f075" 
-        FOREIGN KEY ("author_id") REFERENCES "user"("id") 
-        ON DELETE NO ACTION ON UPDATE NO ACTION`,
     );
 
     await queryRunner.query(

@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ArticleAbstractRepository } from '@src/articles/infrastructure/persistence/article.abstract.repository';
 
 import { ArticleEntity } from './entities/article.entity';
+
 import { ArticleRelationalRepository } from './repositories/article.repository';
 
 @Module({
