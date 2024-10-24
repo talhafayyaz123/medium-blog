@@ -4,4 +4,4 @@ to: src/<%= h.inflection.transform(entity, ['pluralize', 'underscore', 'dasheriz
 after: // Add Query Here
 ---
 
-const <%= h.inflection.transform(entity, ['underscore']).toUpperCase() %>_<%= h.inflection.transform(name, ['underscore']).toUpperCase() %> = ``;
+export const <%= h.inflection.transform(entity, ['underscore']).toUpperCase() %>_<%= h.inflection.transform(name, ['underscore']).toUpperCase() %> = ``;
