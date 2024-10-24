@@ -27,6 +27,15 @@ Implementing the [Realworld Medium Clone Specifications](https://realworld-docs.
 4. **Add Unit Testing and E2E Testing**
    - Implement comprehensive unit and e2e tests to ensure code quality and functionality. Leverage Hygen templates to automate the creation of test files where possible, streamlining the testing process.
 
+5. **Implement Reaction System:**
+    -Introduce a user-friendly reaction system that enables users to interact with articles through emojis, facilitating quick responses and engagement.
+
+6. **Integrate Third-Party APIs:**
+   1. Gemin AI for Title Generation:
+     a. Leverage Gemin AI to automatically generate engaging article titles based on the content.
+
+
+
 ## Features
 
 - [x] This project is using [TypeORM](https://www.npmjs.com/package/typeorm) along with [PostgreSQL](https://www.postgresql.org/).
