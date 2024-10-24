@@ -315,6 +315,7 @@ async unfavoriteArticle(slug: string, user: UserEntity): Promise<Article> {
       take: numericLimit,
       skip: numericOffset,
       order: { created_at: 'DESC' },
+      relations: ['author'],
     };
 
         const articles = await this.articleRepository.find(options);
