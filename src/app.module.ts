@@ -21,10 +21,12 @@ import twitterConfig from './auth-twitter/config/twitter.config';
 import { CommentsModule } from './comments/comments.module';
 import appConfig from './config/app.config';
 import { AllConfigType } from './config/config.type';
+import genAiConfig from './config/gen-ai.config';
 import databaseConfig from './database/config/database.config';
 import { TypeOrmConfigService } from './database/typeorm-config.service';
 import fileConfig from './files/config/file.config';
 import { FilesModule } from './files/files.module';
+import { GenAiModule } from './gen-ai/gen-ai.module';
 import { HomeModule } from './home/home.module';
 import mailConfig from './mail/config/mail.config';
 import { MailModule } from './mail/mail.module';
@@ -43,6 +45,7 @@ const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
 
 @Module({
   imports: [
+    GenAiModule,
     ViewsModule,
     TagsModule,
     CommentsModule,
@@ -59,6 +62,7 @@ const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
         googleConfig,
         twitterConfig,
         appleConfig,
+        genAiConfig,
       ],
       envFilePath: ['.env'],
     }),

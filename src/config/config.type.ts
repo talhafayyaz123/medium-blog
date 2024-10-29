@@ -8,6 +8,7 @@ import { FileConfig } from '@src/files/config/file-config.type';
 import { MailConfig } from '@src/mail/config/mail-config.type';
 
 import { AppConfig } from './app-config.type';
+import { GenAiConfig } from './gen-ai-config.type';
 
 export type AllConfigType = {
   app: AppConfig;
@@ -19,4 +20,5 @@ export type AllConfigType = {
   google: GoogleConfig;
   mail: MailConfig;
   twitter: TwitterConfig;
+  genAi: GenAiConfig;
 };
