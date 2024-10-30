@@ -238,16 +238,16 @@ export class ArticlesService {
 
     const existingFollow = await this.followRepository.findOne({
       where: {
-        user_id: Number(user.id),
-        article_id: article.id,
+        follower: { id: Number(user.id) },
+        following: { id: article.id },
       },
     });
 
     if (existingFollow) throw BAD_REQUEST(`${slug}, Already favorited.`);
 
     const follow = this.followRepository.create({
-      user_id: Number(user.id),
-      article_id: article.id,
+      follower: { id: Number(user.id) },
+      following: { id: article.id },
     });
     await this.followRepository.save(follow);
 
@@ -275,8 +275,8 @@ export class ArticlesService {
 
     const existingFollow = await this.followRepository.findOne({
       where: {
-        user_id: Number(user.id),
-        article_id: article.id,
+        follower: { id: Number(user.id) },
+        following: { id: article.id },
       },
     });
 

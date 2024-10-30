@@ -11,10 +11,10 @@ import {
   UpdateDateColumn,
   JoinColumn,
   OneToOne,
-  //OneToMany
+  OneToMany,
 } from 'typeorm';
 
-//import { FollowEntity } from '@src/articles/infrastructure/persistence/relational/entities/follow.entity';
+import { FollowEntity } from '@src/articles/infrastructure/persistence/relational/entities/follow.entity';
 import { AuthProvidersEnum } from '@src/auth/auth-providers.enum';
 import { TABLES } from '@src/common/constants';
 import { FileEntity } from '@src/files/infrastructure/persistence/relational/entities/file.entity';
@@ -85,9 +85,8 @@ export class UserEntity extends EntityRelationalHelper {
   @JoinColumn({ name: 'status_id' })
   status?: StatusEntity;
 
-
-/*   @OneToMany(() => FollowEntity, follow => follow.follower)
-  following: FollowEntity[]; // Articles the user is following */
+  @OneToMany(() => FollowEntity, (follow) => follow.follower)
+  following: FollowEntity[]; // Articles the user is following
 
   @CreateDateColumn()
   created_at: Date;

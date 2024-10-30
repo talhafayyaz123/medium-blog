@@ -18,8 +18,7 @@ import { UserEntity } from '@src/users/infrastructure/persistence/relational/ent
 import { EntityRelationalHelper } from '@src/utils/relational-entity-helper';
 import { NullableType } from '@src/utils/types/nullable.type';
 
-//import { FollowEntity } from './follow.entity';
-
+import { FollowEntity } from './follow.entity';
 
 @Entity({
   name: TABLES.article,
@@ -50,8 +49,8 @@ export class ArticleEntity extends EntityRelationalHelper {
   @OneToMany(() => CommentEntity, (comment) => comment.article)
   comments: CommentEntity[];
 
- /*  @OneToMany(() => FollowEntity, follow => follow.following)
-  followers: FollowEntity[]; // Users following this article */
+  @OneToMany(() => FollowEntity, (follow) => follow.following)
+  followers: FollowEntity[]; // Users following this article
 
   @ManyToMany(() => TagEntity)
   @JoinTable({
