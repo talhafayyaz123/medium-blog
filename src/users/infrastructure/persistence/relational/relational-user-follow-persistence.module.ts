@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { FollowEntity } from '@src/users/infrastructure/persistence/relational/entities/follow.entity';
 import { UserFollowupRelationalRepository } from '@src/users/infrastructure/persistence/relational/repositories/user.follow.repository';
 import { UserFollowAbstractRepository } from '@src/users/infrastructure/persistence/user.follow.abstract.repository';
+
 import { RelationalUserPersistenceModule } from './relational-persistence.module';
 
 @Module({

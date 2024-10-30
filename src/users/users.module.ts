@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { FilesModule } from '@src/files/files.module';
+import { RelationalUserFollowPersistenceModule } from '@src/users/infrastructure/persistence/relational/relational-user-follow-persistence.module';
 import { ViewsModule } from '@src/views/views.module';
 
 import { FollowEntity } from './infrastructure/persistence/relational/entities/follow.entity';
@@ -9,7 +10,6 @@ import { RelationalUserPersistenceModule } from './infrastructure/persistence/re
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 
-import { RelationalUserFollowPersistenceModule } from '@src/users/infrastructure/persistence/relational/relational-user-follow-persistence.module';
 
 const infrastructurePersistenceModule = RelationalUserPersistenceModule;
 

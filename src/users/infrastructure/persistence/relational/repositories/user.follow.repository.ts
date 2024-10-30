@@ -5,7 +5,6 @@ import { Repository } from 'typeorm';
 import { User } from '@src/users/domain/user';
 import { UserFollow } from '@src/users/domain/user-follow';
 import { FollowEntity } from '@src/users/infrastructure/persistence/relational/entities/follow.entity';
-import { UserEntity } from '@src/users/infrastructure/persistence/relational/entities/user.entity';
 import { UserFollowMapper } from '@src/users/infrastructure/persistence/relational/mappers/user.follow.mapper';
 import { UserFollowAbstractRepository } from '@src/users/infrastructure/persistence/user.follow.abstract.repository';
 import { NullableType } from '@src/utils/types/nullable.type';

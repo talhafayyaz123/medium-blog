@@ -26,7 +26,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { FilterUserDto, SortUserDto } from './dto/query-user.dto';
 import { FollowEntity } from './infrastructure/persistence/relational/entities/follow.entity';
 import { UserAbstractRepository } from './infrastructure/persistence/user.abstract.repository';
-
 import { UserFollowAbstractRepository } from './infrastructure/persistence/user.follow.abstract.repository';
 
 @Injectable()

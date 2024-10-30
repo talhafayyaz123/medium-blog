@@ -1,6 +1,6 @@
 import { UserFollow } from '@src/users/domain/user-follow';
-import { UserEntity } from '@src/users/infrastructure/persistence/relational/entities/user.entity';
 import { FollowEntity } from '@src/users/infrastructure/persistence/relational/entities/follow.entity';
+import { UserEntity } from '@src/users/infrastructure/persistence/relational/entities/user.entity';
 import { UserMapper } from '@src/users/infrastructure/persistence/relational/mappers/user.mapper';
 
 export class UserFollowMapper {
