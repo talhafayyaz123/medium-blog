@@ -43,22 +43,15 @@ export const getType = (type: string): string => {
 export const getPropertyType = (type: string): string => {
   switch (type) {
     case 'varchar':
-      return 'String';
     case 'text':
-      return 'String';
     case 'uuid':
-      return 'String';
-    case 'decimal':
-      return 'Number';
     case 'char':
     case 'longtext':
-      return 'String'; // Return type as string
+      return 'String';
     case 'int':
-      return 'Number';
+    case 'decimal':
     case 'float':
-      return 'Number';
     case 'double':
-      return 'Number';
     case 'int4':
     case 'int8':
     case 'int16':
@@ -67,15 +60,15 @@ export const getPropertyType = (type: string): string => {
     case 'uint16':
     case 'uint32':
     case 'smallint':
-      return 'Number'; // Return type as number
+      return 'Number';
     case 'boolean':
-      return 'Boolean'; // Return type as boolean
+      return 'Boolean';
     case 'timestamp':
     case 'date':
-      return 'Date'; // Return type as Date
+      return 'Date';
     case 'json':
-      return 'Object'; // Return type as object
+      return 'Object';
     default:
-      return type; // Default fallback
+      return type;
   }
 };
