@@ -2,13 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { diff, unique } from 'radash';
 import slugify from 'slugify';
-import { Repository,In,FindManyOptions } from 'typeorm';
+import { Repository, In, FindManyOptions } from 'typeorm';
 
 import { ArticleEntity } from '@src/articles/infrastructure/persistence/relational/entities/article.entity';
 import { JwtPayloadType } from '@src/auth/strategies/types/jwt-payload.type';
 import { CommentsService } from '@src/comments/comments.service';
 import { Comment } from '@src/comments/domain/comment';
-import { NOT_FOUND, UNPROCESSABLE_ENTITY } from '@src/common/exceptions';
+import {
+  NOT_FOUND,
+  UNPROCESSABLE_ENTITY,
+  BAD_REQUEST,
+} from '@src/common/exceptions';
 import { DatabaseHelperRepository } from '@src/database-helpers/database-helper';
 import { Tag } from '@src/tags/domain/tag';
 import { TagsService } from '@src/tags/tags.service';
@@ -18,14 +22,12 @@ import { pagination } from '@src/utils/pagination';
 import { NullableType } from '@src/utils/types/nullable.type';
 import { IPaginationOptions } from '@src/utils/types/pagination-options';
 
-
 import { Article } from './domain/article';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { ArticleAbstractRepository } from './infrastructure/persistence/article.abstract.repository';
-import {FollowEntity} from './infrastructure/persistence/relational/entities/follow.entity'
-import {UserFollowEntity} from './infrastructure/persistence/relational/entities/userFollow.entity'
-
+import { FollowEntity } from './infrastructure/persistence/relational/entities/follow.entity';
+import { UserFollowEntity } from './infrastructure/persistence/relational/entities/userFollow.entity';
 
 @Injectable()
 export class ArticlesService {
@@ -228,101 +230,97 @@ export class ArticlesService {
     return article;
   }
 
- async favoriteArticle(slug:string,user:UserEntity):Promise<Article>{
-  const article = await this.articleRepository.findBySlug(slug);
+  async favoriteArticle(slug: string, user: UserEntity): Promise<Article> {
+    const article = await this.articleRepository.findBySlug(slug);
     if (!article) {
       throw NOT_FOUND('Article', { slug });
     }
 
-     
-     const existingFollow = await this.followRepository.findOne({
+    const existingFollow = await this.followRepository.findOne({
       where: {
         user_id: Number(user.id),
-        article_id: (article.id),
+        article_id: article.id,
       },
     });
-    
-  if (!existingFollow) {
-  
+
+    if (existingFollow) throw BAD_REQUEST(`${slug}, Already favorited.`);
+
     const follow = this.followRepository.create({
       user_id: Number(user.id),
-      article_id: (article.id),
+      article_id: article.id,
     });
     await this.followRepository.save(follow);
-  }
 
     const responseArticle = {
       ...article,
-      favorited:true,
+      favorited: true,
     };
 
-    return  responseArticle ;
-
-}
-
-async unfavoriteArticle(slug: string, user: UserEntity): Promise<Article> {
-  const article = await this.articleRepository.findBySlug(slug);
-  if (!article) {
-    throw NOT_FOUND('Article', { slug });
+    return responseArticle;
   }
 
-  if (!article.id) {
-    console.error('Article ID is null or undefined:', article);
-  }
-  
-  if (!user.id) {
-    console.error('User ID is null or undefined:', user);
-  }
+  async unfavoriteArticle(slug: string, user: UserEntity): Promise<Article> {
+    const article = await this.articleRepository.findBySlug(slug);
+    if (!article) {
+      throw NOT_FOUND('Article', { slug });
+    }
 
-  const existingFollow = await this.followRepository.findOne({
-    where: {
-      user_id: Number(user.id),
-      article_id: article.id
-    },
-  });
+    if (!article.id) {
+      console.error('Article ID is null or undefined:', article);
+    }
 
-  
+    if (!user.id) {
+      console.error('User ID is null or undefined:', user);
+    }
 
-  if (existingFollow) {
+    const existingFollow = await this.followRepository.findOne({
+      where: {
+        user_id: Number(user.id),
+        article_id: article.id,
+      },
+    });
+
+    if (!existingFollow) throw BAD_REQUEST(`${slug}, article not favorited.`);
+
     await this.followRepository.remove(existingFollow);
-  }
 
-  const responseArticle = {
-    ...article,
-    favorited: false,
-  };
-
-  return responseArticle;
-}
-
-
-
- async getFeedArticles(user: UserEntity, limit: string, offset: string): Promise<Article[]> {
-
-  const followedUsers: UserFollowEntity[] = await this.useFollowRepository.find({
-    where: { follower_id: user.id },
-    select: ['following_id'],
-  });
-
-  const followingIds = followedUsers.map(follow => follow.following_id);
-  
-  if (followingIds.length > 0) {
-    const numericLimit = Number(limit);
-    const numericOffset = Number(offset);
-
-    const options: FindManyOptions<ArticleEntity> = {
-      where: { author_id: In(followingIds) },
-      take: numericLimit,
-      skip: numericOffset,
-      order: { created_at: 'DESC' },
-      relations: ['author'],
+    const responseArticle = {
+      ...article,
+      favorited: false,
     };
 
-        const articles = await this.articleRepository.find(options);
-        return articles;
+    return responseArticle;
   }
 
-  return [];
-} 
+  async getFeedArticles(
+    user: UserEntity,
+    limit: string,
+    offset: string,
+  ): Promise<Article[]> {
+    const followedUsers: UserFollowEntity[] =
+      await this.useFollowRepository.find({
+        where: { follower_id: user.id },
+        select: ['following_id'],
+      });
 
+    const followingIds = followedUsers.map((follow) => follow.following_id);
+
+    if (followingIds.length > 0) {
+      const numericLimit = Number(limit);
+      const numericOffset = Number(offset);
+
+      const options: FindManyOptions<ArticleEntity> = {
+        where: { author_id: In(followingIds) },
+        take: numericLimit,
+        skip: numericOffset,
+        order: { created_at: 'DESC' },
+        relations: ['author'],
+      };
+
+      const articles = await this.articleRepository.find(options);
+      return articles;
+    }
+
+    return [];
+  }
 }
