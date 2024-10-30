@@ -68,19 +68,20 @@ export class UsersRelationalRepository implements UserAbstractRepository {
     return entity ? UserMapper.toDomain(entity) : null;
   }
 
+  async findByIdWithRelations(id: User['id']): Promise<NullableType<User>> {
+    const entity = await this.usersRepository.findOne({
+      where: { id: Number(id) },
+      relations: ['followers', 'following'],
+    });
 
-  async findByUserName(firstName: User['firstName']): Promise<NullableType<User>> {
-    if (firstName === null) {
+    if (!entity) {
+      console.log(`User with ID ${id} not found`);
       return null;
     }
-  
-    const entity = await this.usersRepository.findOne({
-      where: { first_name: firstName },
-    });
-  
-    return entity ? UserMapper.toDomain(entity) : null;
+
+    //console.log('User entity with relations:', entity);
+    return UserMapper.toDomain(entity);
   }
-  
 
   async findByEmail(email: User['email']): Promise<NullableType<User>> {
     if (!email) return null;
@@ -140,6 +141,4 @@ export class UsersRelationalRepository implements UserAbstractRepository {
     const summary = await query.where({ id: Number(id) }).getOne();
     return summary ? UserSummaryMapper.toDomain(summary) : null;
   }
-
-  
 }

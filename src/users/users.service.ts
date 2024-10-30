@@ -10,6 +10,7 @@ import {
   NOT_FOUND,
   UNPROCESSABLE_ENTITY,
   CustomException,
+  BAD_REQUEST,
 } from '@src/common/exceptions';
 import { FilesService } from '@src/files/files.service';
 import { RoleEnum } from '@src/roles/roles.enum';
@@ -26,7 +27,7 @@ import { FilterUserDto, SortUserDto } from './dto/query-user.dto';
 import { FollowEntity } from './infrastructure/persistence/relational/entities/follow.entity';
 import { UserAbstractRepository } from './infrastructure/persistence/user.abstract.repository';
 
-
+import { UserFollowAbstractRepository } from './infrastructure/persistence/user.follow.abstract.repository';
 
 @Injectable()
 export class UsersService {
@@ -34,8 +35,9 @@ export class UsersService {
     private readonly usersRepository: UserAbstractRepository,
     private readonly filesService: FilesService,
     private readonly viewsService: ViewsService,
+    private readonly UserFollowRepository: UserFollowAbstractRepository,
     @InjectRepository(FollowEntity)
-    private readonly followRepository: Repository<FollowEntity>
+    private readonly followRepository: Repository<FollowEntity>,
   ) {}
 
   async create(createProfileDto: CreateUserDto): Promise<User> {
@@ -210,82 +212,88 @@ export class UsersService {
     return this.usersRepository.getUserSummary(id, userSummaryView);
   }
 
-  async unfollowUser(followerId: number, username: string): Promise<any> {
-
-    const followingUser = await this.usersRepository.findByUserName(username);
+  async unfollowUser(followerId: number, email: string): Promise<any> {
+    const followingUser = await this.usersRepository.findByEmail(email);
     if (!followingUser) {
-      throw NOT_FOUND('User', { firstName: username });
+      throw NOT_FOUND('User', { email: email });
     }
-  
-    // Prevent unfollowing oneself
+
     if (followerId === followingUser.id) {
       throw CustomException('You cannot unfollow yourself', 'unfollow');
     }
-  
-    const existingFollow = await this.followRepository.findOne({
-      where: {
-        follower_id: followerId,
-        following_id: Number(followingUser.id),
-      },
-    });
-  
-    
-     if(existingFollow){
-      await this.followRepository.remove(existingFollow);  
-     }
-    
+
+    const existingFollow = await this.UserFollowRepository.find(
+      followerId,
+      followingUser.id,
+    );
+
+    if (!existingFollow)
+      throw BAD_REQUEST(
+        `${followingUser.email}, you are not following this user.`,
+      );
+
+    await this.UserFollowRepository.remove(existingFollow.id);
+
     const followerProfile = await this.findAndValidate('id', followerId);
-    
+
     return {
       id: followerProfile.id,
-      username: followerProfile.firstName,
+      firstName: followerProfile.firstName,
+      lastName: followerProfile.lastName,
+      email: followerProfile.email,
       followingUser: {
-        id: followingUser.id,
-        username: followingUser.firstName,
+        firstName: followingUser.firstName,
+        lastName: followingUser.lastName,
+        email: followingUser.email,
         isFollowing: false,
       },
     };
   }
-  
-  
 
-  async followUser(followerId: number, username: string): Promise<any> {
-  
-    const followingUser = await this.usersRepository.findByUserName(username);
+  async followUser(followerId: number, email: string): Promise<any> {
+    const followingUser = await this.usersRepository.findByEmail(email);
+
     if (!followingUser) {
-      throw NOT_FOUND('User', { firstName: username });
+      throw NOT_FOUND('User', { email: email });
     }
 
-    // Prevent following oneself
     if (followerId === followingUser.id) {
       throw CustomException('You cannot follow yourself', 'follow');
     }
 
-      const existingFollow = await this.followRepository.findOne({
-        where: {
-          follower_id: followerId,
-          following_id: Number(followingUser.id),
-        },
-      });
-   
-        if (!existingFollow) {
-          const follow = this.followRepository.create({
-            follower_id: followerId,
-            following_id:Number( followingUser.id),
-          });
-      
-           await this.followRepository.save(follow);
-        }
-    
-        const followerProfile =  await this.findAndValidate('id', followerId);
-        return {
-          id: followerProfile.id,
-          username: followerProfile.firstName,
-          followingUser: {
-            id: followingUser.id,
-            username: followingUser.firstName,
-            isFollowing: true, 
-          },
-        };
+    const existingFollow = await this.UserFollowRepository.find(
+      followerId,
+      followingUser.id,
+    );
+
+    if (existingFollow)
+      throw BAD_REQUEST(
+        `${followingUser.email}, you are already following this user.`,
+      );
+
+    const clonedPayload = {
+      follower: {
+        id: followerId,
+      } as User,
+      following: {
+        id: Number(followingUser.id),
+      } as User,
+    };
+
+    await this.UserFollowRepository.create(clonedPayload);
+
+    const followerProfile = await this.findAndValidate('id', followerId);
+    return {
+      id: followerProfile.id,
+      firstName: followerProfile.firstName,
+      lastName: followerProfile.lastName,
+      email: followerProfile.email,
+      followingUser: {
+        firstName: followingUser.firstName,
+        lastName: followingUser.lastName,
+        email: followingUser.email,
+        isFollowing: true,
+      },
+    };
   }
 }

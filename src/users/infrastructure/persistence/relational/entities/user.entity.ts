@@ -11,7 +11,7 @@ import {
   UpdateDateColumn,
   JoinColumn,
   OneToOne,
-  OneToMany
+  OneToMany,
 } from 'typeorm';
 
 import { AuthProvidersEnum } from '@src/auth/auth-providers.enum';
@@ -87,12 +87,13 @@ export class UserEntity extends EntityRelationalHelper {
   @JoinColumn({ name: 'status_id' })
   status?: StatusEntity;
 
+  // A user can follow many other users
   @OneToMany(() => FollowEntity, (follow) => follow.follower)
-  followers: FollowEntity[];
-
-  @OneToMany(() => FollowEntity, (follow) => follow.following)
   following: FollowEntity[];
 
+  // A user can have many followers
+  @OneToMany(() => FollowEntity, (follow) => follow.following)
+  followers: FollowEntity[];
 
   @CreateDateColumn()
   created_at: Date;

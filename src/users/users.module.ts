@@ -9,11 +9,18 @@ import { RelationalUserPersistenceModule } from './infrastructure/persistence/re
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 
+import { RelationalUserFollowPersistenceModule } from '@src/users/infrastructure/persistence/relational/relational-user-follow-persistence.module';
 
 const infrastructurePersistenceModule = RelationalUserPersistenceModule;
 
 @Module({
-  imports: [infrastructurePersistenceModule, FilesModule, ViewsModule,TypeOrmModule.forFeature([FollowEntity])],
+  imports: [
+    infrastructurePersistenceModule,
+    RelationalUserFollowPersistenceModule,
+    FilesModule,
+    ViewsModule,
+    TypeOrmModule.forFeature([FollowEntity]),
+  ],
   controllers: [UsersController],
   providers: [UsersService],
   exports: [UsersService, infrastructurePersistenceModule],

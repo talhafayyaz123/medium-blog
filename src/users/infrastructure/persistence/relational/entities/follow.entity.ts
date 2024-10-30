@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Unique,ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+} from 'typeorm';
 
 import { TABLES } from '@src/common/constants';
 
@@ -7,25 +14,21 @@ import { UserEntity } from './user.entity';
 @Entity({
   name: TABLES.follow,
 })
-@Unique(['follower_id', 'following_id'])
 export class FollowEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'int', nullable: false })
-  follower_id: number;
-
-  @Column({ type: 'int', nullable: false })
-  following_id: number;
-
-
-  @ManyToOne(() => UserEntity, (user) => user.followers)
+  // The user who is following
+  @ManyToOne(() => UserEntity, (user) => user.following)
+  @JoinColumn({ name: 'follower_id' })
   follower: UserEntity;
 
-  @ManyToOne(() => UserEntity, (user) => user.following)
+  // The user who is being followed
+  @ManyToOne(() => UserEntity, (user) => user.followers)
+  @JoinColumn({ name: 'following_id' })
   following: UserEntity;
 
-  @CreateDateColumn({ name: 'created_at' }) 
+  @CreateDateColumn({ name: 'created_at' })
   created_at: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })

@@ -173,31 +173,31 @@ export class UsersController {
   
 @ApiBearerAuth()
 @UseGuards(AuthGuard('jwt'))
-@Post(':username/follow')
+@Post(':email/follow')
 @HttpCode(HttpStatus.OK)
 @ApiParam({
-  name: 'username',
+  name: 'email',
   type: String,
   required: true,
 })
 @ApiOkResponse({ type: User })
-async followUser(@Param('username') username: string, @Request() req): Promise<any> {
+async followUser(@Param('email') email: string, @Request() req): Promise<any> {
   const userId = req.user.id;
-  return await this.usersService.followUser(userId, username);
+  return await this.usersService.followUser(userId, email);
 }
 
 
-@Delete(':username/follow')
+@Delete(':email/follow')
 @HttpCode(HttpStatus.OK)
 @ApiParam({
-  name: 'username',
+  name: 'email',
   type: String,
   required: true,
 })
 @ApiOkResponse({ type: User })
-async unfollowUser(@Param('username') username: string, @Request() req): Promise<any> {
+async unfollowUser(@Param('email') email: string, @Request() req): Promise<any> {
   const userId = req.user.id;
-  return await this.usersService.unfollowUser(userId, username);
+  return await this.usersService.unfollowUser(userId, email);
 }
 
 

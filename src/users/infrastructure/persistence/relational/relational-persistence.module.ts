@@ -14,6 +14,6 @@ import { UsersRelationalRepository } from './repositories/user.repository';
       useClass: UsersRelationalRepository,
     },
   ],
-  exports: [UserAbstractRepository],
+  exports: [UserAbstractRepository, TypeOrmModule],
 })
 export class RelationalUserPersistenceModule {}
