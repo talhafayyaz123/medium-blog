@@ -5,10 +5,10 @@ import { GoogleConfig } from '@src/auth-google/config/google-config.type';
 import { TwitterConfig } from '@src/auth-twitter/config/twitter-config.type';
 import { DatabaseConfig } from '@src/database/config/database-config.type';
 import { FileConfig } from '@src/files/config/file-config.type';
+import { GenAiConfig } from '@src/gen-ai/config/gen-ai-config.type';
 import { MailConfig } from '@src/mail/config/mail-config.type';
 
 import { AppConfig } from './app-config.type';
-import { GenAiConfig } from './gen-ai-config.type';
 
 export type AllConfigType = {
   app: AppConfig;

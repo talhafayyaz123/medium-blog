@@ -22,7 +22,7 @@ export class GenAiService {
     this.model = genAI.getGenerativeModel({ model: modelName });
   }
 
-  async generateArticleTitle(prompt: string): Promise<any> {
+  async generateArticleTitle(prompt: string): Promise<string> {
     if (!this.model) {
       throw new BadRequestException(GEN_AI_CONFIGURATION_ERROR);
     }
