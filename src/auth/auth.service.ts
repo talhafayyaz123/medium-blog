@@ -135,6 +135,7 @@ export class AuthService {
         email: socialEmail ?? null,
         firstName: socialData.first_name ?? null,
         lastName: socialData.last_name ?? null,
+        username: socialData.username ?? null,
         socialId: socialData.id,
         provider: authProvider,
         role,
