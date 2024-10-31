@@ -11,14 +11,12 @@ export class <%= name %> {
 
   // @custom-inject-point
   @ApiProperty({
-    type: <%= h.getPropertyType(type) %>,
-    example: "<%= example %>",
+    type: Date,
   })
   createdAt: Date;
 
   @ApiProperty({
-    type: <%= h.getPropertyType(type) %>,
-    example: "<%= example %>",
+    type: Date,
   })
   updatedAt: Date;
 }

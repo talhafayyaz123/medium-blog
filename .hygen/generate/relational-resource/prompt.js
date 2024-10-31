@@ -17,34 +17,4 @@ module.exports = [
       { name: 'delete', value: 'delete' },
     ],
   },
-  {
-    type: 'select',
-    name: 'type',
-    message: 'Select type',
-    choices: [
-      'varchar',
-      'text',
-      'uuid',
-      'int',
-      'float',
-      'double',
-      'decimal',
-      'timestamp',
-      'date',
-      'custom',
-    ],
-  },
-  {
-    type: 'input',
-    name: 'example',
-    message:
-      "Provide an example value for the default property (e.g. 'John Doe'):",
-    validate: (input) => {
-      if (!input.trim()) {
-        return 'Property example is required';
-      }
-      return true;
-    },
-    format: (input) => input.trim(),
-  },
 ];

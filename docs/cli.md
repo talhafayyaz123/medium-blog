@@ -48,24 +48,6 @@ This command will trigger a terminal prompt with the following options:
 
    If you choose "Yes", test case structure and mock data for the resource will also be generated along with the selected functionalities.
 
-3. **Type**: You will be asked to choose a data type for the default property from the following list:
-
-   1. varchar
-   2. text
-   3. uuid
-   4. int
-   5. float
-   6. double
-   7. decimal
-   8. boolean
-   9. timestamp
-   10. date
-   11. json
-   12. custom **(If you choose custom, you will be prompted to manually enter the custom type.)**
- 
-4. **Property Example**: You will be asked to provide the default property example . This field is also required, and the input will be validated to ensure it's not empty.
-
-
 
 ### Property for relational database (PostgreSQL + TypeORM)
 
