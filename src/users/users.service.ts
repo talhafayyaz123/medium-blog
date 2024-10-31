@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import bcrypt from 'bcryptjs';
 
 import { AuthProvidersEnum } from '@src/auth/auth-providers.enum';
-import { ERROR_MESSAGES } from '@src/common/constants';
+import { ERROR_MESSAGES } from '@src/common/error-messages';
 import {
   FORBIDDEN,
   NOT_FOUND,

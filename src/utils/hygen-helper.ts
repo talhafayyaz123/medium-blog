@@ -33,7 +33,6 @@ export const getType = (type: string): string => {
       return 'object';
     default:
       if (customTypeMapping.hasOwnProperty(type)) {
-        console.log(customTypeMapping.hasOwnProperty(type));
         return customTypeMapping[type];
       }
       return 'any';

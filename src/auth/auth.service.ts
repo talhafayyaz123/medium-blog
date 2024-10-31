@@ -7,7 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcryptjs';
 import ms from 'ms';
 
-import { ERROR_MESSAGES } from '@src/common/constants';
+import { ERROR_MESSAGES } from '@src/common/error-messages';
 import {
   FORBIDDEN,
   NOT_FOUND,
