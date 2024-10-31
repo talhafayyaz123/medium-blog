@@ -16,6 +16,7 @@ import {
 import { DatabaseHelperRepository } from '@src/database-helpers/database-helper';
 import { Tag } from '@src/tags/domain/tag';
 import { TagsService } from '@src/tags/tags.service';
+import { User } from '@src/users/domain/user';
 import { UserEntity } from '@src/users/infrastructure/persistence/relational/entities/user.entity';
 import { UsersService } from '@src/users/users.service';
 import { pagination } from '@src/utils/pagination';
@@ -26,6 +27,7 @@ import { Article } from './domain/article';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { ArticleAbstractRepository } from './infrastructure/persistence/article.abstract.repository';
+import { FavoriteArticleAbstractRepository } from './infrastructure/persistence/favorite.article.abstract.repository';
 import { FollowEntity } from './infrastructure/persistence/relational/entities/follow.entity';
 import { UserFollowEntity } from './infrastructure/persistence/relational/entities/userFollow.entity';
 
@@ -37,6 +39,7 @@ export class ArticlesService {
     private readonly tagsService: TagsService,
     private readonly dbHelperRepository: DatabaseHelperRepository,
     private userService: UsersService,
+    private readonly favoriteArticleRepository: FavoriteArticleAbstractRepository,
     @InjectRepository(FollowEntity)
     private readonly followRepository: Repository<FollowEntity>,
     @InjectRepository(UserFollowEntity)
@@ -236,20 +239,23 @@ export class ArticlesService {
       throw NOT_FOUND('Article', { slug });
     }
 
-    const existingFollow = await this.followRepository.findOne({
-      where: {
-        follower: { id: Number(user.id) },
-        following: { id: article.id },
-      },
-    });
+    const existingFavorite = await this.favoriteArticleRepository.find(
+      user.id,
+      article.id,
+    );
 
-    if (existingFollow) throw BAD_REQUEST(`${slug}, Already favorited.`);
+    if (existingFavorite) throw BAD_REQUEST(`${slug}, Already favorited.`);
 
-    const follow = this.followRepository.create({
-      follower: { id: Number(user.id) },
-      following: { id: article.id },
-    });
-    await this.followRepository.save(follow);
+    const clonedPayload = {
+      follower: {
+        id: user.id,
+      } as User,
+      following: {
+        id: article.id,
+      } as Article,
+    };
+
+    await this.favoriteArticleRepository.create(clonedPayload);
 
     const responseArticle = {
       ...article,
@@ -269,20 +275,14 @@ export class ArticlesService {
       console.error('Article ID is null or undefined:', article);
     }
 
-    if (!user.id) {
-      console.error('User ID is null or undefined:', user);
-    }
+    const existingFavorite = await this.favoriteArticleRepository.find(
+      user.id,
+      article.id,
+    );
 
-    const existingFollow = await this.followRepository.findOne({
-      where: {
-        follower: { id: Number(user.id) },
-        following: { id: article.id },
-      },
-    });
+    if (!existingFavorite) throw BAD_REQUEST(`${slug}, article not favorited.`);
 
-    if (!existingFollow) throw BAD_REQUEST(`${slug}, article not favorited.`);
-
-    await this.followRepository.remove(existingFollow);
+    await this.favoriteArticleRepository.remove(existingFavorite.id);
 
     const responseArticle = {
       ...article,
