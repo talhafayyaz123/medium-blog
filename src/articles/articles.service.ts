@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { diff, unique } from 'radash';
 import slugify from 'slugify';
-import { Repository, In, FindManyOptions } from 'typeorm';
+import { In, FindManyOptions } from 'typeorm';
 
 import { ArticleEntity } from '@src/articles/infrastructure/persistence/relational/entities/article.entity';
 import { JwtPayloadType } from '@src/auth/strategies/types/jwt-payload.type';
