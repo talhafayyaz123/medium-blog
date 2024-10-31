@@ -14,6 +14,8 @@ import {
   BAD_REQUEST,
 } from '@src/common/exceptions';
 import { DatabaseHelperRepository } from '@src/database-helpers/database-helper';
+import { GenAiService } from '@src/gen-ai/gen-ai.service';
+import { Prompts } from '@src/gen-ai/prompts';
 import { Tag } from '@src/tags/domain/tag';
 import { TagsService } from '@src/tags/tags.service';
 import { User } from '@src/users/domain/user';
@@ -44,6 +46,7 @@ export class ArticlesService {
     private readonly followRepository: Repository<FollowEntity>,
     @InjectRepository(UserFollowEntity)
     private readonly useFollowRepository: Repository<UserFollowEntity>,
+    private readonly genAiService: GenAiService,
   ) {}
 
   async create(
@@ -67,6 +70,16 @@ export class ArticlesService {
 
     let tags: NullableType<Tag[]> = [];
 
+    if (createArticleDto.autoGenerateTitle) {
+      const prompt = Prompts.generateArticleTitle(
+        createArticleDto.description,
+        createArticleDto.body,
+      );
+
+      clonedPayload.title =
+        await this.genAiService.generateArticleTitle(prompt);
+    }
+
     if (createArticleDto.tagList && createArticleDto.tagList.length > 0) {
       const uniqueTagList = unique(createArticleDto.tagList);
 
@@ -89,7 +102,7 @@ export class ArticlesService {
     const articlePayload = {
       ...clonedPayload,
       tagList: tags,
-      slug: this.slugify(createArticleDto.title),
+      slug: this.slugify(clonedPayload.title),
     };
 
     const article = await this.articleRepository.create(articlePayload);
