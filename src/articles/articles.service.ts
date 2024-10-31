@@ -37,8 +37,6 @@ export class ArticlesService {
     private readonly commentsService: CommentsService,
     private readonly tagsService: TagsService,
     private readonly dbHelperRepository: DatabaseHelperRepository,
-    @InjectRepository(UserFollowEntity)
-    private readonly useFollowRepository: Repository<UserFollowEntity>,
     private readonly genAiService: GenAiService,
   ) {}
 
@@ -299,14 +297,12 @@ export class ArticlesService {
     limit: string,
     offset: string,
   ): Promise<Article[]> {
-    const followedUsers: UserFollowEntity[] =
-      await this.useFollowRepository.find({
-        where: { follower: { id: user.id } },
-        relations: ['following'],
-        select: ['following'],
-      });
+    const followedUsers: NullableType<UserFollowEntity[]> =
+      await this.articleRepository.findFollowedUsers(user);
 
-    const followingIds = followedUsers.map((follow) => follow.following?.id);
+    const followingIds = followedUsers
+      ? followedUsers.map((follow) => follow.following?.id)
+      : [];
     if (followingIds.length > 0) {
       const numericLimit = Number(limit);
       const numericOffset = Number(offset);

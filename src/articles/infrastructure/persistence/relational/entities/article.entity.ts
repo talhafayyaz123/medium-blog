@@ -50,7 +50,7 @@ export class ArticleEntity extends EntityRelationalHelper {
   comments: CommentEntity[];
 
   @OneToMany(() => FollowEntity, (follow) => follow.following)
-  followers: FollowEntity[]; // Users following this article
+  followers: FollowEntity[];
 
   @ManyToMany(() => TagEntity)
   @JoinTable({

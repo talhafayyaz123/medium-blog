@@ -22,6 +22,6 @@ import { ArticleRelationalRepository } from './repositories/article.repository';
       useClass: ArticleRelationalRepository,
     },
   ],
-  exports: [ArticleAbstractRepository, TypeOrmModule],
+  exports: [ArticleAbstractRepository],
 })
 export class RelationalArticlePersistenceModule {}

@@ -11,8 +11,10 @@ import { FollowEntity } from '@src/articles/infrastructure/persistence/relationa
 import { ArticleMapper } from '@src/articles/infrastructure/persistence/relational/mappers/article.mapper';
 import { favoriteArticleFollowMapper } from '@src/articles/infrastructure/persistence/relational/mappers/favorite.article.mapper';
 import { User } from '@src/users/domain/user';
+import { FollowEntity as UserFollowEntity } from '@src/users/infrastructure/persistence/relational/entities/follow.entity';
 import { NullableType } from '@src/utils/types/nullable.type';
 import { IPaginationOptions } from '@src/utils/types/pagination-options';
+import { UserEntity } from '@src/users/infrastructure/persistence/relational/entities/user.entity';
 
 @Injectable()
 export class ArticleRelationalRepository implements ArticleAbstractRepository {
@@ -21,6 +23,8 @@ export class ArticleRelationalRepository implements ArticleAbstractRepository {
     private readonly articleRepository: Repository<ArticleEntity>,
     @InjectRepository(FollowEntity)
     private readonly articleFavoriteRepository: Repository<FollowEntity>,
+    @InjectRepository(UserFollowEntity)
+    private readonly useFollowRepository: Repository<UserFollowEntity>,
   ) {}
 
   async create(data: ArticleDTOWithTagDomains): Promise<Article> {
@@ -153,5 +157,15 @@ export class ArticleRelationalRepository implements ArticleAbstractRepository {
 
   async removeFavorite(id: FollowEntity['id']): Promise<void> {
     await this.articleFavoriteRepository.delete(id);
+  }
+
+  async findFollowedUsers(user: UserEntity): Promise<UserFollowEntity[]> {
+    const followedUsers = await this.useFollowRepository.find({
+      where: { follower: { id: user.id } },
+      relations: ['following'],
+      select: ['following'],
+    });
+
+    return followedUsers;
   }
 }
