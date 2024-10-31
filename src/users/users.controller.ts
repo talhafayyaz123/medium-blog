@@ -170,35 +170,37 @@ export class UsersController {
     return this.usersService.remove(id);
   }
 
-  
-@ApiBearerAuth()
-@UseGuards(AuthGuard('jwt'))
-@Post(':email/follow')
-@HttpCode(HttpStatus.OK)
-@ApiParam({
-  name: 'email',
-  type: String,
-  required: true,
-})
-@ApiOkResponse({ type: User })
-async followUser(@Param('email') email: string, @Request() req): Promise<any> {
-  const userId = req.user.id;
-  return await this.usersService.followUser(userId, email);
-}
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Post(':username/follow')
+  @HttpCode(HttpStatus.OK)
+  @ApiParam({
+    name: 'username',
+    type: String,
+    required: true,
+  })
+  @ApiOkResponse({ type: User })
+  async followUser(
+    @Param('username') username: string,
+    @Request() req,
+  ): Promise<any> {
+    const userId = req.user.id;
+    return await this.usersService.followUser(userId, username);
+  }
 
-
-@Delete(':email/follow')
-@HttpCode(HttpStatus.OK)
-@ApiParam({
-  name: 'email',
-  type: String,
-  required: true,
-})
-@ApiOkResponse({ type: User })
-async unfollowUser(@Param('email') email: string, @Request() req): Promise<any> {
-  const userId = req.user.id;
-  return await this.usersService.unfollowUser(userId, email);
-}
-
-
+  @Delete(':username/follow')
+  @HttpCode(HttpStatus.OK)
+  @ApiParam({
+    name: 'username',
+    type: String,
+    required: true,
+  })
+  @ApiOkResponse({ type: User })
+  async unfollowUser(
+    @Param('username') username: string,
+    @Request() req,
+  ): Promise<any> {
+    const userId = req.user.id;
+    return await this.usersService.unfollowUser(userId, username);
+  }
 }

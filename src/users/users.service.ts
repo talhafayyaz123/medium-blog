@@ -220,10 +220,10 @@ export class UsersService {
     return this.usersRepository.getUserSummary(id, userSummaryView);
   }
 
-  async unfollowUser(followerId: number, email: string): Promise<any> {
-    const followingUser = await this.usersRepository.findByEmail(email);
+  async unfollowUser(followerId: number, username: string): Promise<any> {
+    const followingUser = await this.usersRepository.findByUsername(username);
     if (!followingUser) {
-      throw NOT_FOUND('User', { email: email });
+      throw NOT_FOUND('User', { username: username });
     }
 
     if (followerId === followingUser.id) {
@@ -236,9 +236,7 @@ export class UsersService {
     );
 
     if (!existingFollow)
-      throw BAD_REQUEST(
-        `${followingUser.email}, you are not following this user.`,
-      );
+      throw BAD_REQUEST(`${username}, you are not following this user.`);
 
     await this.UserFollowRepository.remove(existingFollow.id);
 
@@ -258,11 +256,11 @@ export class UsersService {
     };
   }
 
-  async followUser(followerId: number, email: string): Promise<any> {
-    const followingUser = await this.usersRepository.findByEmail(email);
+  async followUser(followerId: number, username: string): Promise<any> {
+    const followingUser = await this.usersRepository.findByUsername(username);
 
     if (!followingUser) {
-      throw NOT_FOUND('User', { email: email });
+      throw NOT_FOUND('User', { username: username });
     }
 
     if (followerId === followingUser.id) {
@@ -275,9 +273,7 @@ export class UsersService {
     );
 
     if (existingFollow)
-      throw BAD_REQUEST(
-        `${followingUser.email}, you are already following this user.`,
-      );
+      throw BAD_REQUEST(`${username}, you are already following this user.`);
 
     const clonedPayload = {
       follower: {
