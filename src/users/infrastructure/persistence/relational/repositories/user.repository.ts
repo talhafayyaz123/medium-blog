@@ -83,8 +83,6 @@ export class UsersRelationalRepository implements UserAbstractRepository {
       console.log(`User with ID ${id} not found`);
       return null;
     }
-
-    //console.log('User entity with relations:', entity);
     return UserMapper.toDomain(entity);
   }
 
