@@ -19,8 +19,8 @@ import { Prompts } from '@src/gen-ai/prompts';
 import { Tag } from '@src/tags/domain/tag';
 import { TagsService } from '@src/tags/tags.service';
 import { User } from '@src/users/domain/user';
+import { FollowEntity as UserFollowEntity } from '@src/users/infrastructure/persistence/relational/entities/follow.entity';
 import { UserEntity } from '@src/users/infrastructure/persistence/relational/entities/user.entity';
-import { UsersService } from '@src/users/users.service';
 import { pagination } from '@src/utils/pagination';
 import { NullableType } from '@src/utils/types/nullable.type';
 import { IPaginationOptions } from '@src/utils/types/pagination-options';
@@ -29,9 +29,6 @@ import { Article } from './domain/article';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { ArticleAbstractRepository } from './infrastructure/persistence/article.abstract.repository';
-import { FavoriteArticleAbstractRepository } from './infrastructure/persistence/favorite.article.abstract.repository';
-import { FollowEntity } from './infrastructure/persistence/relational/entities/follow.entity';
-import { FollowEntity as UserFollowEntity } from '@src/users/infrastructure/persistence/relational/entities/follow.entity';
 
 @Injectable()
 export class ArticlesService {
@@ -40,10 +37,6 @@ export class ArticlesService {
     private readonly commentsService: CommentsService,
     private readonly tagsService: TagsService,
     private readonly dbHelperRepository: DatabaseHelperRepository,
-    private userService: UsersService,
-    private readonly favoriteArticleRepository: FavoriteArticleAbstractRepository,
-    @InjectRepository(FollowEntity)
-    private readonly followRepository: Repository<FollowEntity>,
     @InjectRepository(UserFollowEntity)
     private readonly useFollowRepository: Repository<UserFollowEntity>,
     private readonly genAiService: GenAiService,
@@ -252,7 +245,7 @@ export class ArticlesService {
       throw NOT_FOUND('Article', { slug });
     }
 
-    const existingFavorite = await this.favoriteArticleRepository.find(
+    const existingFavorite = await this.articleRepository.findFavorite(
       user.id,
       article.id,
     );
@@ -268,7 +261,7 @@ export class ArticlesService {
       } as Article,
     };
 
-    await this.favoriteArticleRepository.create(clonedPayload);
+    await this.articleRepository.createFavorite(clonedPayload);
 
     const responseArticle = {
       ...article,
@@ -284,18 +277,14 @@ export class ArticlesService {
       throw NOT_FOUND('Article', { slug });
     }
 
-    if (!article.id) {
-      console.error('Article ID is null or undefined:', article);
-    }
-
-    const existingFavorite = await this.favoriteArticleRepository.find(
+    const existingFavorite = await this.articleRepository.findFavorite(
       user.id,
       article.id,
     );
 
     if (!existingFavorite) throw BAD_REQUEST(`${slug}, article not favorited.`);
 
-    await this.favoriteArticleRepository.remove(existingFavorite.id);
+    await this.articleRepository.removeFavorite(existingFavorite.id);
 
     const responseArticle = {
       ...article,

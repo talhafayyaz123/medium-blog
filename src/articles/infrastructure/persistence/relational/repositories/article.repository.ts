@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository,FindManyOptions } from 'typeorm';
+import { Repository, FindManyOptions } from 'typeorm';
 
 import { ArticleDTOWithTagDomains } from '@src/articles/articles.types';
 import { Article } from '@src/articles/domain/article';
+import { FavoriteArticle } from '@src/articles/domain/favorite-article';
 import { ArticleAbstractRepository } from '@src/articles/infrastructure/persistence/article.abstract.repository';
 import { ArticleEntity } from '@src/articles/infrastructure/persistence/relational/entities/article.entity';
+import { FollowEntity } from '@src/articles/infrastructure/persistence/relational/entities/follow.entity';
 import { ArticleMapper } from '@src/articles/infrastructure/persistence/relational/mappers/article.mapper';
+import { favoriteArticleFollowMapper } from '@src/articles/infrastructure/persistence/relational/mappers/favorite.article.mapper';
+import { User } from '@src/users/domain/user';
 import { NullableType } from '@src/utils/types/nullable.type';
 import { IPaginationOptions } from '@src/utils/types/pagination-options';
 
@@ -15,6 +19,8 @@ export class ArticleRelationalRepository implements ArticleAbstractRepository {
   constructor(
     @InjectRepository(ArticleEntity)
     private readonly articleRepository: Repository<ArticleEntity>,
+    @InjectRepository(FollowEntity)
+    private readonly articleFavoriteRepository: Repository<FollowEntity>,
   ) {}
 
   async create(data: ArticleDTOWithTagDomains): Promise<Article> {
@@ -33,7 +39,6 @@ export class ArticleRelationalRepository implements ArticleAbstractRepository {
     return entities.map((entity) => ArticleMapper.toDomain(entity));
   }
 
-  
   async findAllWithPagination({
     paginationOptions,
   }: {
@@ -122,5 +127,31 @@ export class ArticleRelationalRepository implements ArticleAbstractRepository {
 
   async remove(id: Article['id']): Promise<void> {
     await this.articleRepository.delete(id);
+  }
+
+  async createFavorite(data: FavoriteArticle): Promise<FavoriteArticle> {
+    const persistenceModel = favoriteArticleFollowMapper.toPersistence(data);
+    const newEntity = await this.articleFavoriteRepository.save(
+      this.articleFavoriteRepository.create(persistenceModel),
+    );
+    return favoriteArticleFollowMapper.toDomain(newEntity);
+  }
+
+  async findFavorite(
+    followerId: User['id'],
+    followingId: Article['id'],
+  ): Promise<NullableType<FavoriteArticle>> {
+    const entity = await this.articleFavoriteRepository.findOne({
+      where: {
+        follower: { id: Number(followerId) },
+        following: { id: followingId },
+      },
+      relations: ['follower', 'following'],
+    });
+    return entity ? favoriteArticleFollowMapper.toDomain(entity) : null;
+  }
+
+  async removeFavorite(id: FollowEntity['id']): Promise<void> {
+    await this.articleFavoriteRepository.delete(id);
   }
 }

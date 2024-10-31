@@ -7,6 +7,6 @@ export const TABLES = {
   status: 'status',
   tag: 'tag',
   user: 'user',
-  articleFollow:'user_favorite_article',
-  userFollow:'follow'
+  articleFollow: 'user_favorite_article',
+  userFollow: 'follow',
 };
