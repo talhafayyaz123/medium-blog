@@ -50,6 +50,15 @@ export class UsersService {
       }
     }
 
+    if (clonedPayload.username) {
+      const userObject = await this.usersRepository.findByUsername(
+        clonedPayload.username,
+      );
+      if (userObject) {
+        throw FORBIDDEN(ERROR_MESSAGES.ALREADY_EXISTS('username'), 'username');
+      }
+    }
+
     if (clonedPayload.photo?.id) {
       const fileObject = await this.filesService.findById(
         clonedPayload.photo.id,
