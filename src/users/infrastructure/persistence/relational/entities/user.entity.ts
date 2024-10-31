@@ -28,6 +28,13 @@ import { EntityRelationalHelper } from '@src/utils/relational-entity-helper';
   name: TABLES.user,
 })
 export class UserEntity extends EntityRelationalHelper {
+  @Column({
+    type: 'varchar',
+    unique: true,
+    nullable: true,
+  })
+  username: string | null;
+
   @PrimaryGeneratedColumn()
   id: number;
 

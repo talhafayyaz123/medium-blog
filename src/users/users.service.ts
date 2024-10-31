@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import bcrypt from 'bcryptjs';
 
 import { AuthProvidersEnum } from '@src/auth/auth-providers.enum';
-import { ERROR_MESSAGES } from '@src/common/constants';
+import { ERROR_MESSAGES } from '@src/common/error-messages';
 import {
   FORBIDDEN,
   NOT_FOUND,
@@ -47,6 +47,15 @@ export class UsersService {
       );
       if (userObject) {
         throw FORBIDDEN(ERROR_MESSAGES.ALREADY_EXISTS('email'), 'email');
+      }
+    }
+
+    if (clonedPayload.username) {
+      const userObject = await this.usersRepository.findByUsername(
+        clonedPayload.username,
+      );
+      if (userObject) {
+        throw FORBIDDEN(ERROR_MESSAGES.ALREADY_EXISTS('username'), 'username');
       }
     }
 
