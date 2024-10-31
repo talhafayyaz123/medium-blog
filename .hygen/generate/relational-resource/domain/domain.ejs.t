@@ -4,15 +4,19 @@ to: src/<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize'
 import { ApiProperty } from '@nestjs/swagger';
 
 export class <%= name %> {
-  @ApiProperty({
-    type: String,
-  })
+  @ApiProperty()
   id: string;
 
   // @custom-inject-point
-  @ApiProperty()
+  @ApiProperty({
+    type: <%= h.getPropertyType(type) %>,
+    example: "<%= example %>",
+  })
   createdAt: Date;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: <%= h.getPropertyType(type) %>,
+    example: "<%= example %>",
+  })
   updatedAt: Date;
 }

@@ -4,14 +4,13 @@
 
 ## Table of Contents <!-- omit in toc -->
 
-- [Command Line Interface (CLI)](#command-line-interface-cli)
-  - [Generate resource](#generate-resource)
-    - [For relational database (PostgreSQL + TypeORM)](#for-relational-database-postgresql--typeorm)
-    - [Property for relational database (PostgreSQL + TypeORM)](#property-for-relational-database-postgresql--typeorm)
-    - [Generate a basic structure for raw queries](#generate-a-basic-structure-for-raw-queries)
-  - [FAQ](#faq)
-    - [Error: Unable to connect to the newly created relational entity](#error-unable-to-connect-to-the-newly-created-relational-entity)
-    - [Can I create foreign key properties using the add:property command?](#can-i-create-foreign-key-properties-using-the-addproperty-command)
+- [Generate resource](#generate-resource)
+  - [For relational database (PostgreSQL + TypeORM)](#for-relational-database-postgresql--typeorm)
+  - [Property for relational database (PostgreSQL + TypeORM)](#property-for-relational-database-postgresql--typeorm)
+  - [Generate a basic structure for raw queries](#generate-a-basic-structure-for-raw-queries)
+- [FAQ](#faq)
+  - [Error: Unable to connect to the newly created relational entity](#error-unable-to-connect-to-the-newly-created-relational-entity)
+  - [Can I create foreign key properties using the add:property command?](#can-i-create-foreign-key-properties-using-the-addproperty-command)
 
 ---
 
@@ -43,11 +42,30 @@ This command will trigger a terminal prompt with the following options:
 
    Use the arrow keys to navigate and the spacebar to select multiple options. Press Enter key to move to next step.
 
-1. **Add Test Case**: You will be prompted with a confirmation question:
+2. **Add Test Case**: You will be prompted with a confirmation question:
 
    - "Do you want to add test cases and mock data?"
 
    If you choose "Yes", test case structure and mock data for the resource will also be generated along with the selected functionalities.
+
+3. **Type**: You will be asked to choose a data type for the default property from the following list:
+
+   1. varchar
+   2. text
+   3. uuid
+   4. int
+   5. float
+   6. double
+   7. decimal
+   8. boolean
+   9. timestamp
+   10. date
+   11. json
+   12. custom **(If you choose custom, you will be prompted to manually enter the custom type.)**
+ 
+4. **Property Example**: You will be asked to provide the default property example . This field is also required, and the input will be validated to ensure it's not empty.
+
+
 
 ### Property for relational database (PostgreSQL + TypeORM)
 
@@ -63,7 +81,7 @@ This command will initiate a terminal prompt to help you add a new property to a
 
 3. **Is this property optional?:** You will be prompted with a confirmation asking whether the property is optional. If you select "Yes", the property will be marked as optional in the schema.
 
-4. **Type of the property**: You will be asked to choose a data type for the property from the following list:
+4. **Type of the property**: You will be asked to choose a data type for the default property from the following list:
 
    1. varchar
    2. text
@@ -81,6 +99,9 @@ This command will initiate a terminal prompt to help you add a new property to a
 5. **Add to DTO?**: You will be prompted with another confirmation asking whether the property should be added to the DTO (Data Transfer Object). If you select "Yes", the system will include the new property in the DTO.
 
 After the property is created, please check the DTO files and add the relevant imports. Otherwise, the file will have errors.
+
+6. **Property Example**: You will be asked to provide the property example(eg:test@gmail.com). This field is also required, and the input will be validated to ensure it's not empty.
+
 
 ### Generate a basic structure for raw queries
 

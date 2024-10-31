@@ -7,7 +7,7 @@ after: "export class"
 <% if (isAddToDto) { -%>
   @ApiProperty({
     type: <%= h.getPropertyType(type) %>,
-  example: "<%= example %>",
+    example: "<%= example %>",
   })
   <% if (h.getType(type) === 'string') { -%>
   @IsString()
