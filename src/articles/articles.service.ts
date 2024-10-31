@@ -31,7 +31,7 @@ import { UpdateArticleDto } from './dto/update-article.dto';
 import { ArticleAbstractRepository } from './infrastructure/persistence/article.abstract.repository';
 import { FavoriteArticleAbstractRepository } from './infrastructure/persistence/favorite.article.abstract.repository';
 import { FollowEntity } from './infrastructure/persistence/relational/entities/follow.entity';
-import { UserFollowEntity } from './infrastructure/persistence/relational/entities/userFollow.entity';
+import { FollowEntity as UserFollowEntity } from '@src/users/infrastructure/persistence/relational/entities/follow.entity';
 
 @Injectable()
 export class ArticlesService {
@@ -312,12 +312,12 @@ export class ArticlesService {
   ): Promise<Article[]> {
     const followedUsers: UserFollowEntity[] =
       await this.useFollowRepository.find({
-        where: { follower_id: user.id },
-        select: ['following_id'],
+        where: { follower: { id: user.id } },
+        relations: ['following'],
+        select: ['following'],
       });
 
-    const followingIds = followedUsers.map((follow) => follow.following_id);
-
+    const followingIds = followedUsers.map((follow) => follow.following?.id);
     if (followingIds.length > 0) {
       const numericLimit = Number(limit);
       const numericOffset = Number(offset);

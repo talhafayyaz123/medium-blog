@@ -21,6 +21,9 @@ import { FileEntity } from '@src/files/infrastructure/persistence/relational/ent
 import { RoleEntity } from '@src/roles/infrastructure/persistence/relational/entities/role.entity';
 import { StatusEntity } from '@src/statuses/infrastructure/persistence/relational/entities/status.entity';
 import { EntityRelationalHelper } from '@src/utils/relational-entity-helper';
+
+import { FollowEntity as UserFollowEntity } from './follow.entity';
+
 // We use class-transformer in ORM entity and domain entity.
 // We duplicate these rules because you can choose not to use adapters
 // in your project and return an ORM entity directly in response.
@@ -87,6 +90,14 @@ export class UserEntity extends EntityRelationalHelper {
 
   @OneToMany(() => FollowEntity, (follow) => follow.follower)
   following: FollowEntity[]; // Articles the user is following
+
+  // A user can follow many other users
+  @OneToMany(() => UserFollowEntity, (follow) => follow.follower)
+  userFollowing: UserFollowEntity[];
+
+  // A user can have many followers
+  @OneToMany(() => UserFollowEntity, (follow) => follow.following)
+  userFollowers: UserFollowEntity[];
 
   @CreateDateColumn()
   created_at: Date;

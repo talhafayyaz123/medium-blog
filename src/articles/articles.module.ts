@@ -11,8 +11,8 @@ import { UsersModule } from '@src/users/users.module';
 import { ArticlesController } from './articles.controller';
 import { ArticlesService } from './articles.service';
 import { FollowEntity } from './infrastructure/persistence/relational/entities/follow.entity';
-import { UserFollowEntity } from './infrastructure/persistence/relational/entities/userFollow.entity';
 import { RelationalArticlePersistenceModule } from './infrastructure/persistence/relational/relational-persistence.module';
+import { FollowEntity as UserFollowEntity } from '@src/users/infrastructure/persistence/relational/entities/follow.entity';
 
 @Module({
   imports: [
