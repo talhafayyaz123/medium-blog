@@ -4,7 +4,9 @@ to: src/<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize'
 import { ApiProperty } from '@nestjs/swagger';
 
 export class <%= name %> {
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+  })
   id: string;
 
   // @custom-inject-point
