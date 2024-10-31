@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import bcrypt from 'bcryptjs';
-import { Repository } from 'typeorm';
 
 import { AuthProvidersEnum } from '@src/auth/auth-providers.enum';
 import { ERROR_MESSAGES } from '@src/common/error-messages';
@@ -24,9 +22,7 @@ import { ViewsService } from '@src/views/views.service';
 import { User } from './domain/user';
 import { CreateUserDto } from './dto/create-user.dto';
 import { FilterUserDto, SortUserDto } from './dto/query-user.dto';
-import { FollowEntity } from './infrastructure/persistence/relational/entities/follow.entity';
 import { UserAbstractRepository } from './infrastructure/persistence/user.abstract.repository';
-import { UserFollowAbstractRepository } from './infrastructure/persistence/user.follow.abstract.repository';
 
 @Injectable()
 export class UsersService {
@@ -34,9 +30,6 @@ export class UsersService {
     private readonly usersRepository: UserAbstractRepository,
     private readonly filesService: FilesService,
     private readonly viewsService: ViewsService,
-    private readonly UserFollowRepository: UserFollowAbstractRepository,
-    @InjectRepository(FollowEntity)
-    private readonly followRepository: Repository<FollowEntity>,
   ) {}
 
   async create(createProfileDto: CreateUserDto): Promise<User> {
@@ -220,7 +213,7 @@ export class UsersService {
     return this.usersRepository.getUserSummary(id, userSummaryView);
   }
 
-  async unfollowUser(followerId: number, username: string): Promise<any> {
+  async unFollowUser(followerId: number, username: string): Promise<any> {
     const followingUser = await this.usersRepository.findByUsername(username);
     if (!followingUser) {
       throw NOT_FOUND('User', { username: username });
@@ -230,7 +223,7 @@ export class UsersService {
       throw CustomException('You cannot unfollow yourself', 'unfollow');
     }
 
-    const existingFollow = await this.UserFollowRepository.find(
+    const existingFollow = await this.usersRepository.findFollow(
       followerId,
       followingUser.id,
     );
@@ -238,7 +231,7 @@ export class UsersService {
     if (!existingFollow)
       throw BAD_REQUEST(`${username}, you are not following this user.`);
 
-    await this.UserFollowRepository.remove(existingFollow.id);
+    await this.usersRepository.removeFollow(existingFollow.id);
 
     const followerProfile = await this.findAndValidate('id', followerId);
 
@@ -267,7 +260,7 @@ export class UsersService {
       throw CustomException('You cannot follow yourself', 'follow');
     }
 
-    const existingFollow = await this.UserFollowRepository.find(
+    const existingFollow = await this.usersRepository.findFollow(
       followerId,
       followingUser.id,
     );
@@ -284,7 +277,7 @@ export class UsersService {
       } as User,
     };
 
-    await this.UserFollowRepository.create(clonedPayload);
+    await this.usersRepository.createFollow(clonedPayload);
 
     const followerProfile = await this.findAndValidate('id', followerId);
     return {

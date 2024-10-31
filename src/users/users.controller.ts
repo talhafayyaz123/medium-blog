@@ -196,11 +196,11 @@ export class UsersController {
     required: true,
   })
   @ApiOkResponse({ type: User })
-  async unfollowUser(
+  async unFollowUser(
     @Param('username') username: string,
     @Request() req,
   ): Promise<any> {
     const userId = req.user.id;
-    return await this.usersService.unfollowUser(userId, username);
+    return await this.usersService.unFollowUser(userId, username);
   }
 }

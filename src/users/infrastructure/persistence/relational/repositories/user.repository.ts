@@ -3,8 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository, SelectQueryBuilder } from 'typeorm';
 
 import { User } from '@src/users/domain/user';
+import { UserFollow } from '@src/users/domain/user-follow';
 import { FilterUserDto, SortUserDto } from '@src/users/dto/query-user.dto';
+import { FollowEntity } from '@src/users/infrastructure/persistence/relational/entities/follow.entity';
 import { UserEntity } from '@src/users/infrastructure/persistence/relational/entities/user.entity';
+import { UserFollowMapper } from '@src/users/infrastructure/persistence/relational/mappers/user.follow.mapper';
 import { UserMapper } from '@src/users/infrastructure/persistence/relational/mappers/user.mapper';
 import { UserAbstractRepository } from '@src/users/infrastructure/persistence/user.abstract.repository';
 import { NullableType } from '@src/utils/types/nullable.type';
@@ -18,6 +21,8 @@ export class UsersRelationalRepository implements UserAbstractRepository {
   constructor(
     @InjectRepository(UserEntity)
     private readonly usersRepository: Repository<UserEntity>,
+    @InjectRepository(FollowEntity)
+    private readonly usersFollowRepository: Repository<FollowEntity>,
   ) {}
 
   async create(data: User): Promise<User> {
@@ -152,5 +157,31 @@ export class UsersRelationalRepository implements UserAbstractRepository {
   ): Promise<NullableType<UserSummary>> {
     const summary = await query.where({ id: Number(id) }).getOne();
     return summary ? UserSummaryMapper.toDomain(summary) : null;
+  }
+
+  async createFollow(data: UserFollow): Promise<UserFollow> {
+    const persistenceModel = UserFollowMapper.toPersistence(data);
+    const newEntity = await this.usersFollowRepository.save(
+      this.usersFollowRepository.create(persistenceModel),
+    );
+    return UserFollowMapper.toDomain(newEntity);
+  }
+
+  async findFollow(
+    followerId: User['id'],
+    followingId: User['id'],
+  ): Promise<NullableType<UserFollow>> {
+    const entity = await this.usersFollowRepository.findOne({
+      where: {
+        follower: { id: Number(followerId) },
+        following: { id: Number(followingId) },
+      },
+      relations: ['follower', 'following'],
+    });
+    return entity ? UserFollowMapper.toDomain(entity) : null;
+  }
+
+  async removeFollow(id: FollowEntity['id']): Promise<void> {
+    await this.usersFollowRepository.delete(id);
   }
 }
