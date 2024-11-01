@@ -1,12 +1,8 @@
-import { FindManyOptions } from 'typeorm';
-
 import { ArticleDTOWithTagDomains } from '@src/articles/articles.types';
 import { Article } from '@src/articles/domain/article';
 import { FavoriteArticle } from '@src/articles/domain/favorite-article';
-import { ArticleEntity } from '@src/articles/infrastructure/persistence/relational/entities/article.entity';
 import { User } from '@src/users/domain/user';
-import { FollowEntity as UserFollowEntity } from '@src/users/infrastructure/persistence/relational/entities/follow.entity';
-import { UserEntity } from '@src/users/infrastructure/persistence/relational/entities/user.entity';
+import { UserFollow } from '@src/users/domain/user-follow';
 import { DeepPartial } from '@src/utils/types/deep-partial.type';
 import { NullableType } from '@src/utils/types/nullable.type';
 import { IPaginationOptions } from '@src/utils/types/pagination-options';
@@ -44,9 +40,13 @@ export abstract class ArticleAbstractRepository {
     >,
   ): Promise<Article>;
 
-  abstract find(
-    criteria: FindManyOptions<ArticleEntity>,
-  ): Promise<Article[] | []>;
+  abstract findPaginatedWithAuthorIds({
+    paginationOptions,
+    authorIds,
+  }: {
+    paginationOptions: IPaginationOptions;
+    authorIds: Article['id'][];
+  }): Promise<Article[] | []>;
 
   abstract remove(id: Article['id']): Promise<void>;
 
@@ -61,7 +61,5 @@ export abstract class ArticleAbstractRepository {
 
   abstract removeFavorite(id: FavoriteArticle['id']): Promise<void>;
 
-  abstract findFollowedUsers(
-    user: UserEntity,
-  ): Promise<NullableType<UserFollowEntity[]>>;
+  abstract findFollowedUsers(user: User): Promise<NullableType<UserFollow[]>>;
 }

@@ -1,18 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, FindManyOptions } from 'typeorm';
+import { Repository, FindManyOptions, In } from 'typeorm';
 
 import { ArticleDTOWithTagDomains } from '@src/articles/articles.types';
 import { Article } from '@src/articles/domain/article';
 import { FavoriteArticle } from '@src/articles/domain/favorite-article';
 import { ArticleAbstractRepository } from '@src/articles/infrastructure/persistence/article.abstract.repository';
 import { ArticleEntity } from '@src/articles/infrastructure/persistence/relational/entities/article.entity';
-import { favoriteEntity } from '@src/articles/infrastructure/persistence/relational/entities/follow.entity';
+import { FavoriteArticleEntity } from '@src/articles/infrastructure/persistence/relational/entities/favorite-article.entity';
 import { ArticleMapper } from '@src/articles/infrastructure/persistence/relational/mappers/article.mapper';
 import { favoriteArticleFollowMapper } from '@src/articles/infrastructure/persistence/relational/mappers/favorite.article.mapper';
 import { User } from '@src/users/domain/user';
-import { FollowEntity as UserFollowEntity } from '@src/users/infrastructure/persistence/relational/entities/follow.entity';
-import { UserEntity } from '@src/users/infrastructure/persistence/relational/entities/user.entity';
+import { UserFollow } from '@src/users/domain/user-follow';
+import { UserFollowEntity as UserFollowEntity } from '@src/users/infrastructure/persistence/relational/entities/user-follow.entity';
+import { UserFollowMapper } from '@src/users/infrastructure/persistence/relational/mappers/user-follow.mapper';
 import { NullableType } from '@src/utils/types/nullable.type';
 import { IPaginationOptions } from '@src/utils/types/pagination-options';
 
@@ -21,8 +22,8 @@ export class ArticleRelationalRepository implements ArticleAbstractRepository {
   constructor(
     @InjectRepository(ArticleEntity)
     private readonly articleRepository: Repository<ArticleEntity>,
-    @InjectRepository(favoriteEntity)
-    private readonly articleFavoriteRepository: Repository<favoriteEntity>,
+    @InjectRepository(FavoriteArticleEntity)
+    private readonly favoriteArticleRepository: Repository<FavoriteArticleEntity>,
     @InjectRepository(UserFollowEntity)
     private readonly useFollowRepository: Repository<UserFollowEntity>,
   ) {}
@@ -38,8 +39,22 @@ export class ArticleRelationalRepository implements ArticleAbstractRepository {
     return ArticleMapper.toDomain(newEntity);
   }
 
-  async find(criteria: FindManyOptions<ArticleEntity>): Promise<Article[]> {
-    const entities = await this.articleRepository.find(criteria);
+  async findPaginatedWithAuthorIds({
+    paginationOptions: { limit, page },
+    authorIds,
+  }: {
+    paginationOptions: IPaginationOptions;
+    authorIds: Article['id'][];
+  }): Promise<Article[]> {
+    const options: FindManyOptions<ArticleEntity> = {
+      where: { author_id: In(authorIds) },
+      take: limit,
+      skip: page,
+      order: { created_at: 'DESC' },
+      relations: ['author'],
+    };
+
+    const entities = await this.articleRepository.find(options);
     return entities.map((entity) => ArticleMapper.toDomain(entity));
   }
 
@@ -135,8 +150,8 @@ export class ArticleRelationalRepository implements ArticleAbstractRepository {
 
   async createFavorite(data: FavoriteArticle): Promise<FavoriteArticle> {
     const persistenceModel = favoriteArticleFollowMapper.toPersistence(data);
-    const newEntity = await this.articleFavoriteRepository.save(
-      this.articleFavoriteRepository.create(persistenceModel),
+    const newEntity = await this.favoriteArticleRepository.save(
+      this.favoriteArticleRepository.create(persistenceModel),
     );
     return favoriteArticleFollowMapper.toDomain(newEntity);
   }
@@ -145,7 +160,7 @@ export class ArticleRelationalRepository implements ArticleAbstractRepository {
     followerId: User['id'],
     followingId: Article['id'],
   ): Promise<NullableType<FavoriteArticle>> {
-    const entity = await this.articleFavoriteRepository.findOne({
+    const entity = await this.favoriteArticleRepository.findOne({
       where: {
         user: { id: Number(followerId) },
         article: { id: followingId },
@@ -155,17 +170,17 @@ export class ArticleRelationalRepository implements ArticleAbstractRepository {
     return entity ? favoriteArticleFollowMapper.toDomain(entity) : null;
   }
 
-  async removeFavorite(id: favoriteEntity['id']): Promise<void> {
-    await this.articleFavoriteRepository.delete(id);
+  async removeFavorite(id: FavoriteArticle['id']): Promise<void> {
+    await this.favoriteArticleRepository.delete(id);
   }
 
-  async findFollowedUsers(user: UserEntity): Promise<UserFollowEntity[]> {
+  async findFollowedUsers(user: User): Promise<UserFollow[]> {
     const followedUsers = await this.useFollowRepository.find({
-      where: { follower: { id: user.id } },
+      where: { follower: { id: Number(user.id) } },
       relations: ['following'],
       select: ['following'],
     });
 
-    return followedUsers;
+    return followedUsers.map((entity) => UserFollowMapper.toDomain(entity));
   }
 }

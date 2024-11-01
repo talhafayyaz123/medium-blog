@@ -254,9 +254,15 @@ export class ArticlesController {
     @Request() request,
     @Query() query: FindAllArticlesFeedDto,
   ): Promise<Article[]> {
-    const limit = query?.limit ?? 10;
-    const offset = query?.offset ?? 0;
+    const page = query?.page ?? 1;
+    let limit = query?.limit ?? 10;
+    if (limit > 50) {
+      limit = 50;
+    }
     const user = request.user;
-    return this.articlesService.getFeedArticles(user, limit, offset);
+    return this.articlesService.getFeedArticles({
+      paginationOptions: { limit, page },
+      user,
+    });
   }
 }

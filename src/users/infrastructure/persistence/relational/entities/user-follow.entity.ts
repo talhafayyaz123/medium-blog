@@ -14,7 +14,7 @@ import { UserEntity } from './user.entity';
 @Entity({
   name: TABLES.userFollow,
 })
-export class FollowEntity {
+export class UserFollowEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

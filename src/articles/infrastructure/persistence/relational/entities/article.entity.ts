@@ -18,7 +18,7 @@ import { UserEntity } from '@src/users/infrastructure/persistence/relational/ent
 import { EntityRelationalHelper } from '@src/utils/relational-entity-helper';
 import { NullableType } from '@src/utils/types/nullable.type';
 
-import { favoriteEntity } from './follow.entity';
+import { FavoriteArticleEntity } from './favorite-article.entity';
 
 @Entity({
   name: TABLES.article,
@@ -49,8 +49,8 @@ export class ArticleEntity extends EntityRelationalHelper {
   @OneToMany(() => CommentEntity, (comment) => comment.article)
   comments: CommentEntity[];
 
-  @OneToMany(() => favoriteEntity, (favorite) => favorite.article)
-  favorites: favoriteEntity[];
+  @OneToMany(() => FavoriteArticleEntity, (favorite) => favorite.article)
+  favorites: ArticleEntity[];
 
   @ManyToMany(() => TagEntity)
   @JoinTable({

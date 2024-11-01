@@ -1,5 +1,3 @@
-//import { UUID } from 'crypto';
-
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -17,7 +15,7 @@ import { ArticleEntity } from './article.entity';
 @Entity({
   name: TABLES.articleFollow,
 })
-export class favoriteEntity {
+export class FavoriteArticleEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

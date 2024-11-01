@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ArticleAbstractRepository } from '@src/articles/infrastructure/persistence/article.abstract.repository';
-import { favoriteEntity as ArticleFavoriteEntity } from '@src/articles/infrastructure/persistence/relational/entities/follow.entity';
-import { FollowEntity as UserFollowEntity } from '@src/users/infrastructure/persistence/relational/entities/follow.entity';
+import { FavoriteArticleEntity as ArticleFavoriteEntity } from '@src/articles/infrastructure/persistence/relational/entities/favorite-article.entity';
+import { UserFollowEntity as UserFollowEntity } from '@src/users/infrastructure/persistence/relational/entities/user-follow.entity';
 
 import { ArticleEntity } from './entities/article.entity';
 import { ArticleRelationalRepository } from './repositories/article.repository';

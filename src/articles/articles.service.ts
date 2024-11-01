@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { diff, unique } from 'radash';
 import slugify from 'slugify';
-import { In, FindManyOptions } from 'typeorm';
 
-import { ArticleEntity } from '@src/articles/infrastructure/persistence/relational/entities/article.entity';
 import { JwtPayloadType } from '@src/auth/strategies/types/jwt-payload.type';
 import { CommentsService } from '@src/comments/comments.service';
 import { Comment } from '@src/comments/domain/comment';
+import {
+  ARTICLE_ALREADY_FAVORITED_ERROR,
+  ARTICLE_NOT_FAVORITE_ERROR,
+} from '@src/common/error-messages';
 import {
   NOT_FOUND,
   UNPROCESSABLE_ENTITY,
@@ -18,8 +20,7 @@ import { Prompts } from '@src/gen-ai/prompts';
 import { Tag } from '@src/tags/domain/tag';
 import { TagsService } from '@src/tags/tags.service';
 import { User } from '@src/users/domain/user';
-import { FollowEntity as UserFollowEntity } from '@src/users/infrastructure/persistence/relational/entities/follow.entity';
-import { UserEntity } from '@src/users/infrastructure/persistence/relational/entities/user.entity';
+import { UserFollow } from '@src/users/domain/user-follow';
 import { pagination } from '@src/utils/pagination';
 import { NullableType } from '@src/utils/types/nullable.type';
 import { IPaginationOptions } from '@src/utils/types/pagination-options';
@@ -236,7 +237,7 @@ export class ArticlesService {
     return article;
   }
 
-  async favoriteArticle(slug: string, user: UserEntity): Promise<Article> {
+  async favoriteArticle(slug: string, user: User): Promise<Article> {
     const article = await this.articleRepository.findBySlug(slug);
     if (!article) {
       throw NOT_FOUND('Article', { slug });
@@ -247,7 +248,7 @@ export class ArticlesService {
       article.id,
     );
 
-    if (existingFavorite) throw BAD_REQUEST(`${slug}, Already favorited.`);
+    if (existingFavorite) throw BAD_REQUEST(ARTICLE_ALREADY_FAVORITED_ERROR);
 
     const clonedPayload = {
       user: {
@@ -260,15 +261,10 @@ export class ArticlesService {
 
     await this.articleRepository.createFavorite(clonedPayload);
 
-    const responseArticle = {
-      ...article,
-      favorited: true,
-    };
-
-    return responseArticle;
+    return article;
   }
 
-  async unfavoriteArticle(slug: string, user: UserEntity): Promise<Article> {
+  async unfavoriteArticle(slug: string, user: User): Promise<Article> {
     const article = await this.articleRepository.findBySlug(slug);
     if (!article) {
       throw NOT_FOUND('Article', { slug });
@@ -279,43 +275,34 @@ export class ArticlesService {
       article.id,
     );
 
-    if (!existingFavorite) throw BAD_REQUEST(`${slug}, article not favorited.`);
+    if (!existingFavorite) throw BAD_REQUEST(ARTICLE_NOT_FAVORITE_ERROR);
 
     await this.articleRepository.removeFavorite(existingFavorite.id);
 
-    const responseArticle = {
-      ...article,
-      favorited: false,
-    };
-
-    return responseArticle;
+    return article;
   }
 
-  async getFeedArticles(
-    user: UserEntity,
-    limit: number,
-    offset: number,
-  ): Promise<Article[]> {
-    const followedUsers: NullableType<UserFollowEntity[]> =
+  async getFeedArticles({
+    paginationOptions: { limit, page },
+    user,
+  }: {
+    paginationOptions: IPaginationOptions;
+    user: User;
+  }): Promise<Article[]> {
+    const followedUsers: NullableType<UserFollow[]> =
       await this.articleRepository.findFollowedUsers(user);
 
     const followingIds = followedUsers
-      ? followedUsers.map((follow) => follow.following?.id)
+      ? followedUsers.map((follow) => String(follow.following?.id))
       : [];
     if (followingIds.length > 0) {
-      const numericLimit = Number(limit);
-      const numericOffset = Number(offset);
-
-      const options: FindManyOptions<ArticleEntity> = {
-        where: { author_id: In(followingIds) },
-        take: numericLimit,
-        skip: numericOffset,
-        order: { created_at: 'DESC' },
-        relations: ['author'],
-      };
-
-      const articles = await this.articleRepository.find(options);
-      return articles;
+      return this.articleRepository.findPaginatedWithAuthorIds({
+        paginationOptions: {
+          page,
+          limit,
+        },
+        authorIds: followingIds,
+      });
     }
 
     return [];

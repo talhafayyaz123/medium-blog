@@ -1,10 +1,10 @@
 import { UserFollow } from '@src/users/domain/user-follow';
-import { FollowEntity } from '@src/users/infrastructure/persistence/relational/entities/follow.entity';
+import { UserFollowEntity } from '@src/users/infrastructure/persistence/relational/entities/user-follow.entity';
 import { UserEntity } from '@src/users/infrastructure/persistence/relational/entities/user.entity';
 import { UserMapper } from '@src/users/infrastructure/persistence/relational/mappers/user.mapper';
 
 export class UserFollowMapper {
-  static toDomain(raw: FollowEntity): UserFollow {
+  static toDomain(raw: UserFollowEntity): UserFollow {
     const domainEntity = new UserFollow();
     domainEntity.id = raw.id;
     if (raw.follower) {
@@ -21,8 +21,8 @@ export class UserFollowMapper {
     return domainEntity;
   }
 
-  static toPersistence(domainEntity: UserFollow): FollowEntity {
-    const persistenceEntity = new FollowEntity();
+  static toPersistence(domainEntity: UserFollow): UserFollowEntity {
+    const persistenceEntity = new UserFollowEntity();
 
     persistenceEntity.id = domainEntity.id;
 
