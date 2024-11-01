@@ -17,7 +17,7 @@ import { ArticleEntity } from './article.entity';
 @Entity({
   name: TABLES.articleFollow,
 })
-export class FollowEntity {
+export class favoriteEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

@@ -7,7 +7,7 @@ import { Article } from '@src/articles/domain/article';
 import { FavoriteArticle } from '@src/articles/domain/favorite-article';
 import { ArticleAbstractRepository } from '@src/articles/infrastructure/persistence/article.abstract.repository';
 import { ArticleEntity } from '@src/articles/infrastructure/persistence/relational/entities/article.entity';
-import { FollowEntity } from '@src/articles/infrastructure/persistence/relational/entities/follow.entity';
+import { favoriteEntity } from '@src/articles/infrastructure/persistence/relational/entities/follow.entity';
 import { ArticleMapper } from '@src/articles/infrastructure/persistence/relational/mappers/article.mapper';
 import { favoriteArticleFollowMapper } from '@src/articles/infrastructure/persistence/relational/mappers/favorite.article.mapper';
 import { User } from '@src/users/domain/user';
@@ -21,8 +21,8 @@ export class ArticleRelationalRepository implements ArticleAbstractRepository {
   constructor(
     @InjectRepository(ArticleEntity)
     private readonly articleRepository: Repository<ArticleEntity>,
-    @InjectRepository(FollowEntity)
-    private readonly articleFavoriteRepository: Repository<FollowEntity>,
+    @InjectRepository(favoriteEntity)
+    private readonly articleFavoriteRepository: Repository<favoriteEntity>,
     @InjectRepository(UserFollowEntity)
     private readonly useFollowRepository: Repository<UserFollowEntity>,
   ) {}
@@ -155,7 +155,7 @@ export class ArticleRelationalRepository implements ArticleAbstractRepository {
     return entity ? favoriteArticleFollowMapper.toDomain(entity) : null;
   }
 
-  async removeFavorite(id: FollowEntity['id']): Promise<void> {
+  async removeFavorite(id: favoriteEntity['id']): Promise<void> {
     await this.articleFavoriteRepository.delete(id);
   }
 

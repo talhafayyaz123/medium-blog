@@ -1,12 +1,12 @@
 import { FavoriteArticle } from '@src/articles/domain/favorite-article';
 import { ArticleEntity } from '@src/articles/infrastructure/persistence/relational/entities/article.entity';
-import { FollowEntity } from '@src/articles/infrastructure/persistence/relational/entities/follow.entity';
+import { favoriteEntity } from '@src/articles/infrastructure/persistence/relational/entities/follow.entity';
 import { ArticleMapper } from '@src/articles/infrastructure/persistence/relational/mappers/article.mapper';
 import { UserEntity } from '@src/users/infrastructure/persistence/relational/entities/user.entity';
 import { UserMapper } from '@src/users/infrastructure/persistence/relational/mappers/user.mapper';
 
 export class favoriteArticleFollowMapper {
-  static toDomain(raw: FollowEntity): FavoriteArticle {
+  static toDomain(raw: favoriteEntity): FavoriteArticle {
     const domainEntity = new FavoriteArticle();
     domainEntity.id = raw.id;
     if (raw.follower) {
@@ -23,8 +23,8 @@ export class favoriteArticleFollowMapper {
     return domainEntity;
   }
 
-  static toPersistence(domainEntity: FavoriteArticle): FollowEntity {
-    const persistenceEntity = new FollowEntity();
+  static toPersistence(domainEntity: FavoriteArticle): favoriteEntity {
+    const persistenceEntity = new favoriteEntity();
 
     persistenceEntity.id = domainEntity.id;
 

@@ -14,7 +14,7 @@ import {
   OneToMany,
 } from 'typeorm';
 
-import { FollowEntity } from '@src/articles/infrastructure/persistence/relational/entities/follow.entity';
+import { favoriteEntity } from '@src/articles/infrastructure/persistence/relational/entities/follow.entity';
 import { AuthProvidersEnum } from '@src/auth/auth-providers.enum';
 import { TABLES } from '@src/common/constants';
 import { FileEntity } from '@src/files/infrastructure/persistence/relational/entities/file.entity';
@@ -88,8 +88,8 @@ export class UserEntity extends EntityRelationalHelper {
   @JoinColumn({ name: 'status_id' })
   status?: StatusEntity;
 
-  @OneToMany(() => FollowEntity, (follow) => follow.follower)
-  following: FollowEntity[]; // Articles the user is following
+  @OneToMany(() => favoriteEntity, (follow) => follow.follower)
+  following: favoriteEntity[]; // Articles the user is following
 
   // A user can follow many other users
   @OneToMany(() => UserFollowEntity, (follow) => follow.follower)
