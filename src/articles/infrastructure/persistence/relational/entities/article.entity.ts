@@ -49,8 +49,8 @@ export class ArticleEntity extends EntityRelationalHelper {
   @OneToMany(() => CommentEntity, (comment) => comment.article)
   comments: CommentEntity[];
 
-  @OneToMany(() => FavoriteArticleEntity, (favorite) => favorite.article)
-  favorites: ArticleEntity[];
+  @OneToMany(() => FavoriteArticleEntity, (favorite) => favorite.user)
+  favorites: UserEntity[];
 
   @ManyToMany(() => TagEntity)
   @JoinTable({

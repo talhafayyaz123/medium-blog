@@ -2,7 +2,6 @@ import { ArticleDTOWithTagDomains } from '@src/articles/articles.types';
 import { Article } from '@src/articles/domain/article';
 import { FavoriteArticle } from '@src/articles/domain/favorite-article';
 import { User } from '@src/users/domain/user';
-import { UserFollow } from '@src/users/domain/user-follow';
 import { DeepPartial } from '@src/utils/types/deep-partial.type';
 import { NullableType } from '@src/utils/types/nullable.type';
 import { IPaginationOptions } from '@src/utils/types/pagination-options';
@@ -40,12 +39,12 @@ export abstract class ArticleAbstractRepository {
     >,
   ): Promise<Article>;
 
-  abstract findPaginatedWithAuthorIds({
+  abstract findPaginatedWithAuthorId({
     paginationOptions,
-    authorIds,
+    userId,
   }: {
     paginationOptions: IPaginationOptions;
-    authorIds: Article['id'][];
+    userId: User['id'];
   }): Promise<Article[] | []>;
 
   abstract remove(id: Article['id']): Promise<void>;
@@ -60,6 +59,4 @@ export abstract class ArticleAbstractRepository {
   ): Promise<NullableType<FavoriteArticle>>;
 
   abstract removeFavorite(id: FavoriteArticle['id']): Promise<void>;
-
-  abstract findFollowedUsers(user: User): Promise<NullableType<UserFollow[]>>;
 }

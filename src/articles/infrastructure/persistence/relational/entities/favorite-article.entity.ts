@@ -19,13 +19,11 @@ export class FavoriteArticleEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => UserEntity, (user) => user.articleFavorites, { eager: true })
+  @ManyToOne(() => UserEntity, { eager: true })
   @JoinColumn({ name: 'user_id' })
   user: UserEntity;
 
-  @ManyToOne(() => ArticleEntity, (article) => article.favorites, {
-    eager: true,
-  })
+  @ManyToOne(() => ArticleEntity, { eager: true })
   @JoinColumn({ name: 'article_id' })
   article: ArticleEntity;
 

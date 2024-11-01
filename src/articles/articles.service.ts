@@ -20,7 +20,6 @@ import { Prompts } from '@src/gen-ai/prompts';
 import { Tag } from '@src/tags/domain/tag';
 import { TagsService } from '@src/tags/tags.service';
 import { User } from '@src/users/domain/user';
-import { UserFollow } from '@src/users/domain/user-follow';
 import { pagination } from '@src/utils/pagination';
 import { NullableType } from '@src/utils/types/nullable.type';
 import { IPaginationOptions } from '@src/utils/types/pagination-options';
@@ -289,22 +288,12 @@ export class ArticlesService {
     paginationOptions: IPaginationOptions;
     user: User;
   }): Promise<Article[]> {
-    const followedUsers: NullableType<UserFollow[]> =
-      await this.articleRepository.findFollowedUsers(user);
-
-    const followingIds = followedUsers
-      ? followedUsers.map((follow) => String(follow.following?.id))
-      : [];
-    if (followingIds.length > 0) {
-      return this.articleRepository.findPaginatedWithAuthorIds({
-        paginationOptions: {
-          page,
-          limit,
-        },
-        authorIds: followingIds,
-      });
-    }
-
-    return [];
+    return this.articleRepository.findPaginatedWithAuthorId({
+      paginationOptions: {
+        page,
+        limit,
+      },
+      userId: user.id,
+    });
   }
 }

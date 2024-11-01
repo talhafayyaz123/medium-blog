@@ -249,20 +249,26 @@ export class ArticlesController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @Get('/user/feed')
-  @ApiResponse({ type: [Article] })
+  @ApiOkResponse({
+    type: InfinityPaginationResponse(Article),
+  })
   async getFeedArticles(
     @Request() request,
     @Query() query: FindAllArticlesFeedDto,
-  ): Promise<Article[]> {
+  ): Promise<InfinityPaginationResponseDto<Article>> {
     const page = query?.page ?? 1;
     let limit = query?.limit ?? 10;
     if (limit > 50) {
       limit = 50;
     }
     const user = request.user;
-    return this.articlesService.getFeedArticles({
-      paginationOptions: { limit, page },
-      user,
-    });
+
+    return infinityPagination(
+      await this.articlesService.getFeedArticles({
+        paginationOptions: { limit, page },
+        user,
+      }),
+      { page, limit },
+    );
   }
 }

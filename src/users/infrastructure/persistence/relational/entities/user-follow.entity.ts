@@ -19,12 +19,12 @@ export class UserFollowEntity {
   id: string;
 
   // The user who is following
-  @ManyToOne(() => UserEntity, (user) => user.userFollowing)
+  @ManyToOne(() => UserEntity, { eager: true })
   @JoinColumn({ name: 'follower_id' })
   follower: UserEntity;
 
   // The user who is being followed
-  @ManyToOne(() => UserEntity, (user) => user.userFollowers)
+  @ManyToOne(() => UserEntity, { eager: true })
   @JoinColumn({ name: 'following_id' })
   following: UserEntity;
 
