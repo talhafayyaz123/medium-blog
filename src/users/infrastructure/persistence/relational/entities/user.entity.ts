@@ -96,11 +96,11 @@ export class UserEntity extends EntityRelationalHelper {
 
   // A user can follow many other users
   @OneToMany(() => FollowEntity, (follow) => follow.follower)
-  following: FollowEntity[];
+  following: UserEntity[];
 
   // A user can have many followers
   @OneToMany(() => FollowEntity, (follow) => follow.following)
-  followers: FollowEntity[];
+  followers: UserEntity[];
 
   @CreateDateColumn()
   created_at: Date;
