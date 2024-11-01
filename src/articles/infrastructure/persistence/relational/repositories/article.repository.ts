@@ -9,7 +9,7 @@ import { ArticleAbstractRepository } from '@src/articles/infrastructure/persiste
 import { ArticleEntity } from '@src/articles/infrastructure/persistence/relational/entities/article.entity';
 import { FavoriteArticleEntity } from '@src/articles/infrastructure/persistence/relational/entities/favorite-article.entity';
 import { ArticleMapper } from '@src/articles/infrastructure/persistence/relational/mappers/article.mapper';
-import { favoriteArticleFollowMapper } from '@src/articles/infrastructure/persistence/relational/mappers/favorite.article.mapper';
+import { FavoriteArticleMapper } from '@src/articles/infrastructure/persistence/relational/mappers/favorite.article.mapper';
 import { User } from '@src/users/domain/user';
 import { UserFollowEntity as UserFollowEntity } from '@src/users/infrastructure/persistence/relational/entities/user-follow.entity';
 import { NullableType } from '@src/utils/types/nullable.type';
@@ -37,7 +37,7 @@ export class ArticleRelationalRepository implements ArticleAbstractRepository {
     return ArticleMapper.toDomain(newEntity);
   }
 
-  async findPaginatedWithAuthorId({
+  async findPaginatedArticlesWithUserId({
     paginationOptions: { limit, page },
     userId,
   }: {
@@ -147,11 +147,11 @@ export class ArticleRelationalRepository implements ArticleAbstractRepository {
   }
 
   async createFavorite(data: FavoriteArticle): Promise<FavoriteArticle> {
-    const persistenceModel = favoriteArticleFollowMapper.toPersistence(data);
+    const persistenceModel = FavoriteArticleMapper.toPersistence(data);
     const newEntity = await this.favoriteArticleRepository.save(
       this.favoriteArticleRepository.create(persistenceModel),
     );
-    return favoriteArticleFollowMapper.toDomain(newEntity);
+    return FavoriteArticleMapper.toDomain(newEntity);
   }
 
   async findFavorite(
@@ -165,7 +165,7 @@ export class ArticleRelationalRepository implements ArticleAbstractRepository {
       },
       relations: ['user', 'article'],
     });
-    return entity ? favoriteArticleFollowMapper.toDomain(entity) : null;
+    return entity ? FavoriteArticleMapper.toDomain(entity) : null;
   }
 
   async removeFavorite(id: FavoriteArticle['id']): Promise<void> {

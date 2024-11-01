@@ -39,7 +39,7 @@ export abstract class ArticleAbstractRepository {
     >,
   ): Promise<Article>;
 
-  abstract findPaginatedWithAuthorId({
+  abstract findPaginatedArticlesWithUserId({
     paginationOptions,
     userId,
   }: {

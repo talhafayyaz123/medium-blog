@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { diff, unique } from 'radash';
 import slugify from 'slugify';
 
+import { FavoriteArticle } from '@src/articles/domain/favorite-article';
 import { JwtPayloadType } from '@src/auth/strategies/types/jwt-payload.type';
 import { CommentsService } from '@src/comments/comments.service';
 import { Comment } from '@src/comments/domain/comment';
@@ -236,7 +237,7 @@ export class ArticlesService {
     return article;
   }
 
-  async favoriteArticle(slug: string, user: User): Promise<Article> {
+  async favoriteArticle(slug: string, user: User): Promise<FavoriteArticle> {
     const article = await this.articleRepository.findBySlug(slug);
     if (!article) {
       throw NOT_FOUND('Article', { slug });
@@ -258,12 +259,13 @@ export class ArticlesService {
       } as Article,
     };
 
-    await this.articleRepository.createFavorite(clonedPayload);
+    const favoritedArticle =
+      await this.articleRepository.createFavorite(clonedPayload);
 
-    return article;
+    return favoritedArticle;
   }
 
-  async unfavoriteArticle(slug: string, user: User): Promise<Article> {
+  async unfavoriteArticle(slug: string, user: User): Promise<void> {
     const article = await this.articleRepository.findBySlug(slug);
     if (!article) {
       throw NOT_FOUND('Article', { slug });
@@ -276,9 +278,7 @@ export class ArticlesService {
 
     if (!existingFavorite) throw BAD_REQUEST(ARTICLE_NOT_FAVORITE_ERROR);
 
-    await this.articleRepository.removeFavorite(existingFavorite.id);
-
-    return article;
+    return await this.articleRepository.removeFavorite(existingFavorite.id);
   }
 
   async getFeedArticles({
@@ -288,7 +288,7 @@ export class ArticlesService {
     paginationOptions: IPaginationOptions;
     user: User;
   }): Promise<Article[]> {
-    return this.articleRepository.findPaginatedWithAuthorId({
+    return this.articleRepository.findPaginatedArticlesWithUserId({
       paginationOptions: {
         page,
         limit,

@@ -5,7 +5,7 @@ import { ArticleMapper } from '@src/articles/infrastructure/persistence/relation
 import { UserEntity } from '@src/users/infrastructure/persistence/relational/entities/user.entity';
 import { UserMapper } from '@src/users/infrastructure/persistence/relational/mappers/user.mapper';
 
-export class favoriteArticleFollowMapper {
+export class FavoriteArticleMapper {
   static toDomain(raw: FavoriteArticleEntity): FavoriteArticle {
     const domainEntity = new FavoriteArticle();
     domainEntity.id = raw.id;

@@ -20,6 +20,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
+import { FavoriteArticle } from '@src/articles/domain/favorite-article';
 import { Comment } from '@src/comments/domain/comment';
 import {
   InfinityPaginationResponse,
@@ -222,7 +223,7 @@ export class ArticlesController {
   async favoriteArticle(
     @Param('slug') slug: string,
     @Request() request,
-  ): Promise<Article> {
+  ): Promise<FavoriteArticle> {
     const user = request.user;
     return this.articlesService.favoriteArticle(slug, user);
   }
@@ -241,7 +242,7 @@ export class ArticlesController {
   async unfavoriteArticle(
     @Param('slug') slug: string,
     @Request() request,
-  ): Promise<Article> {
+  ): Promise<void> {
     const user = request.user;
     return this.articlesService.unfavoriteArticle(slug, user);
   }
