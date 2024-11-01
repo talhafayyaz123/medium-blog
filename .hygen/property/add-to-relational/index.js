@@ -79,7 +79,8 @@ module.exports = {
     const { example } = await prompter.prompt({
       type: 'input',
       name: 'example',
-      message: "Provide an example value for the property (e.g. 'John Doe' for a name property):",
+      message:
+        "Provide an example value for the property (e.g. 'John Doe' for a name property):",
       validate: (input) => {
         if (!input.trim()) {
           return 'Property example is required';
@@ -88,7 +89,6 @@ module.exports = {
       },
       format: (input) => input.trim(),
     });
-
 
     // Step 5: Ask if the property should be added to DTO
     const { isAddToDto } = await prompter.prompt({

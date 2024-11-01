@@ -4,13 +4,14 @@
 
 ## Table of Contents <!-- omit in toc -->
 
-- [Generate resource](#generate-resource)
-  - [For relational database (PostgreSQL + TypeORM)](#for-relational-database-postgresql--typeorm)
-  - [Property for relational database (PostgreSQL + TypeORM)](#property-for-relational-database-postgresql--typeorm)
-  - [Generate a basic structure for raw queries](#generate-a-basic-structure-for-raw-queries)
-- [FAQ](#faq)
-  - [Error: Unable to connect to the newly created relational entity](#error-unable-to-connect-to-the-newly-created-relational-entity)
-  - [Can I create foreign key properties using the add:property command?](#can-i-create-foreign-key-properties-using-the-addproperty-command)
+- [Command Line Interface (CLI)](#command-line-interface-cli)
+  - [Generate resource](#generate-resource)
+    - [For relational database (PostgreSQL + TypeORM)](#for-relational-database-postgresql--typeorm)
+    - [Property for relational database (PostgreSQL + TypeORM)](#property-for-relational-database-postgresql--typeorm)
+    - [Generate a basic structure for raw queries](#generate-a-basic-structure-for-raw-queries)
+  - [FAQ](#faq)
+    - [Error: Unable to connect to the newly created relational entity](#error-unable-to-connect-to-the-newly-created-relational-entity)
+    - [Can I create foreign key properties using the add:property command?](#can-i-create-foreign-key-properties-using-the-addproperty-command)
 
 ---
 
@@ -48,7 +49,6 @@ This command will trigger a terminal prompt with the following options:
 
    If you choose "Yes", test case structure and mock data for the resource will also be generated along with the selected functionalities.
 
-
 ### Property for relational database (PostgreSQL + TypeORM)
 
 ```bash
@@ -80,10 +80,9 @@ This command will initiate a terminal prompt to help you add a new property to a
 
 5. **Add to DTO?**: You will be prompted with another confirmation asking whether the property should be added to the DTO (Data Transfer Object). If you select "Yes", the system will include the new property in the DTO.
 
-After the property is created, please check the DTO files and add the relevant imports. Otherwise, the file will have errors.
-
 6. **Property Example**: You will be asked to provide the property example(eg:test@gmail.com). This field is also required, and the input will be validated to ensure it's not empty.
 
+After the property is created, please check the DTO files and add the relevant imports. Otherwise, the file will have errors.
 
 ### Generate a basic structure for raw queries
 
