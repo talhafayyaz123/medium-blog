@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   Query,
+  Request,
   HttpStatus,
   HttpCode,
   SerializeOptions,
@@ -167,5 +168,39 @@ export class UsersController {
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id') id: User['id']): Promise<void> {
     return this.usersService.remove(id);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Post(':username/follow')
+  @HttpCode(HttpStatus.OK)
+  @ApiParam({
+    name: 'username',
+    type: String,
+    required: true,
+  })
+  @ApiOkResponse({ type: User })
+  async followUser(
+    @Param('username') username: string,
+    @Request() req,
+  ): Promise<any> {
+    const userId = req.user.id;
+    return await this.usersService.followUser(userId, username);
+  }
+
+  @Delete(':username/follow')
+  @HttpCode(HttpStatus.OK)
+  @ApiParam({
+    name: 'username',
+    type: String,
+    required: true,
+  })
+  @ApiOkResponse({ type: User })
+  async unFollowUser(
+    @Param('username') username: string,
+    @Request() req,
+  ): Promise<any> {
+    const userId = req.user.id;
+    return await this.usersService.unFollowUser(userId, username);
   }
 }

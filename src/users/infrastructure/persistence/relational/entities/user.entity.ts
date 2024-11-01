@@ -11,6 +11,7 @@ import {
   UpdateDateColumn,
   JoinColumn,
   OneToOne,
+  OneToMany,
 } from 'typeorm';
 
 import { AuthProvidersEnum } from '@src/auth/auth-providers.enum';
@@ -19,6 +20,8 @@ import { FileEntity } from '@src/files/infrastructure/persistence/relational/ent
 import { RoleEntity } from '@src/roles/infrastructure/persistence/relational/entities/role.entity';
 import { StatusEntity } from '@src/statuses/infrastructure/persistence/relational/entities/status.entity';
 import { EntityRelationalHelper } from '@src/utils/relational-entity-helper';
+
+import { FollowEntity } from './follow.entity';
 
 // We use class-transformer in ORM entity and domain entity.
 // We duplicate these rules because you can choose not to use adapters
@@ -90,6 +93,14 @@ export class UserEntity extends EntityRelationalHelper {
   })
   @JoinColumn({ name: 'status_id' })
   status?: StatusEntity;
+
+  // A user can follow many other users
+  @OneToMany(() => FollowEntity, (follow) => follow.follower)
+  following: UserEntity[];
+
+  // A user can have many followers
+  @OneToMany(() => FollowEntity, (follow) => follow.following)
+  followers: UserEntity[];
 
   @CreateDateColumn()
   created_at: Date;
