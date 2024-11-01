@@ -5,9 +5,9 @@ import { FindOptionsWhere, Repository, SelectQueryBuilder } from 'typeorm';
 import { User } from '@src/users/domain/user';
 import { UserFollow } from '@src/users/domain/user-follow';
 import { FilterUserDto, SortUserDto } from '@src/users/dto/query-user.dto';
-import { FollowEntity } from '@src/users/infrastructure/persistence/relational/entities/follow.entity';
+import { UserFollowEntity } from '@src/users/infrastructure/persistence/relational/entities/user-follow.entity';
 import { UserEntity } from '@src/users/infrastructure/persistence/relational/entities/user.entity';
-import { UserFollowMapper } from '@src/users/infrastructure/persistence/relational/mappers/user.follow.mapper';
+import { UserFollowMapper } from '@src/users/infrastructure/persistence/relational/mappers/user-follow.mapper';
 import { UserMapper } from '@src/users/infrastructure/persistence/relational/mappers/user.mapper';
 import { UserAbstractRepository } from '@src/users/infrastructure/persistence/user.abstract.repository';
 import { NullableType } from '@src/utils/types/nullable.type';
@@ -21,8 +21,8 @@ export class UsersRelationalRepository implements UserAbstractRepository {
   constructor(
     @InjectRepository(UserEntity)
     private readonly usersRepository: Repository<UserEntity>,
-    @InjectRepository(FollowEntity)
-    private readonly usersFollowRepository: Repository<FollowEntity>,
+    @InjectRepository(UserFollowEntity)
+    private readonly usersFollowRepository: Repository<UserFollowEntity>,
   ) {}
 
   async create(data: User): Promise<User> {
@@ -178,7 +178,7 @@ export class UsersRelationalRepository implements UserAbstractRepository {
     return entity ? UserFollowMapper.toDomain(entity) : null;
   }
 
-  async removeFollow(id: FollowEntity['id']): Promise<void> {
+  async removeFollow(id: UserFollowEntity['id']): Promise<void> {
     await this.usersFollowRepository.delete(id);
   }
 }

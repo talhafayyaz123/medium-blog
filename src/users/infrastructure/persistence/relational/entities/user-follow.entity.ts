@@ -12,19 +12,19 @@ import { TABLES } from '@src/common/constants';
 import { UserEntity } from './user.entity';
 
 @Entity({
-  name: TABLES.follow,
+  name: TABLES.userFollow,
 })
-export class FollowEntity {
+export class UserFollowEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   // The user who is following
-  @ManyToOne(() => UserEntity, (user) => user.following)
+  @ManyToOne(() => UserEntity, { eager: true })
   @JoinColumn({ name: 'follower_id' })
   follower: UserEntity;
 
   // The user who is being followed
-  @ManyToOne(() => UserEntity, (user) => user.followers)
+  @ManyToOne(() => UserEntity, { eager: true })
   @JoinColumn({ name: 'following_id' })
   following: UserEntity;
 

@@ -16,9 +16,11 @@ import {
   ApiCreatedResponse,
   ApiOkResponse,
   ApiParam,
+  ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 
+import { FavoriteArticle } from '@src/articles/domain/favorite-article';
 import { Comment } from '@src/comments/domain/comment';
 import {
   InfinityPaginationResponse,
@@ -36,6 +38,7 @@ import { CreateArticleDto } from './dto/create-article.dto';
 import { CreateCommentPathParamDto } from './dto/create-comment-path-param.dto';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { DeleteCommentPathParamDto } from './dto/delete-comment-path-param.dto';
+import { FindAllArticlesFeedDto } from './dto/find-all-articles-feed.dto';
 import { FindAllArticlesDto } from './dto/find-all-articles.dto';
 import { FindAllCommentsDto } from './dto/find-all-comments.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
@@ -204,5 +207,69 @@ export class ArticlesController {
   ) {
     const { id, slug } = params;
     return this.articlesService.removeComment(id, slug, request.user);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Post(':slug/favorite')
+  @ApiParam({
+    name: 'slug',
+    type: String,
+    required: true,
+  })
+  @ApiResponse({
+    type: Article,
+  })
+  async favoriteArticle(
+    @Param('slug') slug: string,
+    @Request() request,
+  ): Promise<FavoriteArticle> {
+    const user = request.user;
+    return this.articlesService.favoriteArticle(slug, user);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Delete(':slug/favorite')
+  @ApiParam({
+    name: 'slug',
+    type: String,
+    required: true,
+  })
+  @ApiResponse({
+    type: Article,
+  })
+  async unfavoriteArticle(
+    @Param('slug') slug: string,
+    @Request() request,
+  ): Promise<void> {
+    const user = request.user;
+    return this.articlesService.unfavoriteArticle(slug, user);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/user/feed')
+  @ApiOkResponse({
+    type: InfinityPaginationResponse(Article),
+  })
+  async getFeedArticles(
+    @Request() request,
+    @Query() query: FindAllArticlesFeedDto,
+  ): Promise<InfinityPaginationResponseDto<Article>> {
+    const page = query?.page ?? 1;
+    let limit = query?.limit ?? 10;
+    if (limit > 50) {
+      limit = 50;
+    }
+    const user = request.user;
+
+    return infinityPagination(
+      await this.articlesService.getFeedArticles({
+        paginationOptions: { limit, page },
+        user,
+      }),
+      { page, limit },
+    );
   }
 }
