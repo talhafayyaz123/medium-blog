@@ -155,13 +155,13 @@ export class ArticleRelationalRepository implements ArticleAbstractRepository {
   }
 
   async findFavorite(
-    followerId: User['id'],
-    followingId: Article['id'],
+    userId: User['id'],
+    articleId: Article['id'],
   ): Promise<NullableType<FavoriteArticle>> {
     const entity = await this.favoriteArticleRepository.findOne({
       where: {
-        user: { id: Number(followerId) },
-        article: { id: followingId },
+        user: { id: Number(userId) },
+        article: { id: articleId },
       },
       relations: ['user', 'article'],
     });

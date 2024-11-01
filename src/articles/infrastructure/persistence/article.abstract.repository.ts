@@ -54,8 +54,8 @@ export abstract class ArticleAbstractRepository {
   ): Promise<FavoriteArticle>;
 
   abstract findFavorite(
-    followerId: User['id'],
-    followingId: Article['id'],
+    userId: User['id'],
+    articleId: Article['id'],
   ): Promise<NullableType<FavoriteArticle>>;
 
   abstract removeFavorite(id: FavoriteArticle['id']): Promise<void>;
