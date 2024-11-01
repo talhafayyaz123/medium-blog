@@ -95,8 +95,9 @@ export class UserEntity extends EntityRelationalHelper {
   @JoinColumn({ name: 'status_id' })
   status?: StatusEntity;
 
-  @OneToMany(() => favoriteEntity, (follow) => follow.follower)
-  following: favoriteEntity[]; // Articles the user is following
+  // chnage with article keyword
+  @OneToMany(() => favoriteEntity, (favorite) => favorite.user)
+  articleFavorites: favoriteEntity[]; // Articles the user is following
 
   // A user can follow many other users
   @OneToMany(() => UserFollowEntity, (follow) => follow.follower)

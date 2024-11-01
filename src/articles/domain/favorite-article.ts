@@ -11,10 +11,10 @@ export class FavoriteArticle {
   id: string;
 
   @ApiProperty()
-  follower: User;
+  user: User;
 
   @ApiProperty()
-  following: Article;
+  article: Article;
 
   @ApiProperty()
   createdAt: Date;

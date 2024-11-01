@@ -6,10 +6,10 @@ import { FavoriteArticle } from '@src/articles/domain/favorite-article';
 import { ArticleEntity } from '@src/articles/infrastructure/persistence/relational/entities/article.entity';
 import { User } from '@src/users/domain/user';
 import { FollowEntity as UserFollowEntity } from '@src/users/infrastructure/persistence/relational/entities/follow.entity';
+import { UserEntity } from '@src/users/infrastructure/persistence/relational/entities/user.entity';
 import { DeepPartial } from '@src/utils/types/deep-partial.type';
 import { NullableType } from '@src/utils/types/nullable.type';
 import { IPaginationOptions } from '@src/utils/types/pagination-options';
-import { UserEntity } from '@src/users/infrastructure/persistence/relational/entities/user.entity';
 
 export abstract class ArticleAbstractRepository {
   abstract create(data: ArticleDTOWithTagDomains): Promise<Article>;

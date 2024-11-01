@@ -250,10 +250,10 @@ export class ArticlesService {
     if (existingFavorite) throw BAD_REQUEST(`${slug}, Already favorited.`);
 
     const clonedPayload = {
-      follower: {
+      user: {
         id: user.id,
       } as User,
-      following: {
+      article: {
         id: article.id,
       } as Article,
     };
@@ -293,8 +293,8 @@ export class ArticlesService {
 
   async getFeedArticles(
     user: UserEntity,
-    limit: string,
-    offset: string,
+    limit: number,
+    offset: number,
   ): Promise<Article[]> {
     const followedUsers: NullableType<UserFollowEntity[]> =
       await this.articleRepository.findFollowedUsers(user);

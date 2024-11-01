@@ -12,9 +12,9 @@ import { ArticleMapper } from '@src/articles/infrastructure/persistence/relation
 import { favoriteArticleFollowMapper } from '@src/articles/infrastructure/persistence/relational/mappers/favorite.article.mapper';
 import { User } from '@src/users/domain/user';
 import { FollowEntity as UserFollowEntity } from '@src/users/infrastructure/persistence/relational/entities/follow.entity';
+import { UserEntity } from '@src/users/infrastructure/persistence/relational/entities/user.entity';
 import { NullableType } from '@src/utils/types/nullable.type';
 import { IPaginationOptions } from '@src/utils/types/pagination-options';
-import { UserEntity } from '@src/users/infrastructure/persistence/relational/entities/user.entity';
 
 @Injectable()
 export class ArticleRelationalRepository implements ArticleAbstractRepository {
@@ -147,10 +147,10 @@ export class ArticleRelationalRepository implements ArticleAbstractRepository {
   ): Promise<NullableType<FavoriteArticle>> {
     const entity = await this.articleFavoriteRepository.findOne({
       where: {
-        follower: { id: Number(followerId) },
-        following: { id: followingId },
+        user: { id: Number(followerId) },
+        article: { id: followingId },
       },
-      relations: ['follower', 'following'],
+      relations: ['user', 'article'],
     });
     return entity ? favoriteArticleFollowMapper.toDomain(entity) : null;
   }

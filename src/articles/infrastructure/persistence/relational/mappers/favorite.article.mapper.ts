@@ -9,12 +9,12 @@ export class favoriteArticleFollowMapper {
   static toDomain(raw: favoriteEntity): FavoriteArticle {
     const domainEntity = new FavoriteArticle();
     domainEntity.id = raw.id;
-    if (raw.follower) {
-      domainEntity.follower = UserMapper.toDomain(raw.follower);
+    if (raw.user) {
+      domainEntity.user = UserMapper.toDomain(raw.user);
     }
 
-    if (raw.following) {
-      domainEntity.following = ArticleMapper.toDomain(raw.following);
+    if (raw.article) {
+      domainEntity.article = ArticleMapper.toDomain(raw.article);
     }
 
     domainEntity.createdAt = raw.created_at;
@@ -28,14 +28,14 @@ export class favoriteArticleFollowMapper {
 
     persistenceEntity.id = domainEntity.id;
 
-    if (domainEntity.follower) {
-      persistenceEntity.follower = new UserEntity();
-      persistenceEntity.follower.id = Number(domainEntity.follower.id);
+    if (domainEntity.user) {
+      persistenceEntity.user = new UserEntity();
+      persistenceEntity.user.id = Number(domainEntity.user.id);
     }
 
-    if (domainEntity.following) {
-      persistenceEntity.following = new ArticleEntity();
-      persistenceEntity.following.id = domainEntity.following.id;
+    if (domainEntity.article) {
+      persistenceEntity.article = new ArticleEntity();
+      persistenceEntity.article.id = domainEntity.article.id;
     }
 
     persistenceEntity.created_at = domainEntity.createdAt;

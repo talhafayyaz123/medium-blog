@@ -21,15 +21,15 @@ export class favoriteEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => UserEntity, (user) => user.following, { eager: true })
+  @ManyToOne(() => UserEntity, (user) => user.articleFavorites, { eager: true })
   @JoinColumn({ name: 'user_id' })
-  follower: UserEntity;
+  user: UserEntity;
 
-  @ManyToOne(() => ArticleEntity, (article) => article.followers, {
+  @ManyToOne(() => ArticleEntity, (article) => article.favorites, {
     eager: true,
   })
   @JoinColumn({ name: 'article_id' })
-  following: ArticleEntity;
+  article: ArticleEntity;
 
   @CreateDateColumn({ name: 'created_at' })
   created_at: Date;
