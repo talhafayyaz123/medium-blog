@@ -19,7 +19,9 @@ export class GenAiService {
     });
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    this.model = genAI.getGenerativeModel({ model: modelName });
+    if (modelName) {
+      this.model = genAI.getGenerativeModel({ model: modelName });
+    }
   }
 
   async generateArticleTitle(prompt: string): Promise<string> {

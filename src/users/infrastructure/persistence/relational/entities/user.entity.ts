@@ -32,6 +32,13 @@ import { FollowEntity as UserFollowEntity } from './follow.entity';
   name: TABLES.user,
 })
 export class UserEntity extends EntityRelationalHelper {
+  @Column({
+    type: 'varchar',
+    unique: true,
+    nullable: true,
+  })
+  username: string | null;
+
   @PrimaryGeneratedColumn()
   id: number;
 
