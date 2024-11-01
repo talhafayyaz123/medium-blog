@@ -2,7 +2,12 @@ import { Injectable } from '@nestjs/common';
 import bcrypt from 'bcryptjs';
 
 import { AuthProvidersEnum } from '@src/auth/auth-providers.enum';
-import { ERROR_MESSAGES } from '@src/common/error-messages';
+import {
+  ALREADY_FOLLOWING_ERROR,
+  ERROR_MESSAGES,
+  NOT_FOLLOWING_ERROR,
+  SELF_ACTION_ERROR,
+} from '@src/common/error-messages';
 import {
   FORBIDDEN,
   NOT_FOUND,
@@ -220,7 +225,7 @@ export class UsersService {
     }
 
     if (followerId === followingUser.id) {
-      throw CustomException('You cannot unfollow yourself', 'unfollow');
+      throw CustomException(SELF_ACTION_ERROR, 'unfollow');
     }
 
     const existingFollow = await this.usersRepository.findFollow(
@@ -228,8 +233,7 @@ export class UsersService {
       followingUser.id,
     );
 
-    if (!existingFollow)
-      throw BAD_REQUEST(`${username}, you are not following this user.`);
+    if (!existingFollow) throw BAD_REQUEST(NOT_FOLLOWING_ERROR);
 
     await this.usersRepository.removeFollow(existingFollow.id);
 
@@ -257,7 +261,7 @@ export class UsersService {
     }
 
     if (followerId === followingUser.id) {
-      throw CustomException('You cannot follow yourself', 'follow');
+      throw CustomException(SELF_ACTION_ERROR, 'follow');
     }
 
     const existingFollow = await this.usersRepository.findFollow(
@@ -265,8 +269,7 @@ export class UsersService {
       followingUser.id,
     );
 
-    if (existingFollow)
-      throw BAD_REQUEST(`${username}, you are already following this user.`);
+    if (existingFollow) throw BAD_REQUEST(ALREADY_FOLLOWING_ERROR);
 
     const clonedPayload = {
       follower: {

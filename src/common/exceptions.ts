@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   ForbiddenException,
   HttpStatus,
   InternalServerErrorException,
@@ -55,7 +56,7 @@ export const FORBIDDEN = (message: string, attribute: string) => {
 };
 
 export const CustomException = (message: string, attribute: string) => {
-  return new ForbiddenException({
+  return new ConflictException({
     statusCode: HttpStatus.CONFLICT,
     errors: {
       [attribute]: message,
