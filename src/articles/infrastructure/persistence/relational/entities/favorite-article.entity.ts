@@ -1,5 +1,3 @@
-//import { UUID } from 'crypto';
-
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -17,19 +15,17 @@ import { ArticleEntity } from './article.entity';
 @Entity({
   name: TABLES.articleFollow,
 })
-export class FollowEntity {
+export class FavoriteArticleEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => UserEntity, (user) => user.following, { eager: true })
+  @ManyToOne(() => UserEntity, { eager: true })
   @JoinColumn({ name: 'user_id' })
-  follower: UserEntity;
+  user: UserEntity;
 
-  @ManyToOne(() => ArticleEntity, (article) => article.followers, {
-    eager: true,
-  })
+  @ManyToOne(() => ArticleEntity, { eager: true })
   @JoinColumn({ name: 'article_id' })
-  following: ArticleEntity;
+  article: ArticleEntity;
 
   @CreateDateColumn({ name: 'created_at' })
   created_at: Date;

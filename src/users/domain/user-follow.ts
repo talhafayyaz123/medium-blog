@@ -1,20 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { User } from '@src/users/domain/user';
+import { User } from './user';
 
-import { Article } from './article';
-
-export class FavoriteArticle {
+export class UserFollow {
   @ApiProperty({
     type: String,
   })
   id: string;
 
   @ApiProperty()
-  user: User;
+  follower: User;
 
   @ApiProperty()
-  article: Article;
+  following: User;
 
   @ApiProperty()
   createdAt: Date;

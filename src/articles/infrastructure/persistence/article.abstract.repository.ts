@@ -1,12 +1,10 @@
-import { FindManyOptions } from 'typeorm';
-
 import { ArticleDTOWithTagDomains } from '@src/articles/articles.types';
 import { Article } from '@src/articles/domain/article';
-import { ArticleEntity } from '@src/articles/infrastructure/persistence/relational/entities/article.entity';
+import { FavoriteArticle } from '@src/articles/domain/favorite-article';
+import { User } from '@src/users/domain/user';
 import { DeepPartial } from '@src/utils/types/deep-partial.type';
 import { NullableType } from '@src/utils/types/nullable.type';
 import { IPaginationOptions } from '@src/utils/types/pagination-options';
-
 
 export abstract class ArticleAbstractRepository {
   abstract create(data: ArticleDTOWithTagDomains): Promise<Article>;
@@ -41,9 +39,24 @@ export abstract class ArticleAbstractRepository {
     >,
   ): Promise<Article>;
 
+  abstract findPaginatedArticlesWithUserId({
+    paginationOptions,
+    userId,
+  }: {
+    paginationOptions: IPaginationOptions;
+    userId: User['id'];
+  }): Promise<Article[] | []>;
 
-  abstract find(criteria: FindManyOptions<ArticleEntity>): Promise<Article[] | []>;
-  
-  
   abstract remove(id: Article['id']): Promise<void>;
+
+  abstract createFavorite(
+    data: Omit<FavoriteArticle, 'id' | 'createdAt' | 'updatedAt'>,
+  ): Promise<FavoriteArticle>;
+
+  abstract findFavorite(
+    userId: User['id'],
+    articleId: Article['id'],
+  ): Promise<NullableType<FavoriteArticle>>;
+
+  abstract removeFavorite(id: FavoriteArticle['id']): Promise<void>;
 }

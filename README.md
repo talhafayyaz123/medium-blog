@@ -25,7 +25,11 @@ Implementing the [Realworld Medium Clone Specifications](https://realworld-docs.
    - [Unfavorite Article](https://realworld-docs.netlify.app/specifications/backend/endpoints/#unfavorite-article)
 
 4. **Add Unit Testing and E2E Testing**
+
    - Implement comprehensive unit and e2e tests to ensure code quality and functionality. Leverage Hygen templates to automate the creation of test files where possible, streamlining the testing process.
+
+5. **Implement Reaction System:**
+   - Introduce a user-friendly reaction system that enables users to interact with articles through emojis, facilitating quick responses and engagement.
 
 ## Features
 

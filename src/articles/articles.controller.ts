@@ -9,7 +9,6 @@ import {
   UseGuards,
   Request,
   Query,
-  
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {
@@ -19,9 +18,9 @@ import {
   ApiParam,
   ApiResponse,
   ApiTags,
-  ApiQuery
 } from '@nestjs/swagger';
 
+import { FavoriteArticle } from '@src/articles/domain/favorite-article';
 import { Comment } from '@src/comments/domain/comment';
 import {
   InfinityPaginationResponse,
@@ -39,6 +38,7 @@ import { CreateArticleDto } from './dto/create-article.dto';
 import { CreateCommentPathParamDto } from './dto/create-comment-path-param.dto';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { DeleteCommentPathParamDto } from './dto/delete-comment-path-param.dto';
+import { FindAllArticlesFeedDto } from './dto/find-all-articles-feed.dto';
 import { FindAllArticlesDto } from './dto/find-all-articles.dto';
 import { FindAllCommentsDto } from './dto/find-all-comments.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
@@ -209,56 +209,67 @@ export class ArticlesController {
     return this.articlesService.removeComment(id, slug, request.user);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Post(':slug/favorite')
+  @ApiParam({
+    name: 'slug',
+    type: String,
+    required: true,
+  })
+  @ApiResponse({
+    type: Article,
+  })
+  async favoriteArticle(
+    @Param('slug') slug: string,
+    @Request() request,
+  ): Promise<FavoriteArticle> {
+    const user = request.user;
+    return this.articlesService.favoriteArticle(slug, user);
+  }
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Delete(':slug/favorite')
+  @ApiParam({
+    name: 'slug',
+    type: String,
+    required: true,
+  })
+  @ApiResponse({
+    type: Article,
+  })
+  async unfavoriteArticle(
+    @Param('slug') slug: string,
+    @Request() request,
+  ): Promise<void> {
+    const user = request.user;
+    return this.articlesService.unfavoriteArticle(slug, user);
+  }
 
-@ApiBearerAuth()
-@UseGuards(AuthGuard('jwt'))
-@Post(':slug/favorite')
-@ApiParam({
-  name:'slug',
-  type:String,
-  required:true
-})
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/user/feed')
+  @ApiOkResponse({
+    type: InfinityPaginationResponse(Article),
+  })
+  async getFeedArticles(
+    @Request() request,
+    @Query() query: FindAllArticlesFeedDto,
+  ): Promise<InfinityPaginationResponseDto<Article>> {
+    const page = query?.page ?? 1;
+    let limit = query?.limit ?? 10;
+    if (limit > 50) {
+      limit = 50;
+    }
+    const user = request.user;
 
-@ApiResponse({
-  type:Article
-})
-
-async favoriteArticle(@Param('slug') slug:string,@Request() request):Promise<Article>{
-  const user=request.user;
-  return this.articlesService.favoriteArticle(slug,user);
-}
-
-@ApiBearerAuth()
-@UseGuards(AuthGuard('jwt'))
-@Delete(':slug/favorite')
-@ApiParam({
-  name: 'slug',
-  type: String,
-  required: true
-})
-@ApiResponse({
-  type: Article
-})
-async unfavoriteArticle(@Param('slug') slug: string, @Request() request): Promise<Article> {
-  const user = request.user;
-  return this.articlesService.unfavoriteArticle(slug, user);
-}
-
- @ApiBearerAuth()
-@UseGuards(AuthGuard('jwt'))
-@Get('/user/feed')
-@ApiQuery({ name: 'limit', required: false, type: Number })
-@ApiQuery({ name: 'offset', required: false, type: Number })
-@ApiResponse({ type: [Article] })
-async getFeedArticles(
-  @Request() request,
-  @Query('limit') limit: string = '10',  
-  @Query('offset') offset: string = '0'
-): Promise<Article[]> {
-  const user = request.user;
-  return this.articlesService.getFeedArticles(user, limit, offset);
-} 
-
-
+    return infinityPagination(
+      await this.articlesService.getFeedArticles({
+        paginationOptions: { limit, page },
+        user,
+      }),
+      { page, limit },
+    );
+  }
 }

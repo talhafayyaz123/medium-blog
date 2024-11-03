@@ -1,20 +1,20 @@
 import { FavoriteArticle } from '@src/articles/domain/favorite-article';
 import { ArticleEntity } from '@src/articles/infrastructure/persistence/relational/entities/article.entity';
-import { FollowEntity } from '@src/articles/infrastructure/persistence/relational/entities/follow.entity';
+import { FavoriteArticleEntity } from '@src/articles/infrastructure/persistence/relational/entities/favorite-article.entity';
 import { ArticleMapper } from '@src/articles/infrastructure/persistence/relational/mappers/article.mapper';
 import { UserEntity } from '@src/users/infrastructure/persistence/relational/entities/user.entity';
 import { UserMapper } from '@src/users/infrastructure/persistence/relational/mappers/user.mapper';
 
-export class favoriteArticleFollowMapper {
-  static toDomain(raw: FollowEntity): FavoriteArticle {
+export class FavoriteArticleMapper {
+  static toDomain(raw: FavoriteArticleEntity): FavoriteArticle {
     const domainEntity = new FavoriteArticle();
     domainEntity.id = raw.id;
-    if (raw.follower) {
-      domainEntity.follower = UserMapper.toDomain(raw.follower);
+    if (raw.user) {
+      domainEntity.user = UserMapper.toDomain(raw.user);
     }
 
-    if (raw.following) {
-      domainEntity.following = ArticleMapper.toDomain(raw.following);
+    if (raw.article) {
+      domainEntity.article = ArticleMapper.toDomain(raw.article);
     }
 
     domainEntity.createdAt = raw.created_at;
@@ -23,19 +23,19 @@ export class favoriteArticleFollowMapper {
     return domainEntity;
   }
 
-  static toPersistence(domainEntity: FavoriteArticle): FollowEntity {
-    const persistenceEntity = new FollowEntity();
+  static toPersistence(domainEntity: FavoriteArticle): FavoriteArticleEntity {
+    const persistenceEntity = new FavoriteArticleEntity();
 
     persistenceEntity.id = domainEntity.id;
 
-    if (domainEntity.follower) {
-      persistenceEntity.follower = new UserEntity();
-      persistenceEntity.follower.id = Number(domainEntity.follower.id);
+    if (domainEntity.user) {
+      persistenceEntity.user = new UserEntity();
+      persistenceEntity.user.id = Number(domainEntity.user.id);
     }
 
-    if (domainEntity.following) {
-      persistenceEntity.following = new ArticleEntity();
-      persistenceEntity.following.id = domainEntity.following.id;
+    if (domainEntity.article) {
+      persistenceEntity.article = new ArticleEntity();
+      persistenceEntity.article.id = domainEntity.article.id;
     }
 
     persistenceEntity.created_at = domainEntity.createdAt;
