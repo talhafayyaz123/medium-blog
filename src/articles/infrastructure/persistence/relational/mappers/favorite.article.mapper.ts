@@ -9,6 +9,7 @@ export class FavoriteArticleMapper {
   static toDomain(raw: FavoriteArticleEntity): FavoriteArticle {
     const domainEntity = new FavoriteArticle();
     domainEntity.id = raw.id;
+
     if (raw.user) {
       domainEntity.user = UserMapper.toDomain(raw.user);
     }
